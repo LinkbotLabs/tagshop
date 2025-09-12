@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tagshop wall – tagshop</title>
+<link rel="stylesheet" href="uniform-dark-glass.css">
+<style>
+body { background:#000; color:#fff; font-family:system-ui; padding:20px; }
+h1{text-align:center;margin-bottom:20px;}
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+.card { background: rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
+.card img { max-width:100%; border-radius:6px; cursor:pointer; transition:0.3s; }
+.card img:hover { transform: scale(1.05); }
+button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cursor:pointer; color:#000; font-weight:700; padding:4px 8px; font-size:12px; }
+
+/* Affiliate Pop-Up */
+#affiliatePopup {
+  position:fixed; bottom:20px; right:20px; width:300px; max-width:90%;
+  background: rgba(0,0,0,0.95); backdrop-filter: blur(12px);
+  border:1px solid #ffa500; border-radius:16px; padding:16px; z-index:999;
+  color:#fff; display:none; box-shadow:0 4px 20px rgba(0,0,0,0.6);
+}
+#affiliatePopup h2 { color:#ffa500; font-size:16px; margin:0 0 10px 0; text-align:center; }
+#affiliatePopup input, #affiliatePopup button { margin:4px 0; font-size:12px; width:100%; padding:6px; border-radius:8px; }
+
+/* Affiliate Toggle Button */
+#affiliateToggle { 
+  position:fixed; bottom:20px; right:340px; background:#000; color:#ffa500; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; 
+}
+
+/* Page Socials at bottom */
+.page-socials { position:fixed; bottom:20px; left:20px; display:flex; gap:6px; z-index:1000; }
+.social-btn { width:30px; height:30px; background:#000; color:#fff; border:none; border-radius:50%; font-weight:bold; cursor:pointer; font-size:14px; line-height:28px; text-align:center; }
+.social-btn:hover { opacity:0.8; }
+</style>
+</head>
+<body>
+
+<h1>My Product Wall</h1>
+<div class="grid" id="wallGrid"></div>
+
+<!-- Affiliate Toggle Button -->
+<button id="affiliateToggle">Affiliate</button>
+
+<!-- Affiliate Pop-Up -->
+<div id="affiliatePopup">
+  <h2>🔑 Affiliate Activation</h2>
+  <input type="text" id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
+  <input type="text" id="temuAffiliate" placeholder="Temu tag">
+  <input type="text" id="lazadaAffiliate" placeholder="Lazada tag">
+  <input type="text" id="aliexpressAffiliate" placeholder="AliExpress tag">
+  <button id="saveAffiliate">Activate</button>
+  <div id="affiliateOutput" style="margin-top:6px;font-size:12px;color:#ffa500;"></div>
+</div>
+
+<!-- Page Social Media Buttons -->
+<div class="page-socials">
+  <button class="social-btn" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')" title="F @linkbotlabs">F</button>
+  <button class="social-btn" onclick="window.open('https://x.com/@linkbotlabs','_blank')" title="X @linkbotlabs">X</button>
+  <button class="social-btn" onclick="window.open('https://tiktok.com/@linkbotlabs','_blank')" title="Tik @linkbotlabs">T</button>
+  <button class="social-btn" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')" title="YT @linkbotlabs">Y</button>
+</div>
+
+<script>
+// ===== Product Wall =====
+const wallGrid = document.getElementById("wallGrid");
+function renderWall(){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  wallGrid.innerHTML = "";
+  wall.forEach((item,idx)=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerHTML = `
+      ${item.thumb?`<img src="${item.thumb}" onclick="expandItem(${idx})">`:""}
+      <div style="font-size:12px;margin-top:4px;"><strong>${item.title}</strong></div>
+      <a href="${buildAffiliateLink(item.link)}" target="_blank" style="color:#ffa500;font-size:12px;text-decoration:none;">Click to Buy</a><br>
+      <button onclick="addToWall(${idx})">Add to Wall</button>
+      <button onclick="removeItem(${idx})">Remove</button>
+    `;
+    wallGrid.appendChild(div);
+  });
+}
+function removeItem(idx){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  wall.splice(idx,1);
+  localStorage.setItem("productWall", JSON.stringify(wall));
+  renderWall();
+}
+function expandItem(idx){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  const item = wall[idx];
+  alert(`Title: ${item.title}\nLink: ${item.link}`);
+}
+function addToWall(idx){
+  const item = JSON.parse(localStorage.getItem("productWall")||"[]")[idx];
+  // Already in wall logic optional
+  renderWall();
+}
+renderWall();
+
+// ===== Affiliate Handling =====
+const popup = document.getElementById("affiliatePopup");
+const toggleBtn = document.getElementById("affiliateToggle");
+toggleBtn.addEventListener("click",()=>{ 
+  popup.style.display = (popup.style.display==="block")?"none":"block"; 
+});
+
+// Save Affiliate Tags
+document.getElementById("saveAffiliate").addEventListener("click",()=>{
+  const amazon = document.getElementById("amazonAffiliate").value.trim();
+  const temu = document.getElementById("temuAffiliate").value.trim();
+  const lazada = document.getElementById("lazadaAffiliate").value.trim();
+  const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
+  const tags = { amazon, temu, lazada, aliexpress };
+  localStorage.setItem('userAffiliateTags', JSON.stringify(tags));
+  document.getElementById("affiliateOutput").innerText = `✅ Tags saved!\nAmazon: ${amazon}\nTemu: ${temu}\nLazada: ${lazada}\nAliExpress: ${aliexpress}`;
+});
+
+function buildAffiliateLink(originalLink){
+  const tags = JSON.parse(localStorage.getItem('userAffiliateTags')||"{}");
+  if(originalLink.includes("amazon.com")) return tags.amazon?originalLink+(originalLink.includes("?")?"&":"?")+"tag="+tags.amazon:originalLink;
+  if(originalLink.includes("temu.com")) return tags.temu?originalLink+(originalLink.includes("?")?"&":"?")+"aff_id="+tags.temu:originalLink;
+  if(originalLink.includes("lazada.co.th")) return tags.lazada?originalLink+(originalLink.includes("?")?"&":"?")+"spm="+tags.lazada:originalLink;
+  if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
+  return originalLink;
+}
+</script>
+</body>
+</html>
