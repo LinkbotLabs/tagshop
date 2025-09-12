@@ -1,6 +1,6 @@
 name: Deploy Tagshop to GitHub Pages
 
-# Trigger on push to main or manual trigger
+# Trigger workflow manually or on push to main
 on:
   workflow_dispatch:
   push:
@@ -12,18 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
+      # 1. Checkout repository without using default GITHUB_TOKEN credentials
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false  # <-- ensures only your PAT is used
 
       # 2. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.TAGSHOP_TOKEN }}   # <-- must match secret name
-          publish_dir: ./                              # deploy root folder
-          force_orphan: true                           # overwrite gh-pages branch
+          github_token: ${{ secrets.TAGSHOP_TOKEN }}  # <-- must match your secret
+          publish_dir: ./                             # deploy everything in repo root
+          force_orphan: true                          # overwrite gh-pages branch
 
-      # 3. Confirmation
+      # 3. Optional confirmation message
       - name: Deployment completed
         run: echo "✅ Tagshop site deployed to GitHub Pages!"
