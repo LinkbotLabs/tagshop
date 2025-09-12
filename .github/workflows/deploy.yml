@@ -1,23 +1,29 @@
-name: Deploy Static Site to GitHub Pages
+name: Deploy Tagshop to GitHub Pages
 
+# Trigger the workflow manually or on push to main
 on:
-  workflow_dispatch:   # allows manual trigger
+  workflow_dispatch:
   push:
     branches:
-      - main           # deploys automatically on push to main (optional)
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # 1. Checkout repository
+      # 1. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Deploy to GitHub Pages
+      # 2. Set up GitHub Pages deployment
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./      # deploy everything in repo root
-          force_orphan: true   # overwrite gh-pages branch
+          github_token: ${{ secrets.TAGSHOP_TOKEN }}   # Use your secret here
+          publish_dir: ./                              # deploy everything in repo root
+          force_orphan: true                           # overwrite gh-pages branch
+
+      # 3. Optional: Confirm deployment
+      - name: Deployment completed
+        run: echo "Tagshop site deployed to GitHub Pages!"
