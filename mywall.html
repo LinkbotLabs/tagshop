@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tagshop wall – tagshop</title>
+<title>Tagshop Wall – Tagshop</title>
 <link rel="stylesheet" href="uniform-dark-glass.css">
 <style>
 body { background:#000; color:#fff; font-family:system-ui; padding:20px; }
@@ -37,7 +37,7 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
 </head>
 <body>
 
-<h1>My Product Wall</h1>
+<h1 id="wallTitle">Tagshop</h1>
 <div class="grid" id="wallGrid"></div>
 
 <!-- Affiliate Toggle Button -->
@@ -94,7 +94,6 @@ function expandItem(idx){
 }
 function addToWall(idx){
   const item = JSON.parse(localStorage.getItem("productWall")||"[]")[idx];
-  // Already in wall logic optional
   renderWall();
 }
 renderWall();
@@ -125,6 +124,10 @@ function buildAffiliateLink(originalLink){
   if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
   return originalLink;
 }
+
+// ===== Update page title dynamically (optional) =====
+document.getElementById("wallTitle").innerText = "Tagshop";
+
 </script>
 </body>
 </html>
