@@ -1,31 +1,24 @@
-name: Deploy Tagshop to GitHub Pages (Incremental)
+name: Deploy Tagshop to GitHub Pages
 
 on:
-  workflow_dispatch:       # manual trigger
+  workflow_dispatch:
   push:
     branches:
-      - main              # automatic deploy on push to main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository without default credentials
+      # Checkout repository normally
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false  # ensures only TAGSHOP_TOKEN is used
 
-      # 2. Deploy changed files to GitHub Pages
-      - name: Deploy to GitHub Pages Incrementally
+      # Deploy to GitHub Pages using your PAT
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.TAGSHOP_TOKEN }}   # <-- your secret
-          publish_dir: ./                              # root folder
-          keep_files: true                             # only update changed files
-          commit_message: "Update Tagshop site [ci skip]"
-
-      # 3. Optional confirmation
-      - name: Deployment completed
-        run: echo "✅ Tagshop site deployed with only changed files!"
+          github_token: ${{ secrets.TAGSHOP_TOKEN }}  # use your secret
+          publish_dir: ./                             # root folder
+          force_orphan: true                          # overwrite gh-pages branch
