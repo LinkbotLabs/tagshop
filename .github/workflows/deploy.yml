@@ -1,0 +1,23 @@
+name: Deploy Static Site to GitHub Pages
+
+on:
+  workflow_dispatch:   # allows manual trigger
+  push:
+    branches:
+      - main           # deploys automatically on push to main (optional)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./      # deploy everything in repo root
+          force_orphan: true   # overwrite gh-pages branch
