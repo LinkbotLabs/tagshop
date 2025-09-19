@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="uniform-dark-glass.css">
 <style>
 body { background:#000; color:#fff; font-family:system-ui; padding:20px; }
-h1{text-align:center;margin-bottom:20px;}
+h1{text-align:center;margin-bottom:10px;}
+#affiliateIdDisplay { text-align:center; font-weight:bold; color:#ff9900; text-shadow: 0 0 8px #ff9900; margin-bottom:10px; font-size:16px; }
 .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
 .card { background: rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
 .card img { max-width:100%; border-radius:6px; cursor:pointer; transition:0.3s; }
@@ -33,11 +34,16 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
 .page-socials { position:fixed; bottom:20px; left:20px; display:flex; gap:6px; z-index:1000; }
 .social-btn { width:30px; height:30px; background:#000; color:#fff; border:none; border-radius:50%; font-weight:bold; cursor:pointer; font-size:14px; line-height:28px; text-align:center; }
 .social-btn:hover { opacity:0.8; }
+
+/* Visitor count display */
+#visitorCount { position:fixed; top:20px; right:20px; color:#0ff; font-weight:bold; font-size:14px; }
 </style>
 </head>
 <body>
 
 <h1 id="wallTitle">Tagshop</h1>
+<div id="affiliateIdDisplay"></div>
+<div id="visitorCount">Visitors: 0</div>
 <div class="grid" id="wallGrid"></div>
 
 <!-- Affiliate Toggle Button -->
@@ -63,6 +69,33 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
 </div>
 
 <script>
+// ===== Visitor Count =====
+let visitors = parseInt(localStorage.getItem("visitorCount")||"0") + 1;
+localStorage.setItem("visitorCount", visitors);
+document.getElementById("visitorCount").innerText = "Visitors: " + visitors;
+
+// ===== Affiliate Handling =====
+const popup = document.getElementById("affiliatePopup");
+const toggleBtn = document.getElementById("affiliateToggle");
+toggleBtn.addEventListener("click",()=>{ 
+  popup.style.display = (popup.style.display==="block")?"none":"block"; 
+});
+
+// Save Affiliate Tags
+document.getElementById("saveAffiliate").addEventListener("click",()=>{
+  const amazon = document.getElementById("amazonAffiliate").value.trim();
+  const temu = document.getElementById("temuAffiliate").value.trim();
+  const lazada = document.getElementById("lazadaAffiliate").value.trim();
+  const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
+  const tags = { amazon, temu, lazada, aliexpress };
+  localStorage.setItem('userAffiliateTags', JSON.stringify(tags));
+  document.getElementById("affiliateOutput").innerText = `✅ Tags saved!\nAmazon: ${amazon}\nTemu: ${temu}\nLazada: ${lazada}\nAliExpress: ${aliexpress}`;
+
+  // Display first non-empty affiliate ID at top
+  const firstId = amazon || temu || lazada || aliexpress;
+  document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: " + firstId;
+});
+
 // ===== Product Wall =====
 const wallGrid = document.getElementById("wallGrid");
 function renderWall(){
@@ -92,30 +125,52 @@ function expandItem(idx){
   const item = wall[idx];
   alert(`Title: ${item.title}\nLink: ${item.link}`);
 }
+
 function addToWall(idx){
-  const item = JSON.parse(localStorage.getItem("productWall")||"[]")[idx];
+  let wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  
+  // Check 10-item limit
+  if(wall.length >= 10 && !localStorage.getItem("wallUnlocked")){
+    // Show Wise payment overlay
+    const popupDiv = document.createElement("div");
+    popupDiv.style.position="fixed";
+    popupDiv.style.top="50%";
+    popupDiv.style.left="50%";
+    popupDiv.style.transform="translate(-50%,-50%)";
+    popupDiv.style.background="rgba(0,0,0,0.95)";
+    popupDiv.style.color="#fff";
+    popupDiv.style.padding="20px";
+    popupDiv.style.border="2px solid #00FFFF";
+    popupDiv.style.borderRadius="12px";
+    popupDiv.style.zIndex=9999;
+    popupDiv.innerHTML = `
+      ⚠️ You have added 10 items!<br>
+      To continue, please support the developer:<br>
+      <a href="https://wise.com/pay/me/davids14542" target="_blank" style="color:#00FFFF; font-weight:bold;">Pay via Wise</a><br><br>
+      <input type="password" id="unlockPassword" placeholder="Enter password to continue" style="width:100%;padding:6px;border-radius:6px;margin-top:6px;">
+      <button id="unlockBtn" style="margin-top:6px;padding:6px 12px;border-radius:6px;background:#00FFFF;color:#000;cursor:pointer;">Unlock</button>
+    `;
+    document.body.appendChild(popupDiv);
+
+    document.getElementById("unlockBtn").onclick = ()=>{
+      const val = document.getElementById("unlockPassword").value;
+      if(val === "tagshopme"){
+        localStorage.setItem("wallUnlocked","true");
+        alert("Wall unlocked! You can continue adding items.");
+        popupDiv.remove();
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+    return;
+  }
+
   renderWall();
 }
+
 renderWall();
 
-// ===== Affiliate Handling =====
-const popup = document.getElementById("affiliatePopup");
-const toggleBtn = document.getElementById("affiliateToggle");
-toggleBtn.addEventListener("click",()=>{ 
-  popup.style.display = (popup.style.display==="block")?"none":"block"; 
-});
-
-// Save Affiliate Tags
-document.getElementById("saveAffiliate").addEventListener("click",()=>{
-  const amazon = document.getElementById("amazonAffiliate").value.trim();
-  const temu = document.getElementById("temuAffiliate").value.trim();
-  const lazada = document.getElementById("lazadaAffiliate").value.trim();
-  const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
-  const tags = { amazon, temu, lazada, aliexpress };
-  localStorage.setItem('userAffiliateTags', JSON.stringify(tags));
-  document.getElementById("affiliateOutput").innerText = `✅ Tags saved!\nAmazon: ${amazon}\nTemu: ${temu}\nLazada: ${lazada}\nAliExpress: ${aliexpress}`;
-});
-
+// ===== Build Affiliate Link =====
 function buildAffiliateLink(originalLink){
   const tags = JSON.parse(localStorage.getItem('userAffiliateTags')||"{}");
   if(originalLink.includes("amazon.com")) return tags.amazon?originalLink+(originalLink.includes("?")?"&":"?")+"tag="+tags.amazon:originalLink;
@@ -124,9 +179,6 @@ function buildAffiliateLink(originalLink){
   if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
   return originalLink;
 }
-
-// ===== Update page title dynamically (optional) =====
-document.getElementById("wallTitle").innerText = "Tagshop";
 
 </script>
 </body>
