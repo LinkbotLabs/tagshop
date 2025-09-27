@@ -1,15 +1,20 @@
 /* ---------------- ROOT VARIABLES ---------------- */
+/* ---------------- ROOT VARIABLES ---------------- */
 :root {
   --bg-black: #0d0d0d;
   --glass-bg: rgba(0, 0, 0, 0.85);
   --glass-border: rgba(255, 255, 255, 0.1);
   --muted: #c9d1d9;
+
   --accent: #58a6ff;       /* blue */
   --accent-strong: #1f6feb; /* strong blue */
   --warning: #ff7b72;      /* orange/red */
   --success: #3fb950;      /* green */
-  --purple: #d2a8ff;
-  --yellow: #f9e2af;
+  --purple: #5a189a;       /* deep purple for logo */
+  --yellow: #ffd60a;       /* bright yellow for search/save */
+  --chat-ai: var(--success);
+  --chat-user: var(--warning);
+
   --skyblue: #56d4ff;
   --radius-md: 12px;
   --shadow-soft: 0 4px 20px rgba(0,0,0,0.5);
@@ -20,6 +25,52 @@
   --glass-day-bg: rgba(255, 255, 255, 0.85);
   --code-font: "Fira Code", monospace;
 }
+
+/* ---------------- LOGO ---------------- */
+.logo-banner {
+  max-width: 100px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  filter: drop-shadow(0 0 8px var(--purple));
+}
+
+/* ---------------- SEARCH + SAVE TO WALL ---------------- */
+.search-box,
+.save-to-wall {
+  color: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.search-box input,
+.save-to-wall button {
+  background: transparent;
+  color: var(--yellow);
+  border: 1px solid var(--yellow);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+}
+
+/* ---------------- CHAT BUBBLES ---------------- */
+.chat-ai {
+  background: color-mix(in srgb, var(--chat-ai) 20%, transparent);
+  border-left: 4px solid var(--chat-ai);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin: 8px 0;
+  color: var(--color-white);
+}
+
+.chat-user {
+  background: color-mix(in srgb, var(--chat-user) 20%, transparent);
+  border-left: 4px solid var(--chat-user);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin: 8px 0;
+  color: var(--color-white);
+}
+
 
 /* ---------------- FULL SCREEN & BODY ---------------- */
 html, body {
