@@ -1,17 +1,16 @@
 /* ---------------- ROOT VARIABLES ---------------- */
-/* ---------------- ROOT VARIABLES ---------------- */
 :root {
   --bg-black: #0d0d0d;
   --glass-bg: rgba(0, 0, 0, 0.85);
   --glass-border: rgba(255, 255, 255, 0.1);
   --muted: #c9d1d9;
 
-  --accent: #58a6ff;       /* blue */
+  --accent: #58a6ff;        /* blue */
   --accent-strong: #1f6feb; /* strong blue */
-  --warning: #ff7b72;      /* orange/red */
-  --success: #3fb950;      /* green */
-  --purple: #5a189a;       /* deep purple for logo */
-  --yellow: #ffd60a;       /* bright yellow for search/save */
+  --warning: #ff7b72;       /* orange/red */
+  --success: #3fb950;       /* green */
+  --purple: #5a189a;        /* deep purple for logo */
+  --yellow: #ffd60a;        /* bright yellow for search/save */
   --chat-ai: var(--success);
   --chat-user: var(--warning);
 
@@ -71,7 +70,6 @@
   color: var(--color-white);
 }
 
-
 /* ---------------- FULL SCREEN & BODY ---------------- */
 html, body {
   height: 100%;
@@ -113,15 +111,6 @@ a:hover {
 
 body.day-mode a {
   color: #1a73e8;
-}
-
-/* ---------------- LOGO ---------------- */
-.logo-banner {
-  max-width: 100px;
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 
 }
 
 /* ---------------- GLASS PANELS ---------------- */
