@@ -69,6 +69,24 @@
   <div class="output" id="console-log" style="display:none;"></div>
 </div>
 
+<!-- Floating "My Wall" Button -->
+<button onclick="window.location.href='mywall.html'" style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#000;
+  color:#ffe169;
+  border:none;
+  border-radius:16px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+  z-index:1000;
+  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
+">
+🧱 My Wall
+</button>
+
 <script src="https://js.puter.com/v2/"></script>
 <script>
 /* ---------- KEYS ---------- */
@@ -200,24 +218,6 @@ document.getElementById("toggle-log").addEventListener("click", ()=>{
   const el = document.getElementById("console-log");
   el.style.display = el.style.display==="none"?"block":"none";
 });
-  <!-- Floating "My Wall" Button -->
-<button onclick="window.location.href='mywall.html'" style="
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#000;
-  color:#ffe169;
-  border:none;
-  border-radius:16px;
-  padding:10px 14px;
-  font-weight:700;
-  cursor:pointer;
-  z-index:1000;
-  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
-">
-🧱 My Wall
-</button>
-
 </script>
 </body>
 </html>
