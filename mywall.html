@@ -179,6 +179,24 @@ function buildAffiliateLink(originalLink){
   if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
   return originalLink;
 }
+  <!-- Floating Home Button -->
+<button onclick="window.location.href='index.html'" style="
+  position:fixed;
+  bottom:20px;
+  right:120px;
+  background:#000;
+  color:#ffe169;
+  border:none;
+  border-radius:16px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+  z-index:1000;
+  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
+">
+🏠 Home
+</button>
+
 
 </script>
 </body>
