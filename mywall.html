@@ -37,6 +37,22 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
 
 /* Visitor count display */
 #visitorCount { position:fixed; top:20px; right:20px; color:#0ff; font-weight:bold; font-size:14px; }
+
+/* Floating Home Button */
+#homeBtn {
+  position:fixed;
+  bottom:20px;
+  right:120px;
+  background:#000;
+  color:#ffe169;
+  border:none;
+  border-radius:16px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+  z-index:1000;
+  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
+}
 </style>
 </head>
 <body>
@@ -67,6 +83,9 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
   <button class="social-btn" onclick="window.open('https://tiktok.com/@linkbotlabs','_blank')" title="Tik @linkbotlabs">T</button>
   <button class="social-btn" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')" title="YT @linkbotlabs">Y</button>
 </div>
+
+<!-- Floating Home Button -->
+<button id="homeBtn" onclick="window.location.href='index.html'">🏠 Home</button>
 
 <script>
 // ===== Visitor Count =====
@@ -179,25 +198,6 @@ function buildAffiliateLink(originalLink){
   if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
   return originalLink;
 }
-  <!-- Floating Home Button -->
-<button onclick="window.location.href='index.html'" style="
-  position:fixed;
-  bottom:20px;
-  right:120px;
-  background:#000;
-  color:#ffe169;
-  border:none;
-  border-radius:16px;
-  padding:10px 14px;
-  font-weight:700;
-  cursor:pointer;
-  z-index:1000;
-  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
-">
-🏠 Home
-</button>
-
-
 </script>
 </body>
 </html>
