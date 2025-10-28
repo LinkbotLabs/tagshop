@@ -1,225 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>💎 Tagshop Affiliate Wall – Build, Share & Earn</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagshop Wall – Tagshop</title>
+<link rel="stylesheet" href="uniform-dark-glass.css">
 <style>
-:root{
-  --glass-bg: rgba(10,10,12,0.55);
-  --glass-border: rgba(255,165,0,0.12);
-  --accent: #00FFFF;
-  --accent-2: #ffa500;
-  --muted: #c9d1d9;
+body { background:#000; color:#fff; font-family:system-ui; padding:20px; }
+h1{text-align:center;margin-bottom:10px;}
+#affiliateIdDisplay { text-align:center; font-weight:bold; color:#ff9900; text-shadow: 0 0 8px #ff9900; margin-bottom:10px; font-size:16px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+.card { background: rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
+.card img { max-width:100%; border-radius:6px; cursor:pointer; transition:0.3s; }
+.card img:hover { transform: scale(1.05); }
+button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cursor:pointer; color:#000; font-weight:700; padding:4px 8px; font-size:12px; }
+
+/* Affiliate Pop-Up */
+#affiliatePopup {
+  position:fixed; bottom:20px; right:20px; width:300px; max-width:90%;
+  background: rgba(0,0,0,0.95); backdrop-filter: blur(12px);
+  border:1px solid #ffa500; border-radius:16px; padding:16px; z-index:999;
+  color:#fff; display:none; box-shadow:0 4px 20px rgba(0,0,0,0.6);
 }
-html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:#000;color:#fff}
-.wrap{max-width:1100px;margin:18px auto;padding:18px}
-h1{margin:6px 0 14px 0;text-align:center;font-weight:700}
-.glass{background: var(--glass-bg);backdrop-filter: blur(10px);border: 1px solid var(--glass-border);border-radius:12px;padding:18px}
-.banner{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;margin-bottom:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
-.banner h2{margin:0;font-size:18px;color:var(--accent-2)}
-.columns{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:12px}
-.benefits{font-size:14px;line-height:1.45;color:var(--muted)}
-.benefits ul{padding-left:18px;margin:8px 0}
-.qr-block{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,165,0,0.06)}
-.pay-btn{display:inline-block;padding:10px 12px;border-radius:10px;background:var(--accent);color:#000;font-weight:800;text-decoration:none}
-.muted{color:var(--muted);font-size:13px}
-#affiliateToggle{position:fixed;right:340px;bottom:20px;background:#000;color:var(--accent-2);border:none;padding:10px 14px;border-radius:16px;cursor:pointer;z-index:1000;font-weight:700}
-.page-socials{position:fixed;left:20px;bottom:20px;display:flex;gap:8px;z-index:1000}
-.social-btn{width:34px;height:34px;border-radius:50%;background:#000;border:1px solid rgba(255,255,255,0.04);color:#fff;font-weight:700;cursor:pointer}
-#visitorCount{position:fixed;right:20px;top:20px;color:var(--accent);font-weight:800;z-index:1000}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:18px}
-.card{background:var(--glass-bg);border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.03);text-align:center}
-.card img{width:100%;border-radius:6px;display:block;margin:0 auto 8px;cursor:pointer}
-.card .title{font-size:13px;color:#fff;font-weight:700}
-.card a{color:var(--accent-2);text-decoration:none;font-size:12px;display:inline-block;margin-top:6px}
-#affiliatePopup{position:fixed;right:18px;bottom:18px;width:340px;padding:14px;background:var(--glass-bg);border-radius:12px;border:1px solid rgba(255,165,0,0.08);z-index:1500;display:none}
-#affiliatePopup h4{margin:0 0 8px 0;color:var(--accent-2)}
-#affiliatePopup input{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:6px;background:transparent;color:#fff}
-#affiliatePopup .save-btn{margin-top:8px;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:800;cursor:pointer;width:100%}
-.share-area{margin-top:10px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
-.share-area input{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:#0ff}
-@media (max-width:920px){ .columns{grid-template-columns:1fr} #affiliateToggle{right:140px} }
+#affiliatePopup h2 { color:#ffa500; font-size:16px; margin:0 0 10px 0; text-align:center; }
+#affiliatePopup input, #affiliatePopup button { margin:4px 0; font-size:12px; width:100%; padding:6px; border-radius:8px; }
+
+/* Affiliate Toggle Button */
+#affiliateToggle { 
+  position:fixed; bottom:20px; right:340px; background:#000; color:#ffa500; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; 
+}
+
+/* Page Socials at bottom */
+.page-socials { position:fixed; bottom:20px; left:20px; display:flex; gap:6px; z-index:1000; }
+.social-btn { width:30px; height:30px; background:#000; color:#fff; border:none; border-radius:50%; font-weight:bold; cursor:pointer; font-size:14px; line-height:28px; text-align:center; }
+.social-btn:hover { opacity:0.8; }
+
+/* Visitor count display */
+#visitorCount { position:fixed; top:20px; right:20px; color:#0ff; font-weight:bold; font-size:14px; }
+
+/* Floating Home Button */
+#homeBtn {
+  position:fixed;
+  bottom:20px;
+  right:120px;
+  background:#000;
+  color:#ffe169;
+  border:none;
+  border-radius:16px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+  z-index:1000;
+  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
+}
 </style>
 </head>
 <body>
+
+<h1 id="wallTitle">Tagshop</h1>
+<div id="affiliateIdDisplay"></div>
 <div id="visitorCount">Visitors: 0</div>
-<div class="wrap">
-<h1>💎 Tagshop Affiliate Wall – Build, Share & Earn</h1>
-<div class="glass">
-  <div class="banner">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,0.6))">
-      <rect width="24" height="24" rx="6" fill="#001219"></rect>
-      <path d="M12 6v12M6 12h12" stroke="#00FFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <div>
-      <h2>💎 Tagshop Affiliate Wall – Build, Share & Earn</h2>
-      <div class="muted">Auto-attaches affiliate tags. Monetize traffic fast and share walls with followers.</div>
-    </div>
-  </div>
-  <div class="columns">
-    <div>
-      <h3 style="margin-top:0;color:var(--accent-2)">How Tagshop Works</h3>
-      <div class="benefits">
-        <p>Create a wall of products (Amazon, Temu, Lazada, AliExpress). Links automatically include affiliate tags.</p>
-        <ul>
-          <li><strong>Instant monetization:</strong> Default affiliate tags until unlock.</li>
-          <li><strong>Shareable walls:</strong> Copy personalized share links.</li>
-          <li><strong>Straightforward activation:</strong> One-time payment + unlock code.</li>
-          <li><strong>Simple marketing growth:</strong> Influencers can share your wall.</li>
-        </ul>
-      </div>
-    </div>
-    <div>
-      <div class="qr-block">
-        <div style="font-weight:800;color:var(--accent-2)">Activate Tagshop — One-time</div>
-        <div class="muted" style="font-size:13px;text-align:center">Pay via Wise to unlock full affiliate features</div>
-        <img id="mainQR" alt="Wise Pay QR" style="width:220px;height:220px;border-radius:8px;background:#050505;border:1px solid rgba(255,255,255,0.02)">
-        <a id="wiseLink" class="pay-btn" href="#" target="_blank">💳 Pay via Wise</a>
-        <div class="small-muted" style="text-align:center;margin-top:8px">After payment, enter password: <strong>Tagshopme</strong></div>
-        <input id="topUnlockInput" placeholder="Enter unlock password" style="margin-top:10px;">
-        <button id="topUnlockBtn">Unlock</button>
-        <div id="topUnlockMsg" class="small-muted"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div style="margin-top:10px;text-align:center">
-  <div id="affiliateIdDisplay" style="font-weight:800;color:var(--accent-2)">Affiliate ID: mychannelds-20</div>
-</div>
-<div class="grid" id="wallGrid" aria-live="polite"></div>
-</div>
+<div class="grid" id="wallGrid"></div>
 
+<!-- Affiliate Toggle Button -->
 <button id="affiliateToggle">Affiliate</button>
-<div id="affiliatePopup" role="dialog" aria-hidden="true">
-<h4>🔑 Affiliate Activation</h4>
-<div class="muted" style="font-size:13px">Enter your tags after activation</div>
-<input id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
-<input id="temuAffiliate" placeholder="Temu tag">
-<input id="lazadaAffiliate" placeholder="Lazada tag">
-<input id="aliexpressAffiliate" placeholder="AliExpress tag">
-<button id="saveAffiliate" class="save-btn">Save My Affiliate Tags</button>
-<div id="affiliateOutput" style="margin-top:10px;color:var(--accent-2);font-weight:700"></div>
-<div id="shareBlock" class="share-area" style="display:none">
-  <div style="font-size:13px;color:var(--muted);margin-bottom:6px">🔗 My Tagshop Share Link</div>
-  <input id="shareLinkInput" readonly>
-  <div style="display:flex;gap:8px;margin-top:8px">
-    <button id="copyShareBtn" style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;cursor:pointer">Copy Link</button>
-    <button id="tweetShareBtn" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;cursor:pointer">Share</button>
-  </div>
-</div>
+
+<!-- Affiliate Pop-Up -->
+<div id="affiliatePopup">
+  <h2>🔑 Affiliate Activation</h2>
+  <input type="text" id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
+  <input type="text" id="temuAffiliate" placeholder="Temu tag">
+  <input type="text" id="lazadaAffiliate" placeholder="Lazada tag">
+  <input type="text" id="aliexpressAffiliate" placeholder="AliExpress tag">
+  <button id="saveAffiliate">Activate</button>
+  <div id="affiliateOutput" style="margin-top:6px;font-size:12px;color:#ffa500;"></div>
 </div>
 
+<!-- Page Social Media Buttons -->
 <div class="page-socials">
-  <button class="social-btn" title="Facebook" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')">F</button>
-  <button class="social-btn" title="X" onclick="window.open('https://x.com/@linkbotlabs','_blank')">X</button>
-  <button class="social-btn" title="TikTok" onclick="window.open('https://tiktok.com/@linkbotlabs','_blank')">T</button>
-  <button class="social-btn" title="YouTube" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')">Y</button>
+  <button class="social-btn" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')" title="F @linkbotlabs">F</button>
+  <button class="social-btn" onclick="window.open('https://x.com/@linkbotlabs','_blank')" title="X @linkbotlabs">X</button>
+  <button class="social-btn" onclick="window.open('https://tiktok.com/@linkbotlabs','_blank')" title="Tik @linkbotlabs">T</button>
+  <button class="social-btn" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')" title="YT @linkbotlabs">Y</button>
 </div>
+
+<!-- Floating Home Button -->
+<button id="homeBtn" onclick="window.location.href='index.html'">🏠 Home</button>
 
 <script>
-// ===== CONFIG =====
-const WISE_LINK="https://wise.com/pay/me/davids14542";
-const UNLOCK_PASSWORD="Tagshopme";
-const DEV_TAGS={amazon:"mychannelds-20",temu:"mychannelds",lazada:"mychannelds",aliexpress:"mychannelds"};
-const demoProducts=[
-  {title:"Amazon Headphones",link:"https://www.amazon.com/dp/example1",thumb:"https://via.placeholder.com/260x180?text=Headphones"},
-  {title:"Temu Lamp",link:"https://www.temu.com/item/example2",thumb:"https://via.placeholder.com/260x180?text=Lamp"},
-  {title:"Lazada Bag",link:"https://www.lazada.co.th/products/example3",thumb:"https://via.placeholder.com/260x180?text=Bag"},
-  {title:"AliExpress Watch",link:"https://www.aliexpress.com/item/example4",thumb:"https://via.placeholder.com/260x180?text=Watch"}
-];
+// ===== Visitor Count =====
+let visitors = parseInt(localStorage.getItem("visitorCount")||"0") + 1;
+localStorage.setItem("visitorCount", visitors);
+document.getElementById("visitorCount").innerText = "Visitors: " + visitors;
 
-// ===== Visitor counter =====
-let visitors=parseInt(localStorage.getItem("visitorCount")||"0")+1;
-localStorage.setItem("visitorCount",visitors);
-document.getElementById("visitorCount").innerText="Visitors: "+visitors;
-
-// ===== QR Code =====
-document.getElementById("mainQR").src="https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl="+encodeURIComponent(WISE_LINK)+"&chld=L|1";
-document.getElementById("wiseLink").href=WISE_LINK;
-
-// ===== Affiliate Utilities =====
-function buildAffiliateLink(link,tags){
-  if(link.includes("amazon.com")) return link+(link.includes("?")?"&":"?")+"tag="+encodeURIComponent(tags.amazon||DEV_TAGS.amazon);
-  if(link.includes("temu.com")) return link+(link.includes("?")?"&":"?")+"aff_id="+encodeURIComponent(tags.temu||DEV_TAGS.temu);
-  if(link.includes("lazada") && (link.includes(".lazada.")||link.includes("lazada.co"))) return link+(link.includes("?")?"&":"?")+"spm="+encodeURIComponent(tags.lazada||DEV_TAGS.lazada);
-  if(link.includes("aliexpress.com")) return link+(link.includes("?")?"&":"?")+"aff_fcid="+encodeURIComponent(tags.aliexpress||DEV_TAGS.aliexpress);
-  return link;
-}
-function renderWall(){
-  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
-  const grid=document.getElementById("wallGrid");
-  grid.innerHTML="";
-  demoProducts.forEach(item=>{
-    const div=document.createElement("div");
-    div.className="card";
-    div.innerHTML=`<img src="${item.thumb}" alt="${item.title}"><div class="title">${item.title}</div><a href="${buildAffiliateLink(item.link,tags)}" target="_blank" rel="noopener">Click to Buy</a>`;
-    grid.appendChild(div);
-  });
-  updateAffiliateIdDisplay();
-}
-function updateAffiliateIdDisplay(){
-  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
-  const display=tags.amazon||DEV_TAGS.amazon;
-  document.getElementById("affiliateIdDisplay").innerText="Affiliate ID: "+display;
-}
-
-// ===== Unlock Logic =====
-document.getElementById("topUnlockBtn").addEventListener("click",()=>{
-  const val=document.getElementById("topUnlockInput").value.trim();
-  const msg=document.getElementById("topUnlockMsg");
-  if(val===UNLOCK_PASSWORD){
-    localStorage.setItem("wallUnlocked","true");
-    msg.innerText="✅ Unlocked. You can save affiliate tags now.";
-    document.getElementById("topUnlockInput").disabled=true;
-    document.getElementById("topUnlockBtn").disabled=true;
-    openAffiliatePopup();
-    renderWall();
-  } else msg.innerText="❌ Incorrect password.";
+// ===== Affiliate Handling =====
+const popup = document.getElementById("affiliatePopup");
+const toggleBtn = document.getElementById("affiliateToggle");
+toggleBtn.addEventListener("click",()=>{ 
+  popup.style.display = (popup.style.display==="block")?"none":"block"; 
 });
 
-// ===== Affiliate Popup =====
-const affiliateToggle=document.getElementById("affiliateToggle");
-const affiliatePopup=document.getElementById("affiliatePopup");
-affiliateToggle.addEventListener("click",()=>{ affiliatePopup.style.display=affiliatePopup.style.display==="block"?"none":"block"; });
-function openAffiliatePopup(){
-  affiliatePopup.style.display="block";
-  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
-  document.getElementById("amazonAffiliate").value=tags.amazon||"";
-  document.getElementById("temuAffiliate").value=tags.temu||"";
-  document.getElementById("lazadaAffiliate").value=tags.lazada||"";
-  document.getElementById("aliexpressAffiliate").value=tags.aliexpress||"";
-}
-
-// ===== Save Tags =====
+// Save Affiliate Tags
 document.getElementById("saveAffiliate").addEventListener("click",()=>{
-  const tags={
-    amazon:document.getElementById("amazonAffiliate").value.trim()||DEV_TAGS.amazon,
-    temu:document.getElementById("temuAffiliate").value.trim()||DEV_TAGS.temu,
-    lazada:document.getElementById("lazadaAffiliate").value.trim()||DEV_TAGS.lazada,
-    aliexpress:document.getElementById("aliexpressAffiliate").value.trim()||DEV_TAGS.aliexpress
-  };
-  localStorage.setItem("myTags",JSON.stringify(tags));
-  document.getElementById("affiliateOutput").innerText="✅ Tags saved!";
-  document.getElementById("shareBlock").style.display="block";
-  const shareUrl=window.location.href+"?ref="+tags.amazon;
-  document.getElementById("shareLinkInput").value=shareUrl;
+  const amazon = document.getElementById("amazonAffiliate").value.trim();
+  const temu = document.getElementById("temuAffiliate").value.trim();
+  const lazada = document.getElementById("lazadaAffiliate").value.trim();
+  const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
+  const tags = { amazon, temu, lazada, aliexpress };
+  localStorage.setItem('userAffiliateTags', JSON.stringify(tags));
+  document.getElementById("affiliateOutput").innerText = `✅ Tags saved!\nAmazon: ${amazon}\nTemu: ${temu}\nLazada: ${lazada}\nAliExpress: ${aliexpress}`;
+
+  // Display first non-empty affiliate ID at top
+  const firstId = amazon || temu || lazada || aliexpress;
+  document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: " + firstId;
+});
+
+// ===== Product Wall =====
+const wallGrid = document.getElementById("wallGrid");
+function renderWall(){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  wallGrid.innerHTML = "";
+  wall.forEach((item,idx)=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerHTML = `
+      ${item.thumb?`<img src="${item.thumb}" onclick="expandItem(${idx})">`:""}
+      <div style="font-size:12px;margin-top:4px;"><strong>${item.title}</strong></div>
+      <a href="${buildAffiliateLink(item.link)}" target="_blank" style="color:#ffa500;font-size:12px;text-decoration:none;">Click to Buy</a><br>
+      <button onclick="addToWall(${idx})">Add to Wall</button>
+      <button onclick="removeItem(${idx})">Remove</button>
+    `;
+    wallGrid.appendChild(div);
+  });
+}
+function removeItem(idx){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  wall.splice(idx,1);
+  localStorage.setItem("productWall", JSON.stringify(wall));
   renderWall();
-});
+}
+function expandItem(idx){
+  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  const item = wall[idx];
+  alert(`Title: ${item.title}\nLink: ${item.link}`);
+}
 
-// ===== Share Buttons =====
-document.getElementById("copyShareBtn").addEventListener("click",()=>{
-  document.getElementById("shareLinkInput").select();
-  document.execCommand("copy");
-  alert("Link copied!");
-});
-document.getElementById("tweetShareBtn").addEventListener("click",()=>{
-  const url=encodeURIComponent(document.getElementById("shareLinkInput").value);
-  window.open(`https://twitter.com/intent/tweet?url=${url}`,"_blank");
-});
+function addToWall(idx){
+  let wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+  
+  // Check 10-item limit
+  if(wall.length >= 10 && !localStorage.getItem("wallUnlocked")){
+    // Show Wise payment overlay
+    const popupDiv = document.createElement("div");
+    popupDiv.style.position="fixed";
+    popupDiv.style.top="50%";
+    popupDiv.style.left="50%";
+    popupDiv.style.transform="translate(-50%,-50%)";
+    popupDiv.style.background="rgba(0,0,0,0.95)";
+    popupDiv.style.color="#fff";
+    popupDiv.style.padding="20px";
+    popupDiv.style.border="2px solid #00FFFF";
+    popupDiv.style.borderRadius="12px";
+    popupDiv.style.zIndex=9999;
+    popupDiv.innerHTML = `
+      ⚠️ You have added 10 items!<br>
+      To continue, please support the developer:<br>
+      <a href="https://wise.com/pay/me/davids14542" target="_blank" style="color:#00FFFF; font-weight:bold;">Pay via Wise</a><br><br>
+      <input type="password" id="unlockPassword" placeholder="Enter password to continue" style="width:100%;padding:6px;border-radius:6px;margin-top:6px;">
+      <button id="unlockBtn" style="margin-top:6px;padding:6px 12px;border-radius:6px;background:#00FFFF;color:#000;cursor:pointer;">Unlock</button>
+    `;
+    document.body.appendChild(popupDiv);
 
-// ===== Initial render =====
+    document.getElementById("unlockBtn").onclick = ()=>{
+      const val = document.getElementById("unlockPassword").value;
+      if(val === "tagshopme"){
+        localStorage.setItem("wallUnlocked","true");
+        alert("Wall unlocked! You can continue adding items.");
+        popupDiv.remove();
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+    return;
+  }
+
+  renderWall();
+}
+
 renderWall();
+
+// ===== Build Affiliate Link =====
+function buildAffiliateLink(originalLink){
+  const tags = JSON.parse(localStorage.getItem('userAffiliateTags')||"{}");
+  if(originalLink.includes("amazon.com")) return tags.amazon?originalLink+(originalLink.includes("?")?"&":"?")+"tag="+tags.amazon:originalLink;
+  if(originalLink.includes("temu.com")) return tags.temu?originalLink+(originalLink.includes("?")?"&":"?")+"aff_id="+tags.temu:originalLink;
+  if(originalLink.includes("lazada.co.th")) return tags.lazada?originalLink+(originalLink.includes("?")?"&":"?")+"spm="+tags.lazada:originalLink;
+  if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
+  return originalLink;
+}
 </script>
 </body>
 </html>
