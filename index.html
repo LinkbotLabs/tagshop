@@ -69,6 +69,100 @@
   <div class="output" id="console-log" style="display:none;"></div>
 </div>
 
+<!-- AFFILIATE NOTICE + SUPPORT LINKS WITH QR CODE MODAL -->
+<div class="card" style="
+  background: linear-gradient(135deg, #ffe169, #ff5f6d);
+  color: #000;
+  text-align: center;
+  font-weight: 700;
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 30px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.6);
+">
+  <h2 style="margin-bottom: 10px;">Affiliate Partners 🌟</h2>
+  <p style="font-size:15px; margin-bottom:16px; line-height:1.6;">
+    If you are an affiliate of 
+    <strong>Amazon</strong>, <strong>Temu</strong>, <strong>AliExpress</strong>, 
+    <strong>DHgate</strong>, or <strong>Lazada</strong> — use this tool to <br>
+    <span style="background:#000; color:#ffe169; padding:3px 8px; border-radius:6px;">
+      build and showcase your shop!
+    </span>
+  </p>
+
+  <!-- Support Buttons -->
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-top:12px;">
+    <a href="https://www.buymeacoffee.com/yourusername" target="_blank" style="
+      display:inline-block;
+      background:#000;
+      color:#ffe169;
+      padding:12px 20px;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      box-shadow:0 0 8px rgba(0,0,0,0.4);
+      transition:all 0.3s;
+    " onmouseover="this.style.background='#ffe169'; this.style.color='#000';" onmouseout="this.style.background='#000'; this.style.color='#ffe169';">
+      ☕ Buy Me a Coffee
+    </a>
+
+    <a href="https://wise.com/pay/me/davids14542" target="_blank" style="
+      display:inline-block;
+      background:#1fc27e;
+      color:#000;
+      padding:12px 20px;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      box-shadow:0 0 8px rgba(0,0,0,0.4);
+      transition:all 0.3s;
+    " onmouseover="this.style.background='#000'; this.style.color='#1fc27e';" onmouseout="this.style.background='#1fc27e'; this.style.color='#000';">
+      💸 Support via Wise
+    </a>
+  </div>
+
+  <!-- QR Code Section -->
+  <div style="margin-top:20px;">
+    <p style="font-size:13px; margin-bottom:6px;">Scan to pay with Wise 👇</p>
+    <img 
+      src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://wise.com/pay/me/davids14542" 
+      alt="Wise Payment QR Code" 
+      id="wiseQR"
+      style="border-radius:10px; border:2px solid #000; box-shadow:0 0 6px rgba(0,0,0,0.5); background:#fff; padding:4px; cursor:pointer;"
+      title="Click to enlarge"
+    >
+  </div>
+</div>
+
+<!-- QR CODE POPUP MODAL -->
+<div id="qrModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+">
+  <div style="position:relative; text-align:center;">
+    <span id="closeQR" style="
+      position:absolute;
+      top:-40px; right:-10px;
+      font-size:28px;
+      font-weight:bold;
+      color:#ffe169;
+      cursor:pointer;
+    ">&times;</span>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https://wise.com/pay/me/davids14542" 
+         alt="Wise Payment QR Code Large"
+         style="border-radius:10px; border:3px solid #ffe169; background:#fff; padding:6px; box-shadow:0 0 12px rgba(255,255,255,0.6);">
+    <p style="color:#ffe169; margin-top:10px; font-size:14px;">Scan to support via Wise 💚</p>
+  </div>
+</div>
+
 <!-- Floating "My Wall" Button -->
 <button onclick="window.location.href='mywall.html'" style="
   position:fixed;
@@ -218,6 +312,15 @@ document.getElementById("toggle-log").addEventListener("click", ()=>{
   const el = document.getElementById("console-log");
   el.style.display = el.style.display==="none"?"block":"none";
 });
+
+/* ---------- QR MODAL ---------- */
+const qrImg = document.getElementById("wiseQR");
+const modal = document.getElementById("qrModal");
+const closeQR = document.getElementById("closeQR");
+
+qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
+closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
+modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
 </script>
 </body>
 </html>
