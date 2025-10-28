@@ -1,183 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>💎 Tagshop Affiliate Wall – Build, Share & Earn</title>
-<link rel="stylesheet" href="uniform-dark-glass.css">
 <style>
-  :root{
-    --glass-bg: rgba(10,10,12,0.55);
-    --glass-border: rgba(255,165,0,0.12);
-    --accent: #00FFFF;
-    --accent-2: #ffa500;
-    --muted: #c9d1d9;
-  }
-  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:#000;color:#fff}
-  .wrap{max-width:1100px;margin:18px auto;padding:18px}
-  h1{margin:6px 0 14px 0;text-align:center;font-weight:700}
-  /* Glass info box */
-  .glass {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius:12px;
-    padding:18px;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.6);
-  }
-  .banner {
-    display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;margin-bottom:10px;
-    background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.02);
-  }
-  .banner h2{margin:0;font-size:18px;color:var(--accent-2)}
-  .columns{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:12px}
-  .benefits{font-size:14px;line-height:1.45;color:var(--muted)}
-  .benefits ul{padding-left:18px;margin:8px 0}
-  .qr-block{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,165,0,0.06)}
-  .pay-btn{display:inline-block;padding:10px 12px;border-radius:10px;background:var(--accent);color:#000;font-weight:800;text-decoration:none}
-  .muted{color:var(--muted);font-size:13px}
-  /* Affiliate popup button */
-  #affiliateToggle{position:fixed;right:340px;bottom:20px;background:#000;color:var(--accent-2);border:none;padding:10px 14px;border-radius:16px;cursor:pointer;z-index:1000;font-weight:700}
-  .page-socials{position:fixed;left:20px;bottom:20px;display:flex;gap:8px;z-index:1000}
-  .social-btn{width:34px;height:34px;border-radius:50%;background:#000;border:1px solid rgba(255,255,255,0.04);color:#fff;font-weight:700;cursor:pointer}
-  #visitorCount{position:fixed;right:20px;top:20px;color:var(--accent);font-weight:800;z-index:1000}
-  /* Wall grid */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:18px}
-  .card{background:var(--glass-bg);border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.03);text-align:center}
-  .card img{width:100%;border-radius:6px;display:block;margin:0 auto 8px;cursor:pointer}
-  .card .title{font-size:13px;color:#fff;font-weight:700}
-  .card a{color:var(--accent-2);text-decoration:none;font-size:12px;display:inline-block;margin-top:6px}
-  /* Activation overlay (full-screen) */
-  .overlay {
-    position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.85),rgba(0,0,0,0.9));z-index:2000;
-    display:flex;align-items:center;justify-content:center;padding:18px;
-  }
-  .overlay .panel{
-    width:920px;max-width:98%;border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(8px);
-    border:2px solid rgba(255,165,0,0.08);box-shadow:0 8px 40px rgba(0,0,0,0.7);display:flex;gap:18px;
-  }
-  .overlay .left{flex:1}
-  .overlay .right{width:320px}
-  .overlay h3{margin:0 0 8px 0;color:var(--accent-2)}
-  .overlay p{color:var(--muted);font-size:13px}
-  .overlay input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);margin-top:8px;background:transparent;color:#fff}
-  .overlay button{width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:800;margin-top:8px;cursor:pointer}
-  .small-muted{font-size:12px;color:var(--muted);margin-top:8px}
-  .glow {
-    box-shadow: 0 0 18px rgba(255,165,0,0.14), inset 0 -4px 20px rgba(0,0,0,0.3);
-    border-radius:12px;border:1px solid rgba(255,165,0,0.12);
-  }
-  /* Affiliate popup (bottom right) */
-  #affiliatePopup{position:fixed;right:18px;bottom:18px;width:340px;padding:14px;background:var(--glass-bg);border-radius:12px;border:1px solid rgba(255,165,0,0.08);z-index:1500;display:none}
-  #affiliatePopup h4{margin:0 0 8px 0;color:var(--accent-2)}
-  #affiliatePopup input{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:6px;background:transparent;color:#fff}
-  #affiliatePopup .save-btn{margin-top:8px;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:800;cursor:pointer;width:100%}
-  /* Share link area */
-  .share-area{margin-top:10px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
-  .share-area input{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:#0ff}
-  @media (max-width:920px){ .columns{grid-template-columns:1fr} .overlay .panel{flex-direction:column} #affiliateToggle{right:140px} }
+:root{
+  --glass-bg: rgba(10,10,12,0.55);
+  --glass-border: rgba(255,165,0,0.12);
+  --accent: #00FFFF;
+  --accent-2: #ffa500;
+  --muted: #c9d1d9;
+}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:#000;color:#fff}
+.wrap{max-width:1100px;margin:18px auto;padding:18px}
+h1{margin:6px 0 14px 0;text-align:center;font-weight:700}
+.glass{background: var(--glass-bg);backdrop-filter: blur(10px);border: 1px solid var(--glass-border);border-radius:12px;padding:18px}
+.banner{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;margin-bottom:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
+.banner h2{margin:0;font-size:18px;color:var(--accent-2)}
+.columns{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:12px}
+.benefits{font-size:14px;line-height:1.45;color:var(--muted)}
+.benefits ul{padding-left:18px;margin:8px 0}
+.qr-block{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,165,0,0.06)}
+.pay-btn{display:inline-block;padding:10px 12px;border-radius:10px;background:var(--accent);color:#000;font-weight:800;text-decoration:none}
+.muted{color:var(--muted);font-size:13px}
+#affiliateToggle{position:fixed;right:340px;bottom:20px;background:#000;color:var(--accent-2);border:none;padding:10px 14px;border-radius:16px;cursor:pointer;z-index:1000;font-weight:700}
+.page-socials{position:fixed;left:20px;bottom:20px;display:flex;gap:8px;z-index:1000}
+.social-btn{width:34px;height:34px;border-radius:50%;background:#000;border:1px solid rgba(255,255,255,0.04);color:#fff;font-weight:700;cursor:pointer}
+#visitorCount{position:fixed;right:20px;top:20px;color:var(--accent);font-weight:800;z-index:1000}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:18px}
+.card{background:var(--glass-bg);border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.03);text-align:center}
+.card img{width:100%;border-radius:6px;display:block;margin:0 auto 8px;cursor:pointer}
+.card .title{font-size:13px;color:#fff;font-weight:700}
+.card a{color:var(--accent-2);text-decoration:none;font-size:12px;display:inline-block;margin-top:6px}
+#affiliatePopup{position:fixed;right:18px;bottom:18px;width:340px;padding:14px;background:var(--glass-bg);border-radius:12px;border:1px solid rgba(255,165,0,0.08);z-index:1500;display:none}
+#affiliatePopup h4{margin:0 0 8px 0;color:var(--accent-2)}
+#affiliatePopup input{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:6px;background:transparent;color:#fff}
+#affiliatePopup .save-btn{margin-top:8px;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:800;cursor:pointer;width:100%}
+.share-area{margin-top:10px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+.share-area input{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:#0ff}
+@media (max-width:920px){ .columns{grid-template-columns:1fr} #affiliateToggle{right:140px} }
 </style>
 </head>
 <body>
 <div id="visitorCount">Visitors: 0</div>
-
 <div class="wrap">
-  <h1>💎 Tagshop Affiliate Wall – Build, Share & Earn</h1>
-
-  <!-- Info glass box -->
-  <div class="glass">
-    <div class="banner">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,0.6))">
-        <rect width="24" height="24" rx="6" fill="#001219"></rect>
-        <path d="M12 6v12M6 12h12" stroke="#00FFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div>
-        <h2>💎 Tagshop Affiliate Wall – Build, Share & Earn</h2>
-        <div class="muted">A simple visual product wall that auto-attaches affiliate tags. Monetize traffic fast and share walls with followers.</div>
+<h1>💎 Tagshop Affiliate Wall – Build, Share & Earn</h1>
+<div class="glass">
+  <div class="banner">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,0.6))">
+      <rect width="24" height="24" rx="6" fill="#001219"></rect>
+      <path d="M12 6v12M6 12h12" stroke="#00FFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <h2>💎 Tagshop Affiliate Wall – Build, Share & Earn</h2>
+      <div class="muted">Auto-attaches affiliate tags. Monetize traffic fast and share walls with followers.</div>
+    </div>
+  </div>
+  <div class="columns">
+    <div>
+      <h3 style="margin-top:0;color:var(--accent-2)">How Tagshop Works</h3>
+      <div class="benefits">
+        <p>Create a wall of products (Amazon, Temu, Lazada, AliExpress). Links automatically include affiliate tags.</p>
+        <ul>
+          <li><strong>Instant monetization:</strong> Default affiliate tags until unlock.</li>
+          <li><strong>Shareable walls:</strong> Copy personalized share links.</li>
+          <li><strong>Straightforward activation:</strong> One-time payment + unlock code.</li>
+          <li><strong>Simple marketing growth:</strong> Influencers can share your wall.</li>
+        </ul>
       </div>
     </div>
-
-    <div class="columns">
-      <div>
-        <h3 style="margin-top:0;color:var(--accent-2)">How Tagshop Works</h3>
-        <div class="benefits">
-          <p>Tagshop lets you create a shareable wall of products (Amazon, Temu, Lazada, AliExpress). Each product link will automatically include an affiliate tag so you earn commissions when people buy. Activation is one-time — after that you can add your own affiliate tags and generate a personalized share link to bring traffic and track referrals.</p>
-          <h4 style="margin-bottom:6px;color:var(--accent-2)">Benefits</h4>
-          <ul>
-            <li><strong>Instant monetization:</strong> Your visitors click buy and your affiliate tag (default: <strong>mychannelds-20</strong>) is used until they activate.</li>
-            <li><strong>Shareable walls:</strong> Copy a personalized share link to social channels — every new visitor can be tracked by referrer.</li>
-            <li><strong>Straightforward activation:</strong> One-time Wise payment + unlock code (you provide) to enable user tags.</li>
-            <li><strong>Simple marketing growth:</strong> Give influencers a share link, they drive purchases and you keep commissions until they upgrade.</li>
-          </ul>
-
-          <h4 style="margin-top:8px;color:var(--accent-2)">How to Use (Step-by-step)</h4>
-          <ol style="padding-left:18px;color:var(--muted);font-size:14px;line-height:1.45">
-            <li>Open Tagshop. You will see the product wall and the activation panel.</li>
-            <li>Scan the Wise QR or click Pay → complete one-time payment.</li>
-            <li>Enter the unlock password in the activation box.</li>
-            <li>After unlocking, enter your affiliate tags (Amazon, Temu, Lazada, AliExpress) in the Affiliate panel.</li>
-            <li>Copy your personal share link and post to social channels — new visitors will be marked as referred by you.</li>
-          </ol>
-
-          <p class="small-muted">Note: Until a visitor unlocks, clicks use the developer default affiliate tags so the product continues earning for the developer.</p>
-        </div>
-      </div>
-
-      <!-- Right column: Payment + QR -->
-      <div>
-        <div class="qr-block glow">
-          <div style="font-weight:800;color:var(--accent-2)">Activate Tagshop — One-time</div>
-          <div class="muted" style="font-size:13px;text-align:center">Pay via Wise to unlock full affiliate features</div>
-
-          <!-- QR image (uses Google Chart API to create QR on the fly) -->
-          <img id="mainQR" alt="Wise Pay QR" style="width:220px;height:220px;border-radius:8px;background:#050505;border:1px solid rgba(255,255,255,0.02)">
-
-          <a id="wiseLink" class="pay-btn" href="https://wise.com/pay/me/davids14542" target="_blank">💳 Pay via Wise</a>
-          <div class="small-muted" style="text-align:center;margin-top:8px">After payment, enter the unlock password: <strong>Tagshopme</strong></div>
-
-          <input id="topUnlockInput" placeholder="Enter unlock password" style="margin-top:10px;">
-          <button id="topUnlockBtn">Unlock</button>
-          <div id="topUnlockMsg" class="small-muted"></div>
-        </div>
+    <div>
+      <div class="qr-block">
+        <div style="font-weight:800;color:var(--accent-2)">Activate Tagshop — One-time</div>
+        <div class="muted" style="font-size:13px;text-align:center">Pay via Wise to unlock full affiliate features</div>
+        <img id="mainQR" alt="Wise Pay QR" style="width:220px;height:220px;border-radius:8px;background:#050505;border:1px solid rgba(255,255,255,0.02)">
+        <a id="wiseLink" class="pay-btn" href="#" target="_blank">💳 Pay via Wise</a>
+        <div class="small-muted" style="text-align:center;margin-top:8px">After payment, enter password: <strong>Tagshopme</strong></div>
+        <input id="topUnlockInput" placeholder="Enter unlock password" style="margin-top:10px;">
+        <button id="topUnlockBtn">Unlock</button>
+        <div id="topUnlockMsg" class="small-muted"></div>
       </div>
     </div>
   </div>
-
-  <!-- affiliate ID display (default developer id until unlock) -->
-  <div style="margin-top:10px;text-align:center">
-    <div id="affiliateIdDisplay" style="font-weight:800;color:var(--accent-2);text-shadow:0 0 8px rgba(255,165,0,0.08)">Affiliate ID: mychannelds-20</div>
-  </div>
-
-  <!-- Product wall -->
-  <div class="grid" id="wallGrid" aria-live="polite"></div>
+</div>
+<div style="margin-top:10px;text-align:center">
+  <div id="affiliateIdDisplay" style="font-weight:800;color:var(--accent-2)">Affiliate ID: mychannelds-20</div>
+</div>
+<div class="grid" id="wallGrid" aria-live="polite"></div>
 </div>
 
-<!-- Affiliate toggle & popup -->
 <button id="affiliateToggle">Affiliate</button>
-
 <div id="affiliatePopup" role="dialog" aria-hidden="true">
-  <h4>🔑 Affiliate Activation</h4>
-  <div class="muted" style="font-size:13px">Enter your tags after activation (unlock required)</div>
-  <input id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
-  <input id="temuAffiliate" placeholder="Temu tag">
-  <input id="lazadaAffiliate" placeholder="Lazada tag">
-  <input id="aliexpressAffiliate" placeholder="AliExpress tag">
-  <button id="saveAffiliate" class="save-btn">Save My Affiliate Tags</button>
-
-  <div id="affiliateOutput" style="margin-top:10px;color:var(--accent-2);font-weight:700"></div>
-
-  <div id="shareBlock" class="share-area" style="display:none">
-    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">🔗 My Tagshop Share Link</div>
-    <input id="shareLinkInput" readonly>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button id="copyShareBtn" style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;cursor:pointer">Copy Link</button>
-      <button id="tweetShareBtn" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;cursor:pointer">Share</button>
-    </div>
+<h4>🔑 Affiliate Activation</h4>
+<div class="muted" style="font-size:13px">Enter your tags after activation</div>
+<input id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
+<input id="temuAffiliate" placeholder="Temu tag">
+<input id="lazadaAffiliate" placeholder="Lazada tag">
+<input id="aliexpressAffiliate" placeholder="AliExpress tag">
+<button id="saveAffiliate" class="save-btn">Save My Affiliate Tags</button>
+<div id="affiliateOutput" style="margin-top:10px;color:var(--accent-2);font-weight:700"></div>
+<div id="shareBlock" class="share-area" style="display:none">
+  <div style="font-size:13px;color:var(--muted);margin-bottom:6px">🔗 My Tagshop Share Link</div>
+  <input id="shareLinkInput" readonly>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button id="copyShareBtn" style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#000;cursor:pointer">Copy Link</button>
+    <button id="tweetShareBtn" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;cursor:pointer">Share</button>
   </div>
 </div>
+</div>
 
-<!-- Socials -->
 <div class="page-socials">
   <button class="social-btn" title="Facebook" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')">F</button>
   <button class="social-btn" title="X" onclick="window.open('https://x.com/@linkbotlabs','_blank')">X</button>
@@ -186,241 +118,108 @@
 </div>
 
 <script>
-/* =========================
-   CONFIG & DEFAULT VALUES
-   ========================= */
-const WISE_LINK = "https://wise.com/pay/me/davids14542";
-const UNLOCK_PASSWORD = "Tagshopme"; // was missing value      // as requested
-const DEV_TAGS = {
-  amazon: "mychannelds-20",
-  temu: "mychannelds",
-  lazada: "mychannelds",
-  aliexpress: "mychannelds"
-};
-/* ========================= */
-
-/* Visitor count */
-let visitors = parseInt(localStorage.getItem("visitorCount")||"0") + 1;
-localStorage.setItem("visitorCount", visitors);
-document.getElementById("visitorCount").innerText = "Visitors: " + visitors;
-
-/* Set Wise links & QR image */
-document.getElementById("wiseLink").href = WISE_LINK;
-/* Use Google Chart API to render QR on the fly (browser will request it) */
-const qrSrc = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" + encodeURIComponent(WISE_LINK) + "&chld=L|1";
-document.getElementById("mainQR").src = qrSrc;
-
-/* ===== Activation overlay logic (immediate requirement) ===== */
-/* Show activation overlay on first load if not unlocked */
-function ensureActivationUI(){
-  if(localStorage.getItem("wallUnlocked")==="true"){
-    // unlocked - hide top messages
-    document.getElementById("topUnlockMsg").innerText = "✅ Activated";
-    updateAffiliateIdDisplay();
-    return;
-  }
-  // not unlocked: make sure users know they must activate.
-  document.getElementById("topUnlockMsg").innerText = "🔒 Activation required to use your own affiliate tags. Until unlock, clicks use developer IDs.";
-}
-ensureActivationUI();
-
-/* Unlock from top panel */
-document.getElementById("topUnlockBtn").addEventListener("click", ()=>{
-  const val = document.getElementById("topUnlockInput").value.trim();
-  if(!val){ document.getElementById("topUnlockMsg").innerText = "Please enter the unlock password after payment."; return; }
-  if(val === UNLOCK_PASSWORD){
-    localStorage.setItem("wallUnlocked","true");
-    localStorage.setItem("unlockTimestamp", new Date().toISOString());
-    document.getElementById("topUnlockMsg").innerText = "✅ Unlocked. Now you can save your affiliate tags.";
-    updateAffiliateIdDisplay();
-    // show affiliate popup so user can save tags
-    setTimeout(()=>{ openAffiliatePopup(); }, 700);
-  } else {
-    document.getElementById("topUnlockMsg").innerText = "❌ Incorrect password. Please complete payment and try again.";
-  }
-});
-
-/* Affiliate popup show/hide */
-const affiliateToggle = document.getElementById("affiliateToggle");
-const affiliatePopup = document.getElementById("affiliatePopup");
-affiliateToggle.addEventListener("click", ()=>{
-  // if not unlocked, open activation reminder (scroll to top) and show overlay message
-  if(localStorage.getItem("wallUnlocked") !== "true"){
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById("topUnlockMsg").innerText = "🔒 Please pay (Wise) and enter unlock password to use your tags.";
-    // still allow them to open the popup but emphasize they must unlock first
-  }
-  affiliatePopup.style.display = affiliatePopup.style.display === "block" ? "none" : "block";
-});
-function openAffiliatePopup(){ affiliatePopup.style.display = "block"; }
-
-/* Save affiliate tags - only applied if unlocked */
-document.getElementById("saveAffiliate").addEventListener("click", ()=>{
-  if(localStorage.getItem("wallUnlocked") !== "true"){
-    document.getElementById("affiliateOutput").innerText = "🔒 Unlock required before saving tags.";
-    return;
-  }
-  const tags = {
-    amazon: document.getElementById("amazonAffiliate").value.trim(),
-    temu: document.getElementById("temuAffiliate").value.trim(),
-    lazada: document.getElementById("lazadaAffiliate").value.trim(),
-    aliexpress: document.getElementById("aliexpressAffiliate").value.trim()
-  };
-  localStorage.setItem("userAffiliateTags", JSON.stringify(tags));
-  document.getElementById("affiliateOutput").innerText = "✅ Tags saved!";
-  updateAffiliateIdDisplay();
-  buildAndShowShareLink(tags);
-});
-
-/* Display affiliate ID (developer or user's if unlocked) */
-function updateAffiliateIdDisplay(){
-  const unlocked = localStorage.getItem("wallUnlocked") === "true";
-  if(unlocked){
-    const userTags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
-    const firstId = userTags.amazon || userTags.temu || userTags.lazada || userTags.aliexpress;
-    if(firstId){
-      document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: " + firstId + " (Your tag)";
-      return;
-    } else {
-      document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: (unlocked — add your tag)";
-      return;
-    }
-  }
-  // not unlocked: show dev id
-  document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: " + DEV_TAGS.amazon;
-}
-
-/* Build & show share link when user saves tags */
-function buildAndShowShareLink(tags){
-  const firstId = tags.amazon || tags.temu || tags.lazada || tags.aliexpress;
-  if(!firstId) return;
-  const shareLink = `${location.origin}${location.pathname}?ref=${encodeURIComponent(firstId)}`;
-  document.getElementById("shareBlock").style.display = "block";
-  document.getElementById("shareLinkInput").value = shareLink;
-  document.getElementById("copyShareBtn").onclick = ()=>{ navigator.clipboard.writeText(shareLink).then(()=>alert("Copied your Tagshop share link!")); };
-  document.getElementById("tweetShareBtn").onclick = ()=>{ window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Check my Tagshop wall: "+shareLink)}`,"_blank"); };
-}
-
-/* Referral handling: show "Referred by" if user arrived with ?ref=someone */
-(function handleReferrer(){
-  const params = new URLSearchParams(location.search);
-  const ref = params.get("ref");
-  if(ref){
-    localStorage.setItem("referrerID", ref);
-  }
-  const savedRef = localStorage.getItem("referrerID");
-  if(savedRef){
-    const node = document.createElement("div");
-    node.style.textAlign = "center";
-    node.style.color = "#0ff";
-    node.style.marginTop = "10px";
-    node.style.fontWeight = "700";
-    node.innerText = "👥 Referred by: " + savedRef;
-    document.querySelector(".wrap").insertBefore(node, document.querySelector(".wrap").children[1]);
-    // Save ref visits count optionally (not implemented server-side)
-  }
-})();
-
-/* Product wall (demo products). You can replace productWall in localStorage or via admin UI */
-const demoProducts = [
-  { title: "Example Amazon Headphones", link: "https://www.amazon.com/dp/example1", thumb: "https://via.placeholder.com/260x180?text=Headphones" },
-  { title: "Example Temu Lamp", link: "https://www.temu.com/item/example2", thumb: "https://via.placeholder.com/260x180?text=Lamp" },
-  { title: "Example Lazada Bag", link: "https://www.lazada.co.th/products/example3", thumb: "https://via.placeholder.com/260x180?text=Bag" },
-  { title: "Example AliExpress Watch", link: "https://www.aliexpress.com/item/example4", thumb: "https://via.placeholder.com/260x180?text=Watch" }
+// ===== CONFIG =====
+const WISE_LINK="https://wise.com/pay/me/davids14542";
+const UNLOCK_PASSWORD="Tagshopme";
+const DEV_TAGS={amazon:"mychannelds-20",temu:"mychannelds",lazada:"mychannelds",aliexpress:"mychannelds"};
+const demoProducts=[
+  {title:"Amazon Headphones",link:"https://www.amazon.com/dp/example1",thumb:"https://via.placeholder.com/260x180?text=Headphones"},
+  {title:"Temu Lamp",link:"https://www.temu.com/item/example2",thumb:"https://via.placeholder.com/260x180?text=Lamp"},
+  {title:"Lazada Bag",link:"https://www.lazada.co.th/products/example3",thumb:"https://via.placeholder.com/260x180?text=Bag"},
+  {title:"AliExpress Watch",link:"https://www.aliexpress.com/item/example4",thumb:"https://via.placeholder.com/260x180?text=Watch"}
 ];
-if(!localStorage.getItem("productWall")) localStorage.setItem("productWall", JSON.stringify(demoProducts));
 
+// ===== Visitor counter =====
+let visitors=parseInt(localStorage.getItem("visitorCount")||"0")+1;
+localStorage.setItem("visitorCount",visitors);
+document.getElementById("visitorCount").innerText="Visitors: "+visitors;
+
+// ===== QR Code =====
+document.getElementById("mainQR").src="https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl="+encodeURIComponent(WISE_LINK)+"&chld=L|1";
+document.getElementById("wiseLink").href=WISE_LINK;
+
+// ===== Affiliate Utilities =====
+function buildAffiliateLink(link,tags){
+  if(link.includes("amazon.com")) return link+(link.includes("?")?"&":"?")+"tag="+encodeURIComponent(tags.amazon||DEV_TAGS.amazon);
+  if(link.includes("temu.com")) return link+(link.includes("?")?"&":"?")+"aff_id="+encodeURIComponent(tags.temu||DEV_TAGS.temu);
+  if(link.includes("lazada") && (link.includes(".lazada.")||link.includes("lazada.co"))) return link+(link.includes("?")?"&":"?")+"spm="+encodeURIComponent(tags.lazada||DEV_TAGS.lazada);
+  if(link.includes("aliexpress.com")) return link+(link.includes("?")?"&":"?")+"aff_fcid="+encodeURIComponent(tags.aliexpress||DEV_TAGS.aliexpress);
+  return link;
+}
 function renderWall(){
-  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
-  const grid = document.getElementById("wallGrid");
-  grid.innerHTML = "";
-  wall.forEach((item, idx) => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerHTML = `
-      <img alt="${escapeHtml(item.title)}" src="${item.thumb}">
-      <div class="title">${escapeHtml(item.title)}</div>
-      <a href="${buildAffiliateLink(item.link)}" target="_blank" rel="noopener">Click to Buy</a>
-    `;
-    grid.appendChild(el);
+  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
+  const grid=document.getElementById("wallGrid");
+  grid.innerHTML="";
+  demoProducts.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`<img src="${item.thumb}" alt="${item.title}"><div class="title">${item.title}</div><a href="${buildAffiliateLink(item.link,tags)}" target="_blank" rel="noopener">Click to Buy</a>`;
+    grid.appendChild(div);
   });
   updateAffiliateIdDisplay();
 }
-renderWall();
-
-/* Build affiliate link: uses DEV_TAGS until unlocked; after unlock uses user's tags */
-function buildAffiliateLink(originalLink){
-  const unlocked = localStorage.getItem("wallUnlocked") === "true";
-  const userTags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
-  const tags = unlocked ? userTags : DEV_TAGS;
-
-  try {
-    if(originalLink.includes("amazon.com")) return originalLink + (originalLink.includes("?") ? "&" : "?") + "tag=" + encodeURIComponent(tags.amazon || DEV_TAGS.amazon);
-    if(originalLink.includes("temu.com")) return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_id=" + encodeURIComponent(tags.temu || DEV_TAGS.temu);
-    if(originalLink.includes("lazada") && (originalLink.includes(".lazada.") || originalLink.includes("lazada.co"))) return originalLink + (originalLink.includes("?") ? "&" : "?") + "spm=" + encodeURIComponent(tags.lazada || DEV_TAGS.lazada);
-    if(originalLink.includes("aliexpress.com")) return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_fcid=" + encodeURIComponent(tags.aliexpress || DEV_TAGS.aliexpress);
-  } catch(e){
-    // fallback
-  }
-  return originalLink;
+function updateAffiliateIdDisplay(){
+  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
+  const display=tags.amazon||DEV_TAGS.amazon;
+  document.getElementById("affiliateIdDisplay").innerText="Affiliate ID: "+display;
 }
 
-/* Utility to escape HTML */
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m];}); }
-
-/* Update affiliate ID display initially */
-updateAffiliateIdDisplay();
-
-/* If unlocked previously but user hasn't saved tags, remind them */
-if(localStorage.getItem("wallUnlocked")==="true" && !localStorage.getItem("userAffiliateTags")){
-  // open popup to prompt tag entry
-  setTimeout(()=>{ openAffiliatePopup(); }, 900);
-}
-
-/* Make QR appear also inside the affiliate popup for convenience (when they open it) */
-affiliateToggle.addEventListener("click", ()=>{
-  // append QR inside popup if not already present
-  if(affiliatePopup.style.display === "block"){
-    // ensure QR inside popup (small)
-    if(!document.getElementById("popupQR")){
-      const img = document.createElement("img");
-      img.id = "popupQR";
-      img.src = qrSrc;
-      img.style.width = "220px";
-      img.style.display = "block";
-      img.style.margin = "12px auto";
-      img.style.borderRadius = "8px";
-      affiliatePopup.appendChild(img);
-
-      const payLink = document.createElement("a");
-      payLink.href = WISE_LINK;
-      payLink.target = "_blank";
-      payLink.className = "pay-btn";
-      payLink.style.display = "block";
-      payLink.style.textAlign = "center";
-      payLink.style.marginTop = "8px";
-      payLink.innerText = "💳 Pay via Wise";
-      affiliatePopup.appendChild(payLink);
-    }
-  }
+// ===== Unlock Logic =====
+document.getElementById("topUnlockBtn").addEventListener("click",()=>{
+  const val=document.getElementById("topUnlockInput").value.trim();
+  const msg=document.getElementById("topUnlockMsg");
+  if(val===UNLOCK_PASSWORD){
+    localStorage.setItem("wallUnlocked","true");
+    msg.innerText="✅ Unlocked. You can save affiliate tags now.";
+    document.getElementById("topUnlockInput").disabled=true;
+    document.getElementById("topUnlockBtn").disabled=true;
+    openAffiliatePopup();
+    renderWall();
+  } else msg.innerText="❌ Incorrect password.";
 });
 
-/* Also allow unlocking via URL param ?unlock=Tagshopme for convenience if you generate unique codes */
-(function tryAutoUnlockFromUrl(){
-  const p = new URLSearchParams(location.search);
-  const u = p.get("unlock");
-  if(u && u === UNLOCK_PASSWORD){
-    localStorage.setItem("wallUnlocked","true");
-    document.getElementById("topUnlockMsg").innerText = "✅ Unlocked via unlock param.";
-    updateAffiliateIdDisplay();
-  }
-})();
+// ===== Affiliate Popup =====
+const affiliateToggle=document.getElementById("affiliateToggle");
+const affiliatePopup=document.getElementById("affiliatePopup");
+affiliateToggle.addEventListener("click",()=>{ affiliatePopup.style.display=affiliatePopup.style.display==="block"?"none":"block"; });
+function openAffiliatePopup(){
+  affiliatePopup.style.display="block";
+  const tags=JSON.parse(localStorage.getItem("myTags")||"{}");
+  document.getElementById("amazonAffiliate").value=tags.amazon||"";
+  document.getElementById("temuAffiliate").value=tags.temu||"";
+  document.getElementById("lazadaAffiliate").value=tags.lazada||"";
+  document.getElementById("aliexpressAffiliate").value=tags.aliexpress||"";
+}
 
-/* Expose a simple admin reset in console for testing (optional) */
-window._tagshop = {
-  reset: ()=>{ localStorage.removeItem("wallUnlocked"); localStorage.removeItem("userAffiliateTags"); localStorage.removeItem("referrerID"); localStorage.removeItem("productWall"); localStorage.removeItem("visitorCount"); alert("Tagshop local storage cleared (reload page)."); }
-};
+// ===== Save Tags =====
+document.getElementById("saveAffiliate").addEventListener("click",()=>{
+  const tags={
+    amazon:document.getElementById("amazonAffiliate").value.trim()||DEV_TAGS.amazon,
+    temu:document.getElementById("temuAffiliate").value.trim()||DEV_TAGS.temu,
+    lazada:document.getElementById("lazadaAffiliate").value.trim()||DEV_TAGS.lazada,
+    aliexpress:document.getElementById("aliexpressAffiliate").value.trim()||DEV_TAGS.aliexpress
+  };
+  localStorage.setItem("myTags",JSON.stringify(tags));
+  document.getElementById("affiliateOutput").innerText="✅ Tags saved!";
+  document.getElementById("shareBlock").style.display="block";
+  const shareUrl=window.location.href+"?ref="+tags.amazon;
+  document.getElementById("shareLinkInput").value=shareUrl;
+  renderWall();
+});
 
+// ===== Share Buttons =====
+document.getElementById("copyShareBtn").addEventListener("click",()=>{
+  document.getElementById("shareLinkInput").select();
+  document.execCommand("copy");
+  alert("Link copied!");
+});
+document.getElementById("tweetShareBtn").addEventListener("click",()=>{
+  const url=encodeURIComponent(document.getElementById("shareLinkInput").value);
+  window.open(`https://twitter.com/intent/tweet?url=${url}`,"_blank");
+});
+
+// ===== Initial render =====
+renderWall();
 </script>
 </body>
 </html>
