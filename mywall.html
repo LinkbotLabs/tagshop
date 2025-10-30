@@ -6,60 +6,59 @@
 <title>Tagshop Wall – Tagshop</title>
 <link rel="stylesheet" href="uniform-dark-glass.css">
 <style>
-body { background:#000; color:#fff; font-family:system-ui; padding:20px; }
-h1{text-align:center;margin-bottom:10px;}
-#affiliateIdDisplay { text-align:center; font-weight:bold; color:#ff9900; text-shadow: 0 0 8px #ff9900; margin-bottom:10px; font-size:16px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
-.card { background: rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
+:root { --accent: #ffa500; --glow: #00FFFF; --text: #fff; --bg: #000; }
+body { background:var(--bg); color:var(--text); font-family:system-ui; padding:20px; margin:0; }
+h1 { text-align:center; margin-bottom:10px; color:#ffe169; }
+#affiliateIdDisplay { text-align:center; font-weight:bold; color:var(--accent); text-shadow:0 0 8px var(--accent); margin-bottom:10px; font-size:16px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; margin-top:20px; }
+.card { background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
 .card img { max-width:100%; border-radius:6px; cursor:pointer; transition:0.3s; }
-.card img:hover { transform: scale(1.05); }
-button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cursor:pointer; color:#000; font-weight:700; padding:4px 8px; font-size:12px; }
+.card img:hover { transform:scale(1.05); }
+button { margin-top:4px; background:var(--glow); border:none; border-radius:6px; cursor:pointer; color:#000; font-weight:700; padding:4px 8px; font-size:12px; }
 
 /* Affiliate Pop-Up */
 #affiliatePopup {
   position:fixed; bottom:20px; right:20px; width:300px; max-width:90%;
-  background: rgba(0,0,0,0.95); backdrop-filter: blur(12px);
-  border:1px solid #ffa500; border-radius:16px; padding:16px; z-index:999;
+  background:rgba(0,0,0,0.95); backdrop-filter:blur(12px);
+  border:1px solid var(--accent); border-radius:16px; padding:16px; z-index:999;
   color:#fff; display:none; box-shadow:0 4px 20px rgba(0,0,0,0.6);
 }
-#affiliatePopup h2 { color:#ffa500; font-size:16px; margin:0 0 10px 0; text-align:center; }
+#affiliatePopup h2 { color:var(--accent); font-size:16px; margin:0 0 10px 0; text-align:center; }
 #affiliatePopup input, #affiliatePopup button { margin:4px 0; font-size:12px; width:100%; padding:6px; border-radius:8px; }
 
 /* Affiliate Toggle Button */
 #affiliateToggle { 
-  position:fixed; bottom:20px; right:340px; background:#000; color:#ffa500; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; 
+  position:fixed; bottom:20px; right:340px; background:#000; color:var(--accent); border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; 
 }
 
-/* Page Socials at bottom */
+/* Social Buttons */
 .page-socials { position:fixed; bottom:20px; left:20px; display:flex; gap:6px; z-index:1000; }
 .social-btn { width:30px; height:30px; background:#000; color:#fff; border:none; border-radius:50%; font-weight:bold; cursor:pointer; font-size:14px; line-height:28px; text-align:center; }
 .social-btn:hover { opacity:0.8; }
 
-/* Visitor count display */
-#visitorCount { position:fixed; top:20px; right:20px; color:#0ff; font-weight:bold; font-size:14px; }
+/* Visitor Count */
+#visitorCount { position:fixed; top:20px; right:20px; color:var(--glow); font-weight:bold; font-size:14px; }
 
-/* Floating Home Button */
+/* Home Button */
 #homeBtn {
-  position:fixed;
-  bottom:20px;
-  right:120px;
-  background:#000;
-  color:#ffe169;
-  border:none;
-  border-radius:16px;
-  padding:10px 14px;
-  font-weight:700;
-  cursor:pointer;
-  z-index:1000;
-  box-shadow: 0 0 8px rgba(255, 225, 105, 0.7);
+  position:fixed; bottom:20px; right:120px; background:#000; color:#ffe169; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; box-shadow:0 0 8px rgba(255,225,105,0.7);
+}
+
+/* Unlock Overlay */
+#unlockOverlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.95); display:flex; justify-content:center; align-items:center; z-index:9999; display:none;
+}
+#unlockBox {
+  background:rgba(0,0,0,0.9); border:2px solid var(--glow); border-radius:12px; padding:20px; max-width:320px; text-align:center; color:#fff;
 }
 </style>
 </head>
 <body>
 
-<h1 id="wallTitle">Tagshop</h1>
+<h1 id="wallTitle">Tagshop Wall</h1>
 <div id="affiliateIdDisplay"></div>
 <div id="visitorCount">Visitors: 0</div>
+
 <div class="grid" id="wallGrid"></div>
 
 <!-- Affiliate Toggle Button -->
@@ -67,16 +66,16 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
 
 <!-- Affiliate Pop-Up -->
 <div id="affiliatePopup">
-  <h2>🔑 Affiliate Activation</h2>
+  <h2>Affiliate Activation</h2>
   <input type="text" id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
   <input type="text" id="temuAffiliate" placeholder="Temu tag">
   <input type="text" id="lazadaAffiliate" placeholder="Lazada tag">
   <input type="text" id="aliexpressAffiliate" placeholder="AliExpress tag">
   <button id="saveAffiliate">Activate</button>
-  <div id="affiliateOutput" style="margin-top:6px;font-size:12px;color:#ffa500;"></div>
+  <div id="affiliateOutput" style="margin-top:6px; font-size:12px; color:var(--accent);"></div>
 </div>
 
-<!-- Page Social Media Buttons -->
+<!-- Social Media Buttons -->
 <div class="page-socials">
   <button class="social-btn" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')" title="F @linkbotlabs">F</button>
   <button class="social-btn" onclick="window.open('https://x.com/@linkbotlabs','_blank')" title="X @linkbotlabs">X</button>
@@ -84,120 +83,159 @@ button { margin-top:4px; background:#00FFFF; border:none; border-radius:6px; cur
   <button class="social-btn" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')" title="YT @linkbotlabs">Y</button>
 </div>
 
-<!-- Floating Home Button -->
-<button id="homeBtn" onclick="window.location.href='index.html'">🏠 Home</button>
+<!-- Home Button -->
+<button id="homeBtn" onclick="window.location.href='index.html'">Home</button>
+
+<!-- Unlock Overlay -->
+<div id="unlockOverlay">
+  <div id="unlockBox">
+    <h3 style="color:var(--glow); margin-top:0;">10-Item Limit Reached!</h3>
+    <p>To add more, support the developer:</p>
+    <a href="https://wise.com/pay/me/davids14542" target="_blank" style="color:var(--glow); font-weight:bold;">Pay via Wise</a>
+    <p style="margin:10px 0 6px;">or enter password:</p>
+    <input type="password" id="unlockPassword" placeholder="Password" style="width:100%; padding:6px; border-radius:6px; margin-bottom:8px;">
+    <button id="unlockBtn" style="background:var(--glow); color:#000; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Unlock</button>
+    <button onclick="document.getElementById('unlockOverlay').style.display='none'" style="margin-left:6px; background:#444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Cancel</button>
+  </div>
+</div>
 
 <script>
 // ===== Visitor Count =====
-let visitors = parseInt(localStorage.getItem("visitorCount")||"0") + 1;
+let visitors = (parseInt(localStorage.getItem("visitorCount") || "0")) + 1;
 localStorage.setItem("visitorCount", visitors);
 document.getElementById("visitorCount").innerText = "Visitors: " + visitors;
 
 // ===== Affiliate Handling =====
 const popup = document.getElementById("affiliatePopup");
 const toggleBtn = document.getElementById("affiliateToggle");
-toggleBtn.addEventListener("click",()=>{ 
-  popup.style.display = (popup.style.display==="block")?"none":"block"; 
+const affiliateDisplay = document.getElementById("affiliateIdDisplay");
+
+toggleBtn.addEventListener("click", () => {
+  popup.style.display = popup.style.display === "block" ? "none" : "block";
 });
 
+// Load saved affiliate tags
+function loadAffiliateTags() {
+  const tags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
+  if (tags.amazon) document.getElementById("amazonAffiliate").value = tags.amazon;
+  if (tags.temu) document.getElementById("temuAffiliate").value = tags.temu;
+  if (tags.lazada) document.getElementById("lazadaAffiliate").value = tags.lazada;
+  if (tags.aliexpress) document.getElementById("aliexpressAffiliate").value = tags.aliexpress;
+
+  // Show first non-empty tag
+  const first = tags.amazon || tags.temu || tags.lazada || tags.aliexpress || "";
+  if (first) {
+    affiliateDisplay.innerText = "Affiliate ID: " + first;
+  }
+}
+
 // Save Affiliate Tags
-document.getElementById("saveAffiliate").addEventListener("click",()=>{
+document.getElementById("saveAffiliate").addEventListener("click", () => {
   const amazon = document.getElementById("amazonAffiliate").value.trim();
   const temu = document.getElementById("temuAffiliate").value.trim();
   const lazada = document.getElementById("lazadaAffiliate").value.trim();
   const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
-  const tags = { amazon, temu, lazada, aliexpress };
-  localStorage.setItem('userAffiliateTags', JSON.stringify(tags));
-  document.getElementById("affiliateOutput").innerText = `✅ Tags saved!\nAmazon: ${amazon}\nTemu: ${temu}\nLazada: ${lazada}\nAliExpress: ${aliexpress}`;
 
-  // Display first non-empty affiliate ID at top
+  const tags = { amazon, temu, lazada, aliexpress };
+  localStorage.setItem("userAffiliateTags", JSON.stringify(tags));
+
+  document.getElementById("affiliateOutput").innerText = "Tags saved!";
+
+  // Update display and close popup
   const firstId = amazon || temu || lazada || aliexpress;
-  document.getElementById("affiliateIdDisplay").innerText = "Affiliate ID: " + firstId;
+  if (firstId) {
+    affiliateDisplay.innerText = "Affiliate ID: " + firstId;
+  }
+  popup.style.display = "none"; // Close popup after save
 });
 
 // ===== Product Wall =====
 const wallGrid = document.getElementById("wallGrid");
-function renderWall(){
-  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+
+function renderWall() {
+  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
   wallGrid.innerHTML = "";
-  wall.forEach((item,idx)=>{
+  if (wall.length === 0) {
+    wallGrid.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#888; font-size:14px;'>Your wall is empty. Add products from the main page!</p>";
+    return;
+  }
+
+  wall.forEach((item, idx) => {
     const div = document.createElement("div");
-    div.className="card";
+    div.className = "card";
+    const affLink = buildAffiliateLink(item.link);
     div.innerHTML = `
-      ${item.thumb?`<img src="${item.thumb}" onclick="expandItem(${idx})">`:""}
-      <div style="font-size:12px;margin-top:4px;"><strong>${item.title}</strong></div>
-      <a href="${buildAffiliateLink(item.link)}" target="_blank" style="color:#ffa500;font-size:12px;text-decoration:none;">Click to Buy</a><br>
-      <button onclick="addToWall(${idx})">Add to Wall</button>
+      ${item.thumb ? `<img src="${item.thumb}" onclick="expandItem(${idx})">` : ""}
+      <div style="font-size:12px; margin-top:4px;"><strong>${item.title}</strong></div>
+      <a href="${affLink}" target="_blank" style="color:var(--accent); font-size:11px; text-decoration:none;">Buy Now</a><br>
       <button onclick="removeItem(${idx})">Remove</button>
     `;
     wallGrid.appendChild(div);
   });
 }
-function removeItem(idx){
-  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
-  wall.splice(idx,1);
+
+function removeItem(idx) {
+  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
+  wall.splice(idx, 1);
   localStorage.setItem("productWall", JSON.stringify(wall));
   renderWall();
 }
-function expandItem(idx){
-  const wall = JSON.parse(localStorage.getItem("productWall")||"[]");
+
+function expandItem(idx) {
+  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
   const item = wall[idx];
   alert(`Title: ${item.title}\nLink: ${item.link}`);
 }
 
-function addToWall(idx){
-  let wall = JSON.parse(localStorage.getItem("productWall")||"[]");
-  
-  // Check 10-item limit
-  if(wall.length >= 10 && !localStorage.getItem("wallUnlocked")){
-    // Show Wise payment overlay
-    const popupDiv = document.createElement("div");
-    popupDiv.style.position="fixed";
-    popupDiv.style.top="50%";
-    popupDiv.style.left="50%";
-    popupDiv.style.transform="translate(-50%,-50%)";
-    popupDiv.style.background="rgba(0,0,0,0.95)";
-    popupDiv.style.color="#fff";
-    popupDiv.style.padding="20px";
-    popupDiv.style.border="2px solid #00FFFF";
-    popupDiv.style.borderRadius="12px";
-    popupDiv.style.zIndex=9999;
-    popupDiv.innerHTML = `
-      ⚠️ You have added 10 items!<br>
-      To continue, please support the developer:<br>
-      <a href="https://wise.com/pay/me/davids14542" target="_blank" style="color:#00FFFF; font-weight:bold;">Pay via Wise</a><br><br>
-      <input type="password" id="unlockPassword" placeholder="Enter password to continue" style="width:100%;padding:6px;border-radius:6px;margin-top:6px;">
-      <button id="unlockBtn" style="margin-top:6px;padding:6px 12px;border-radius:6px;background:#00FFFF;color:#000;cursor:pointer;">Unlock</button>
-    `;
-    document.body.appendChild(popupDiv);
+// Add to Wall (called from index.html)
+window.addToWall = function(title, thumb, link) {
+  let wall = JSON.parse(localStorage.getItem("productWall") || "[]");
 
-    document.getElementById("unlockBtn").onclick = ()=>{
-      const val = document.getElementById("unlockPassword").value;
-      if(val === "tagshopme"){
-        localStorage.setItem("wallUnlocked","true");
-        alert("Wall unlocked! You can continue adding items.");
-        popupDiv.remove();
-      } else {
-        alert("Incorrect password.");
-      }
-    }
+  if (wall.length >= 10 && !localStorage.getItem("wallUnlocked")) {
+    document.getElementById("unlockOverlay").style.display = "flex";
     return;
   }
 
+  wall.push({ title, thumb, link });
+  localStorage.setItem("productWall", JSON.stringify(wall));
   renderWall();
-}
+};
 
-renderWall();
+// Unlock Wall
+document.getElementById("unlockBtn").addEventListener("click", () => {
+  const pass = document.getElementById("unlockPassword").value.trim();
+  if (pass === "tagshopme") {
+    localStorage.setItem("wallUnlocked", "true");
+    document.getElementById("unlockOverlay").style.display = "none";
+    alert("Wall unlocked! You can now add unlimited items.");
+  } else {
+    alert("Incorrect password.");
+  }
+});
 
 // ===== Build Affiliate Link =====
-function buildAffiliateLink(originalLink){
-  const tags = JSON.parse(localStorage.getItem('userAffiliateTags')||"{}");
-  if(originalLink.includes("amazon.com")) return tags.amazon?originalLink+(originalLink.includes("?")?"&":"?")+"tag="+tags.amazon:originalLink;
-  if(originalLink.includes("temu.com")) return tags.temu?originalLink+(originalLink.includes("?")?"&":"?")+"aff_id="+tags.temu:originalLink;
-  if(originalLink.includes("lazada.co.th")) return tags.lazada?originalLink+(originalLink.includes("?")?"&":"?")+"spm="+tags.lazada:originalLink;
-  if(originalLink.includes("aliexpress.com")) return tags.aliexpress?originalLink+(originalLink.includes("?")?"&":"?")+"aff_fcid="+tags.aliexpress:originalLink;
+function buildAffiliateLink(originalLink) {
+  const tags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
+  if (!originalLink) return "#";
+
+  if (originalLink.includes("amazon.com") && tags.amazon) {
+    return originalLink + (originalLink.includes("?") ? "&" : "?") + "tag=" + tags.amazon;
+  }
+  if (originalLink.includes("temu.com") && tags.temu) {
+    return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_id=" + tags.temu;
+  }
+  if ((originalLink.includes("lazada.") || originalLink.includes("lazada.co")) && tags.lazada) {
+    return originalLink + (originalLink.includes("?") ? "&" : "?") + "spm=" + tags.lazada;
+  }
+  if (originalLink.includes("aliexpress.com") && tags.aliexpress) {
+    return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_fcid=" + tags.aliexpress;
+  }
   return originalLink;
 }
+
+// Initialize
+loadAffiliateTags();
+renderWall();
 </script>
 </body>
 </html>
