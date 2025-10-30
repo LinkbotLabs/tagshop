@@ -64,25 +64,25 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 
 <!-- CONSOLE LOGS -->
 <div class="card">
-  <h2>Console Logs 🖥️</h2>
+  <h2>Console Logs</h2>
   <button id="toggle-log">Toggle Logs</button>
   <div class="output" id="console-log" style="display:none;"></div>
 </div>
 
 <!-- AFFILIATE + SUPPORT + QR -->
 <div class="card" style="background: linear-gradient(135deg, #ffe169, #ff5f6d); color: #000; text-align:center; font-weight:700; padding:20px; border-radius:14px; margin-top:30px; box-shadow:0 0 15px rgba(255,255,255,0.6);">
-  <h2 style="margin-bottom:10px;">Affiliate Partners 🌟</h2>
+  <h2 style="margin-bottom:10px;">Affiliate Partners</h2>
   <p style="font-size:15px; margin-bottom:16px; line-height:1.6;">
     If you are an affiliate of <strong>Amazon</strong>, <strong>Temu</strong>, <strong>AliExpress</strong>, 
     <strong>DHgate</strong>, or <strong>Lazada</strong> — use this tool to <br>
     <span style="background:#000; color:#ffe169; padding:3px 8px; border-radius:6px;">build and showcase your shop!</span>
   </p>
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-top:12px;">
-    <a href="https://www.buymeacoffee.com/yourusername" target="_blank" style="display:inline-block; background:#000; color:#ffe169; padding:12px 20px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:700; box-shadow:0 0 8px rgba(0,0,0,0.4);" onmouseover="this.style.background='#ffe169'; this.style.color='#000';" onmouseout="this.style.background='#000'; this.style.color='#ffe169';">☕ Buy Me a Coffee</a>
-    <a href="https://wise.com/pay/me/davids14542" target="_blank" style="display:inline-block; background:#1fc27e; color:#000; padding:12px 20px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:700; box-shadow:0 0 8px rgba(0,0,0,0.4);" onmouseover="this.style.background='#000'; this.style.color='#1fc27e';" onmouseout="this.style.background='#1fc27e'; this.style.color='#000';">💸 Support via Wise</a>
+    <a href="https://www.buymeacoffee.com/yourusername" target="_blank" style="display:inline-block; background:#000; color:#ffe169; padding:12px 20px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:700; box-shadow:0 0 8px rgba(0,0,0,0.4);" onmouseover="this.style.background='#ffe169'; this.style.color='#000';" onmouseout="this.style.background='#000'; this.style.color='#ffe169';">Buy Me a Coffee</a>
+    <a href="https://wise.com/pay/me/davids14542" target="_blank" style="display:inline-block; background:#1fc27e; color:#000; padding:12px 20px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:700; box-shadow:0 0 8px rgba(0,0,0,0.4);" onmouseover="this.style.background='#000'; this.style.color='#1fc27e';" onmouseout="this.style.background='#1fc27e'; this.style.color='#000';">Support via Wise</a>
   </div>
   <div style="margin-top:20px;">
-    <p style="font-size:13px; margin-bottom:6px;">Scan to pay with Wise 👇</p>
+    <p style="font-size:13px; margin-bottom:6px;">Scan to pay with Wise</p>
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://wise.com/pay/me/davids14542" 
          alt="Wise Payment QR Code" id="wiseQR" style="border-radius:10px; border:2px solid #000; box-shadow:0 0 6px rgba(0,0,0,0.5); background:#fff; padding:4px; cursor:pointer;" title="Click to enlarge">
   </div>
@@ -91,14 +91,15 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <!-- QR MODAL -->
 <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:2000;">
   <div style="position:relative; text-align:center;">
-    <span id="closeQR" style="position:absolute; top:-40px; right:-10px; font-size:28px; font-weight:bold; color:#ffe169; cursor:pointer;">&times;</span>
+    <span id="closeQR" style="position:absolute; top:-40px; right:-10px; font-size:28px; font-weight:bold; color:#ffe169; cursor:pointer;">×</span>
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https://wise.com/pay/me/davids14542" alt="Wise Payment QR Code Large" style="border-radius:10px; border:3px solid #ffe169; background:#fff; padding:6px; box-shadow:0 0 12px rgba(255,255,255,0.6);">
-    <p style="color:#ffe169; margin-top:10px; font-size:14px;">Scan to support via Wise 💚</p>
+    <p style="color:#ffe169; margin-top:10px; font-size:14px;">Scan to support via Wise</p>
   </div>
 </div>
 
 <!-- Floating My Wall button -->
-<button onclick="window.location.href='mywall.html'" style="position:fixed; bottom:20px; right:20px; background:#000; color:#ffe169; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; box-shadow:0 0 8px rgba(255,225,105,0.7);">🧱 My Wall</button>
+<button onclick="window.location.href='mywall.html'" style="position:fixed; bottom:20px; right:20px; background:#000; color:#ffe169; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; box-shadow:0 0 8px rgba(255,225,105,0.7);">My Wall</button>
+
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
@@ -234,8 +235,8 @@ const modal = document.getElementById("qrModal");
 const closeQR = document.getElementById("closeQR");
 qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
 closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
-modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "
-  <script>
+modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
+
 /* ---------- POPUP + DONATION INTEGRATION ---------- */
 (function(){
   const AGREE_KEY = "tagshopUserAgreed";
@@ -269,7 +270,7 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
     document.body.appendChild(overlay);
 
     box.innerHTML = `
-      <h2 style="color:#ffe169;margin-bottom:8px;">Welcome to Tagshop 🌟</h2>
+      <h2 style="color:#ffe169;margin-bottom:8px;">Welcome to Tagshop</h2>
       <p style="font-size:14px;margin-bottom:10px;">
         Build your affiliate wall and earn commissions from every sale.
       </p>
@@ -313,7 +314,7 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
     document.body.appendChild(overlay);
 
     box.innerHTML = `
-      <h2 style="color:#1fc27e;margin-bottom:10px;">Support Tagshop 💚</h2>
+      <h2 style="color:#1fc27e;margin-bottom:10px;">Support Tagshop</h2>
       <p style="font-size:14px;margin-bottom:10px;">Optional donation helps keep tools free.</p>
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
         <button data-amt="usd" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">$5 USD</button>
@@ -345,7 +346,7 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
       if(val === SECRET_PASSWORD){
         overlay.remove();
         const note = document.createElement("div");
-        note.textContent = "✅ Tagshop unlocked. Thank you!";
+        note.textContent = "Tagshop unlocked. Thank you!";
         note.style = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1fc27e;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;";
         document.body.appendChild(note);
         setTimeout(()=>note.remove(),3000);
@@ -356,3 +357,5 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
   }
 })();
 </script>
+</body>
+</html>
