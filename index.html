@@ -234,14 +234,15 @@ const modal = document.getElementById("qrModal");
 const closeQR = document.getElementById("closeQR");
 qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
 closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
-modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
-
-/* ---------- POPUP + DONATION ---------- */
+modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "
+  <script>
+/* ---------- POPUP + DONATION INTEGRATION ---------- */
 (function(){
   const AGREE_KEY = "tagshopUserAgreed";
   const SECRET_PASSWORD = "tagshopme";
   let actionCount = 0, MAX_ACTIONS = 3;
 
+  // Track button clicks to trigger popup
   document.body.addEventListener("click", e=>{
     if(e.target.tagName==="BUTTON" || e.target.closest("button")){
       actionCount++;
@@ -253,15 +254,25 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
 
   function showPopup(){
     const overlay = document.createElement("div");
-    overlay.style = "position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:9999;color:#fff;padding:20px;";
+    overlay.style = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.9);
+      display:flex;justify-content:center;align-items:center;
+      z-index:9999;color:#fff;padding:20px;
+    `;
     const box = document.createElement("div");
-    box.style = "background:rgba(20,20,20,0.95);border:2px solid #ffe169;border-radius:16px;max-width:420px;width:90%;padding:20px;text-align:center;font-family:system-ui;box-shadow:0 0 15px rgba(255,255,255,0.3);animation:popin 0.3s ease;";
+    box.style = `
+      background:rgba(20,20,20,0.95);border:2px solid #ffe169;
+      border-radius:16px;max-width:420px;width:90%;padding:20px;
+      text-align:center;font-family:system-ui;box-shadow:0 0 15px rgba(255,255,255,0.3);
+    `;
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
     box.innerHTML = `
       <h2 style="color:#ffe169;margin-bottom:8px;">Welcome to Tagshop 🌟</h2>
-      <p style="font-size:14px;margin-bottom:10px;">Build your affiliate wall and earn commissions from every sale.</p>
+      <p style="font-size:14px;margin-bottom:10px;">
+        Build your affiliate wall and earn commissions from every sale.
+      </p>
       <div style="font-size:13px;text-align:left;margin-bottom:12px;line-height:1.5;">
         <strong>How it works</strong><br>
         • Add up to 10 products to your wall.<br>
@@ -272,13 +283,35 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
         • Private, shareable wall.<br>
         • Optional donation keeps Tagshop ad-free.
       </div>
-      <button id="agreeBtn" style="background:#ffe169;color:#000;border:none;border-radius:8px;font-weight:700;padding:10px 18px;cursor:pointer;">Agree & Continue</button>
+      <button id="agreeBtn" style="
+        background:#ffe169;color:#000;border:none;border-radius:8px;
+        font-weight:700;padding:10px 18px;cursor:pointer;">Agree & Continue</button>
     `;
 
-    box.querySelector("#agreeBtn").addEventListener("click", ()=>showDonation(box, overlay));
+    box.querySelector("#agreeBtn").addEventListener("click", ()=>{
+      // Mark user as agreed
+      localStorage.setItem(AGREE_KEY,"true");
+      overlay.remove(); // Close welcome popup
+      showDonation();   // Optionally show donation
+    });
   }
 
-  function showDonation(box, overlay){
+  function showDonation(){
+    const overlay = document.createElement("div");
+    overlay.style = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);
+      display:flex;justify-content:center;align-items:center;
+      z-index:9999;color:#fff;padding:20px;
+    `;
+    const box = document.createElement("div");
+    box.style = `
+      background:rgba(20,20,20,0.95);border:2px solid #1fc27e;
+      border-radius:16px;max-width:400px;width:90%;padding:20px;
+      text-align:center;font-family:system-ui;box-shadow:0 0 15px rgba(0,255,0,0.3);
+    `;
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
     box.innerHTML = `
       <h2 style="color:#1fc27e;margin-bottom:10px;">Support Tagshop 💚</h2>
       <p style="font-size:14px;margin-bottom:10px;">Optional donation helps keep tools free.</p>
@@ -296,31 +329,30 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
 
     const qr = new QRious({ element: document.getElementById("qrCanvas"), size:180, value:"https://wise.com/pay/me/davids14542/5usd" });
 
+    // Currency buttons
     box.querySelectorAll("[data-amt]").forEach(btn=>{
       btn.addEventListener("click",()=>{
-        const v=btn.dataset.amt;
-        const urls={ usd:"https://wise.com/pay/me/davids14542/5usd", gbp:"https://wise.com/pay/me/davids14542/8gbp", thb:"https://wise.com/pay/me/davids14542/200thb" };
-        qr.set({value:urls[v]});
-        box.querySelector("#msg").innerText=`QR updated for ${btn.innerText}`;
+        const v = btn.dataset.amt;
+        const urls = { usd:"https://wise.com/pay/me/davids14542/5usd", gbp:"https://wise.com/pay/me/davids14542/8gbp", thb:"https://wise.com/pay/me/davids14542/200thb" };
+        qr.set({value: urls[v]});
+        box.querySelector("#msg").innerText = `QR updated for ${btn.innerText}`;
       });
     });
 
-    box.querySelector("#unlockBtn").addEventListener("click",()=>{
-      const val=box.querySelector("#unlockPass").value.trim();
-      if(val===SECRET_PASSWORD){
-        localStorage.setItem(AGREE_KEY,"true");
+    // Password unlock
+    box.querySelector("#unlockBtn").addEventListener("click", ()=>{
+      const val = box.querySelector("#unlockPass").value.trim();
+      if(val === SECRET_PASSWORD){
         overlay.remove();
-        const note=document.createElement("div");
-        note.textContent="✅ Tagshop unlocked. Thank you!";
-        note.style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1fc27e;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;";
+        const note = document.createElement("div");
+        note.textContent = "✅ Tagshop unlocked. Thank you!";
+        note.style = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1fc27e;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;";
         document.body.appendChild(note);
         setTimeout(()=>note.remove(),3000);
-      }else{
-        box.querySelector("#msg").innerText="Incorrect password.";
+      } else {
+        box.querySelector("#msg").innerText = "Incorrect password.";
       }
     });
   }
 })();
 </script>
-</body>
-</html>
