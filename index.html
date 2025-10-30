@@ -322,115 +322,115 @@ qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
 closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
 modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
 </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
-/* ---------- UNIVERSAL TAGSHOP POPUP ---------- */
-(function() {
+(function(){
   const AGREE_KEY = "tagshopUserAgreed";
-  const PASSWORD_KEY = "tagshopUnlockPass";
   const SECRET_PASSWORD = "tagshopme"; // change if desired
+  let actionCount = 0, MAX_ACTIONS = 3;
 
-  let actionCount = 0;
-  const MAX_ACTIONS_BEFORE_POPUP = 3;
-
-  // Observe clicks on product-related buttons
-  document.body.addEventListener("click", e => {
-    if (e.target.tagName === "BUTTON" || e.target.closest("button")) {
+  document.body.addEventListener("click", e=>{
+    if(e.target.tagName==="BUTTON"||e.target.closest("button")){
       actionCount++;
-      if (actionCount >= MAX_ACTIONS_BEFORE_POPUP && !localStorage.getItem(AGREE_KEY)) {
-        showPopup();
-      }
+      if(actionCount>=MAX_ACTIONS && !localStorage.getItem(AGREE_KEY)) showPopup();
     }
   });
 
-  function showPopup() {
-    const overlay = document.createElement("div");
-    overlay.style = `
-      position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.9); color:#fff; z-index:9999;
-      display:flex; justify-content:center; align-items:center; padding:20px;
+  function showPopup(){
+    const overlay=document.createElement("div");
+    overlay.style=`
+      position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;
+      display:flex;justify-content:center;align-items:center;padding:20px;color:#fff;
     `;
-
-    const box = document.createElement("div");
-    box.style = `
-      background:rgba(20,20,20,0.95); border:2px solid #ffe169; 
-      border-radius:16px; max-width:420px; padding:20px; text-align:center;
-      font-family:system-ui; box-shadow:0 0 20px rgba(255,255,255,0.3);
-    `;
-    box.innerHTML = `
-      <h2 style="color:#ffe169;margin-bottom:10px;">Welcome to Tagshop 🌟</h2>
-      <p style="font-size:14px;line-height:1.4;margin-bottom:10px;">
-        Tagshop helps affiliates build product walls and earn commissions
-        from every purchase made through their links.
-      </p>
-      <div style="text-align:left;font-size:13px;margin-bottom:10px;">
-        <strong>How it works:</strong><br>
-        • Search and add up to 10 products to your wall.<br>
-        • Share your wall with affiliate tags.<br>
-        • Earn commission on purchases made via your links.<br><br>
-        <strong>Benefits:</strong><br>
-        • Auto-link detection (Amazon, Temu, Lazada etc.)<br>
-        • Private “My Wall” showcase for your followers.<br>
-        • Optional support to keep Tagshop ad-free.
-      </div>
-      <button id="agreeBtn" style="
-        background:#ffe169;color:#000;padding:10px 16px;
-        border:none;border-radius:8px;font-weight:700;cursor:pointer;">
-        Agree & Continue
-      </button>
+    const box=document.createElement("div");
+    box.style=`
+      background:rgba(20,20,20,0.9);border:2px solid #ffe169;border-radius:16px;
+      max-width:420px;width:90%;padding:20px;text-align:center;font-family:system-ui;
+      box-shadow:0 0 15px rgba(255,255,255,0.3);
     `;
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    document.getElementById("agreeBtn").onclick = () => {
-      box.innerHTML = `
-        <h2 style="color:#1fc27e;">Support Tagshop 💚</h2>
-        <p style="font-size:14px;margin-bottom:10px;">Optional donation helps maintain AI and affiliate tools.</p>
-        <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px;">
-          <button data-amt="usd" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">$5 USD</button>
-          <button data-amt="gbp" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">£8 GBP</button>
-          <button data-amt="thb" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">฿200 THB</button>
-        </div>
-        <div id="qrHolder" style="margin:10px auto;"></div>
-        <p style="font-size:12px;margin-top:6px;">or unlock with password:</p>
-        <input type="password" id="unlockPass" placeholder="Enter password" style="width:80%;padding:6px;border-radius:6px;">
-        <button id="unlockBtn" style="background:#1fc27e;color:#000;border:none;border-radius:6px;padding:6px 10px;margin-top:8px;">Unlock</button>
-      `;
+    box.innerHTML=`
+      <h2 style="color:#ffe169;margin-bottom:8px;">Welcome to Tagshop 🌟</h2>
+      <p style="font-size:14px;margin-bottom:10px;">
+        Build affiliate walls and earn commission from every sale.
+      </p>
+      <div style="font-size:13px;text-align:left;margin-bottom:12px;line-height:1.4;">
+        <strong>How it works</strong><br>
+        • Add up to 10 products to your wall.<br>
+        • Share your affiliate wall link.<br>
+        • Earn when your visitors buy.<br><br>
+        <strong>Benefits</strong><br>
+        • Amazon / Temu / Lazada support.<br>
+        • Private, shareable wall.<br>
+        • Optional donation keeps Tagshop ad-free.
+      </div>
+      <button id="agreeBtn" style="
+        background:#ffe169;color:#000;border:none;border-radius:8px;
+        font-weight:700;padding:10px 18px;cursor:pointer;">Agree & Continue</button>
+    `;
 
-      const qrCanvas = document.createElement("canvas");
-      document.getElementById("qrHolder").appendChild(qrCanvas);
-      const qr = new QRious({
-        element: qrCanvas,
-        size: 180,
-        value: "https://wise.com/pay/me/davids14542/5usd"
-      });
+    // Attach AFTER element creation
+    box.querySelector("#agreeBtn").addEventListener("click", ()=>showDonation(box,overlay));
+  }
 
-      box.querySelectorAll("button[data-amt]").forEach(btn=>{
-        btn.onclick = ()=>{
-          const val = btn.getAttribute("data-amt");
-          const urls = {
-            usd:"https://wise.com/pay/me/davids14542/5usd",
-            gbp:"https://wise.com/pay/me/davids14542/8gbp",
-            thb:"https://wise.com/pay/me/davids14542/200thb"
-          };
-          qr.set({value: urls[val]});
+  function showDonation(box,overlay){
+    box.innerHTML=`
+      <h2 style="color:#1fc27e;margin-bottom:10px;">Support Tagshop 💚</h2>
+      <p style="font-size:14px;margin-bottom:10px;">Optional donation helps maintain free AI tools.</p>
+      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <button data-amt="usd" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">$5 USD</button>
+        <button data-amt="gbp" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">£8 GBP</button>
+        <button data-amt="thb" style="background:#000;color:#ffe169;border-radius:6px;padding:6px 10px;">฿200 THB</button>
+      </div>
+      <div id="qrHolder" style="margin:10px auto;"></div>
+      <p style="font-size:12px;margin-top:6px;">or unlock with password:</p>
+      <input type="password" id="unlockPass" placeholder="Enter password" style="
+        width:80%;padding:6px;border-radius:6px;border:1px solid #444;background:#111;color:#fff;"><br>
+      <button id="unlockBtn" style="background:#1fc27e;color:#000;border:none;border-radius:6px;padding:6px 10px;margin-top:8px;">Unlock</button>
+      <div id="msg" style="margin-top:10px;font-size:13px;color:#1fc27e;"></div>
+    `;
+
+    const qrCanvas=document.createElement("canvas");
+    document.getElementById("qrHolder").appendChild(qrCanvas);
+    const qr=new QRious({
+      element:qrCanvas,
+      size:180,
+      value:"https://wise.com/pay/me/davids14542/5usd"
+    });
+
+    // currency buttons
+    box.querySelectorAll("[data-amt]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const v=btn.dataset.amt;
+        const urls={
+          usd:"https://wise.com/pay/me/davids14542/5usd",
+          gbp:"https://wise.com/pay/me/davids14542/8gbp",
+          thb:"https://wise.com/pay/me/davids14542/200thb"
         };
+        qr.set({value:urls[v]});
+        box.querySelector("#msg").innerText=`QR updated for ${btn.innerText}`;
       });
+    });
 
-      document.getElementById("unlockBtn").onclick = ()=>{
-        const val = document.getElementById("unlockPass").value.trim();
-        if(val === SECRET_PASSWORD){
-          localStorage.setItem(AGREE_KEY, "true");
-          localStorage.setItem(PASSWORD_KEY, val);
-          overlay.remove();
-          alert("✅ Thank you — Tagshop is now unlocked!");
-        } else {
-          alert("Incorrect password.");
-        }
-      };
-    };
+    // password unlock
+    box.querySelector("#unlockBtn").addEventListener("click",()=>{
+      const val=box.querySelector("#unlockPass").value.trim();
+      if(val===SECRET_PASSWORD){
+        localStorage.setItem(AGREE_KEY,"true");
+        overlay.remove();
+        box.remove();
+        // subtle inline success
+        const note=document.createElement("div");
+        note.textContent="✅ Tagshop unlocked. Thank you!";
+        note.style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1fc27e;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;";
+        document.body.appendChild(note);
+        setTimeout(()=>note.remove(),3000);
+      }else{
+        box.querySelector("#msg").innerText="Incorrect password.";
+      }
+    });
   }
 })();
 </script>
-</body>
-</html>
