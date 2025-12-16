@@ -3,36 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Free Wan 2.2 AI Video Generator</title>
+<title>Free AI Video Generator – Tagshop</title>
 
 <!-- Puter.js -->
 <script src="https://js.puter.com/v2/"></script>
 
 <style>
-body {
-  font-family: system-ui, Arial;
+body{
+  font-family:system-ui,Arial;
   background:#0f0f0f;
   color:#f5f5f5;
   max-width:900px;
   margin:auto;
   padding:20px;
 }
-h1,h2 { color:#00e5ff; }
-button {
-  padding:12px 18px;
-  border:none;
-  border-radius:8px;
-  background:#00e5ff;
-  color:#000;
-  font-weight:800;
-  cursor:pointer;
-  margin-top:8px;
-}
-button:disabled {
-  opacity:0.4;
-  cursor:not-allowed;
-}
-textarea,input {
+h1,h2{color:#00e5ff}
+textarea,input,select{
   width:100%;
   margin-top:8px;
   padding:10px;
@@ -41,191 +27,230 @@ textarea,input {
   background:#1a1a1a;
   color:#fff;
 }
-video {
-  margin-top:16px;
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  background:#00e5ff;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+button.secondary{
+  background:#222;
+  color:#00e5ff;
+}
+.actions,.shareRow{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+video{
   width:100%;
+  margin-top:16px;
   border-radius:12px;
 }
-.status {
+.status{
   margin-top:8px;
   color:#aaa;
   font-style:italic;
 }
-.badge {
+.badge{
   display:inline-block;
-  padding:6px 12px;
-  border-radius:14px;
+  padding:4px 10px;
+  border-radius:12px;
   font-size:12px;
   font-weight:700;
 }
-.ok { background:#1fc27e; color:#000; }
-.no { background:#ff5f6d; color:#000; }
-hr { margin:32px 0; border:1px solid #222; }
-.footer {
+.ok{background:#1fc27e;color:#000}
+.no{background:#ff5f6d;color:#000}
+.footer{
   margin-top:40px;
   text-align:center;
   font-size:13px;
   color:#888;
 }
-.footer a { color:#00e5ff; text-decoration:none; }
+.footer a{color:#00e5ff;text-decoration:none}
+hr{margin:30px 0;border:1px solid #222}
 </style>
 </head>
 
 <body>
 
-<h1>🎬 Free Wan 2.2 AI Video Generator</h1>
-<p>No API keys • No backend • Runs entirely in your browser</p>
+<h1>🎬 Free AI Video Generator</h1>
+<p>
+No API keys • No backend • Runs in your browser<br>
+<strong>Powered by Puter.js</strong>
+</p>
 
-<div id="loginBadge" class="badge no">Not logged in</div><br><br>
+<div id="loginBadge" class="badge no">Not logged in</div>
 
-<button id="loginBtn">🔐 Sign in with Puter</button>
+<div class="actions">
+  <button class="secondary" onclick="signIn()">Login to Puter</button>
+</div>
 
 <hr>
 
 <!-- SECTION 1: TEXT TO VIDEO -->
-<h2>📝 Text → Video (Wan 2.2)</h2>
+<h2>📝 Text → Video (Experimental)</h2>
 
-<textarea id="t2vPrompt" rows="4">
-A colorful cartoon pigeon talking directly to the camera,
-exaggerated beak movement, expressive eyes,
-playful cartoon style, smooth continuous animation lasting about 10 seconds
+<textarea id="textPrompt" rows="4">
+A colorful cartoon pigeon talking directly to the camera, comedy style
 </textarea>
 
-<button id="t2vBtn" disabled>🎬 Generate Text → Video</button>
-<div id="t2vStatus" class="status"></div>
-<div id="t2vOutput"></div>
+<button onclick="generateTextVideo()">Generate Text → Video</button>
+<div id="textStatus" class="status"></div>
 
 <hr>
 
 <!-- SECTION 2: IMAGE TO VIDEO -->
-<h2>🖼️ Image → Video (Wan 2.2)</h2>
+<h2>🖼️ Image → Video (Recommended)</h2>
 
-<textarea id="i2vPrompt" rows="4">
-A cartoon character comes to life and starts talking,
-animated mouth movement, expressive gestures,
-playful cartoon style, extended motion
+<textarea id="imagePrompt" rows="4">
+A bold animated advertisement promoting a free AI text to video generator,
+powered by Puter, futuristic UI, neon colors, clean tech style
 </textarea>
 
-<input id="i2vImage" placeholder="Paste image URL here" />
+<input id="imageUrl"
+placeholder="Image URL"
+value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"/>
 
-<button id="i2vBtn" disabled>🎬 Generate Image → Video</button>
-<div id="i2vStatus" class="status"></div>
-<div id="i2vOutput"></div>
+<button onclick="generateImageVideo()">Generate Image → Video</button>
+<div id="imageStatus" class="status"></div>
 
-<script>
-let isAuthed = false;
-
-/* ---------- ENSURE PUTER READY ---------- */
-async function ensurePuterReady(){
-  if (puter.ready) {
-    await puter.ready;
-  } else {
-    await new Promise(r => setTimeout(r, 1500));
-  }
-}
-
-/* ---------- LOGIN ---------- */
-document.getElementById("loginBtn").onclick = async () => {
-  const badge = document.getElementById("loginBadge");
-  badge.textContent = "Opening login…";
-
-  try {
-    await puter.auth.signIn({ popup:true });
-    await ensurePuterReady();
-
-    isAuthed = true;
-    badge.textContent = "Logged in to Puter";
-    badge.className = "badge ok";
-
-    document.getElementById("t2vBtn").disabled = false;
-    document.getElementById("i2vBtn").disabled = false;
-
-  } catch {
-    badge.textContent = "Login cancelled";
-    badge.className = "badge no";
-  }
-};
-
-/* ---------- TEXT TO VIDEO ---------- */
-document.getElementById("t2vBtn").onclick = async () => {
-  if(!isAuthed) return;
-
-  const status = document.getElementById("t2vStatus");
-  const out = document.getElementById("t2vOutput");
-  out.innerHTML = "";
-  status.textContent = "Generating video…";
-
-  try {
-    await ensurePuterReady();
-
-    const video = await puter.ai.txt2vid(
-      document.getElementById("t2vPrompt").value,
-      { model:"Wan-AI/Wan2.2-T2V-A14B" }
-    );
-
-    video.controls = true;
-    video.muted = true;
-    video.playsInline = true;
-
-    out.appendChild(video);
-    video.play().catch(()=>{});
-
-    status.textContent = "✅ Video ready";
-
-  } catch (err) {
-    console.error(err);
-    status.textContent = "❌ Generation failed – please wait and try again";
-  }
-};
-
-/* ---------- IMAGE TO VIDEO ---------- */
-document.getElementById("i2vBtn").onclick = async () => {
-  if(!isAuthed) return;
-
-  const status = document.getElementById("i2vStatus");
-  const out = document.getElementById("i2vOutput");
-  out.innerHTML = "";
-  status.textContent = "Generating video…";
-
-  try {
-    await ensurePuterReady();
-
-    const video = await puter.ai.txt2vid(
-      document.getElementById("i2vPrompt").value,
-      {
-        model:"Wan-AI/Wan2.2-I2V-A14B",
-        image_url: document.getElementById("i2vImage").value
-      }
-    );
-
-    video.controls = true;
-    video.muted = true;
-    video.playsInline = true;
-
-    out.appendChild(video);
-    video.play().catch(()=>{});
-
-    status.textContent = "✅ Video ready";
-
-  } catch (err) {
-    console.error(err);
-    status.textContent = "❌ Generation failed – check image URL and retry";
-  }
-};
-</script>
+<div id="videoWrap"></div>
 
 <div class="footer">
 <p>
-Powered by <strong>Puter.js</strong><br>
-Special thanks to the <a href="https://puter.com" target="_blank">Puter</a> team for enabling
+Built with ❤️ using <strong>Puter.js</strong><br>
+Thanks to the <a href="https://puter.com" target="_blank">Puter</a> team for enabling
 secure, client-side AI via their innovative <em>User-Pays</em> model.<br><br>
 
-Models used:<br>
-Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br><br>
-
-No API keys • No backend • Truly serverless AI video generation
+Models:<br>
+Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B
 </p>
 </div>
+
+<script>
+let loggedIn = false;
+
+/* ---------- AUTH ---------- */
+async function signIn(){
+  try{
+    await puter.auth.signIn();
+    loggedIn = true;
+    const badge = document.getElementById("loginBadge");
+    badge.textContent = "Logged in to Puter";
+    badge.className = "badge ok";
+  }catch(e){
+    console.error(e);
+  }
+}
+
+/* ---------- TEXT → VIDEO ---------- */
+async function generateTextVideo(){
+  const status = document.getElementById("textStatus");
+  const wrap = document.getElementById("videoWrap");
+  wrap.innerHTML = "";
+
+  if(!loggedIn) await signIn();
+
+  status.textContent =
+    "Generating text → video… (may be busy, please wait)";
+
+  try{
+    const video = await puter.ai.txt2vid(
+      document.getElementById("textPrompt").value,
+      { model:"Wan-AI/Wan2.2-T2V-A14B" }
+    );
+    showVideo(video);
+    status.textContent = "Finished ✔";
+  }catch(err){
+    console.error(err);
+    status.textContent =
+      "⏳ Text → Video is busy. Please retry later or use Image → Video (recommended).";
+  }
+}
+
+/* ---------- IMAGE → VIDEO ---------- */
+async function generateImageVideo(){
+  const status = document.getElementById("imageStatus");
+  const wrap = document.getElementById("videoWrap");
+  wrap.innerHTML = "";
+
+  if(!loggedIn) await signIn();
+
+  status.textContent = "Generating image → video…";
+
+  try{
+    const video = await puter.ai.txt2vid(
+      document.getElementById("imagePrompt").value,
+      {
+        model:"Wan-AI/Wan2.2-I2V-A14B",
+        image_url:document.getElementById("imageUrl").value
+      }
+    );
+    showVideo(video);
+    status.textContent = "Finished ✔";
+  }catch(err){
+    console.error(err);
+    status.textContent = "Generation failed – stay logged in and try again.";
+  }
+}
+
+/* ---------- VIDEO UI ---------- */
+function showVideo(video){
+  const wrap = document.getElementById("videoWrap");
+
+  video.controls = true;
+  video.playsInline = true;
+  video.muted = true;
+
+  wrap.appendChild(video);
+
+  video.addEventListener("loadeddata",()=>{
+    video.play().catch(()=>{});
+  });
+
+  const share = document.createElement("div");
+  share.className = "shareRow";
+  share.innerHTML = `
+    <button onclick="downloadVideo(this)">⬇ Download</button>
+    <button onclick="copyCaption()">📋 Copy Caption</button>
+    <button onclick="openTikTok()">TikTok</button>
+    <button onclick="openYouTube()">YouTube</button>
+    <button onclick="openFacebook()">Facebook</button>
+  `;
+  wrap.appendChild(share);
+}
+
+/* ---------- HELPERS ---------- */
+function downloadVideo(btn){
+  const video = btn.closest("#videoWrap").querySelector("video");
+  const a = document.createElement("a");
+  a.href = video.src;
+  a.download = "tagshop-ai-video.mp4";
+  a.click();
+}
+function copyCaption(){
+  navigator.clipboard.writeText(
+`Free AI text to video 🔥
+Powered by Puter
+Click bio → Tagshop → Generate now`
+  );
+  alert("Caption copied!");
+}
+function openTikTok(){
+  window.open("https://www.tiktok.com/upload","_blank");
+}
+function openYouTube(){
+  window.open("https://studio.youtube.com","_blank");
+}
+function openFacebook(){
+  window.open("https://www.facebook.com/reels/create","_blank");
+}
+</script>
 
 </body>
 </html>
