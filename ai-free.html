@@ -3,198 +3,134 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Free Wan 2.2 AI Video Generator</title>
+<title>Tagshop – Free AI Video Generator</title>
 
-<!-- Puter.js -->
+<!-- Puter SDK -->
 <script src="https://js.puter.com/v2/"></script>
 
 <style>
-body {
-  font-family: system-ui, Arial;
+body{
+  font-family:system-ui,Arial;
   background:#0f0f0f;
-  color:#f5f5f5;
-  max-width:900px;
+  color:#fff;
+  max-width:800px;
   margin:auto;
   padding:20px;
 }
-h1,h2 { color:#00e5ff; }
-button {
-  padding:12px 18px;
-  border:none;
-  border-radius:8px;
-  background:#00e5ff;
-  color:#000;
-  font-weight:800;
-  cursor:pointer;
-  margin-top:8px;
-}
-button:disabled {
-  opacity:0.4;
-  cursor:not-allowed;
-}
-textarea,input {
+h1{color:#00e5ff}
+textarea,input{
   width:100%;
-  margin-top:8px;
   padding:10px;
+  margin-top:10px;
   border-radius:6px;
   border:none;
   background:#1a1a1a;
   color:#fff;
 }
-video {
-  margin-top:16px;
+button{
+  margin-top:12px;
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  background:#00e5ff;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+video{
   width:100%;
+  margin-top:20px;
   border-radius:12px;
 }
-.status {
-  margin-top:8px;
+.status{
+  margin-top:10px;
+  font-size:14px;
   color:#aaa;
-  font-style:italic;
 }
-.badge {
+.badge{
   display:inline-block;
-  padding:6px 12px;
-  border-radius:14px;
+  padding:4px 10px;
+  border-radius:12px;
   font-size:12px;
   font-weight:700;
+  margin-bottom:10px;
 }
-.ok { background:#1fc27e; color:#000; }
-.no { background:#ff5f6d; color:#000; }
-hr { margin:32px 0; border:1px solid #222; }
-.footer {
-  margin-top:40px;
-  text-align:center;
-  font-size:13px;
-  color:#888;
-}
-.footer a { color:#00e5ff; text-decoration:none; }
+.ok{background:#1fc27e;color:#000}
+.no{background:#ff5f6d;color:#000}
 </style>
 </head>
 
 <body>
 
-<h1>🎬 Free Wan 2.2 AI Video Generator</h1>
-<p>No API keys • No backend • Runs entirely in your browser</p>
+<h1>🎬 Tagshop Free AI Video</h1>
+<p>Powered by <strong>Puter.js</strong> · No API keys · Browser only</p>
 
-<div id="loginBadge" class="badge no">Not logged in</div><br><br>
+<div id="loginBadge" class="badge no">Not logged in</div>
 
-<button id="loginBtn">🔐 Sign in with Puter</button>
+<button onclick="login()">Login with Puter</button>
 
-<hr>
+<hr style="margin:30px 0;border:1px solid #222">
 
-<!-- SECTION 1: TEXT TO VIDEO -->
-<h2>📝 Text → Video (Wan 2.2)</h2>
+<h2>🖼️ Image → Video</h2>
 
-<textarea id="t2vPrompt" rows="4">
-A colorful cartoon pigeon talking directly to the camera,
-exaggerated beak movement, expressive eyes,
-playful cartoon style, smooth continuous animation lasting about 10 seconds
+<textarea id="prompt" rows="4">
+A clean animated tech advertisement scene,
+futuristic UI, neon cyan highlights,
+smooth motion, professional style
 </textarea>
 
-<button id="t2vBtn" disabled>🎬 Generate Text → Video</button>
-<div id="t2vStatus" class="status"></div>
-<div id="t2vOutput"></div>
+<input id="imageUrl"
+value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"/>
 
-<hr>
+<button onclick="generate()">Generate Video</button>
 
-<!-- SECTION 2: IMAGE TO VIDEO -->
-<h2>🖼️ Image → Video (Wan 2.2)</h2>
-
-<textarea id="i2vPrompt" rows="4">
-A cartoon character comes to life and starts talking,
-animated mouth movement, expressive gestures,
-playful cartoon style, extended motion
-</textarea>
-
-<input id="i2vImage" placeholder="Paste image URL here" />
-
-<button id="i2vBtn" disabled>🎬 Generate Image → Video</button>
-<div id="i2vStatus" class="status"></div>
-<div id="i2vOutput"></div>
+<div id="status" class="status"></div>
+<div id="output"></div>
 
 <script>
-let isAuthed = false;
-
-/* ---------- ENSURE PUTER READY ---------- */
-async function ensurePuterReady(){
-  if (puter.ready) {
-    await puter.ready;
-  } else {
-    await new Promise(r => setTimeout(r, 1500));
+/* ---------- LOGIN ---------- */
+async function login(){
+  try{
+    await puter.auth.signIn();
+    await waitForLogin();
+    setLoggedIn(true);
+  }catch(e){
+    console.error(e);
   }
 }
 
-/* ---------- LOGIN ---------- */
-document.getElementById("loginBtn").onclick = async () => {
+function setLoggedIn(ok){
   const badge = document.getElementById("loginBadge");
-  badge.textContent = "Opening login…";
+  badge.textContent = ok ? "Logged in to Puter" : "Not logged in";
+  badge.className = "badge " + (ok ? "ok" : "no");
+}
 
-  try {
-    await puter.auth.signIn({ popup:true });
-    await ensurePuterReady();
-
-    isAuthed = true;
-    badge.textContent = "Logged in to Puter";
-    badge.className = "badge ok";
-
-    document.getElementById("t2vBtn").disabled = false;
-    document.getElementById("i2vBtn").disabled = false;
-
-  } catch {
-    badge.textContent = "Login cancelled";
-    badge.className = "badge no";
+async function waitForLogin(){
+  while(!puter.auth.isSignedIn){
+    await new Promise(r=>setTimeout(r,300));
   }
-};
+}
 
-/* ---------- TEXT TO VIDEO ---------- */
-document.getElementById("t2vBtn").onclick = async () => {
-  if(!isAuthed) return;
+/* ---------- GENERATE ---------- */
+async function generate(){
+  const status = document.getElementById("status");
+  const output = document.getElementById("output");
+  output.innerHTML = "";
 
-  const status = document.getElementById("t2vStatus");
-  const out = document.getElementById("t2vOutput");
-  out.innerHTML = "";
+  status.textContent = "Checking login…";
+
+  if(!puter.auth.isSignedIn){
+    await login();
+  }
+
   status.textContent = "Generating video…";
 
-  try {
-    await ensurePuterReady();
-
+  try{
     const video = await puter.ai.txt2vid(
-      document.getElementById("t2vPrompt").value,
-      { model:"Wan-AI/Wan2.2-T2V-A14B" }
-    );
-
-    video.controls = true;
-    video.muted = true;
-    video.playsInline = true;
-
-    out.appendChild(video);
-    video.play().catch(()=>{});
-
-    status.textContent = "✅ Video ready";
-
-  } catch (err) {
-    console.error(err);
-    status.textContent = "❌ Generation failed – please wait and try again";
-  }
-};
-
-/* ---------- IMAGE TO VIDEO ---------- */
-document.getElementById("i2vBtn").onclick = async () => {
-  if(!isAuthed) return;
-
-  const status = document.getElementById("i2vStatus");
-  const out = document.getElementById("i2vOutput");
-  out.innerHTML = "";
-  status.textContent = "Generating video…";
-
-  try {
-    await ensurePuterReady();
-
-    const video = await puter.ai.txt2vid(
-      document.getElementById("i2vPrompt").value,
+      document.getElementById("prompt").value,
       {
         model:"Wan-AI/Wan2.2-I2V-A14B",
-        image_url: document.getElementById("i2vImage").value
+        image_url:document.getElementById("imageUrl").value
       }
     );
 
@@ -202,30 +138,20 @@ document.getElementById("i2vBtn").onclick = async () => {
     video.muted = true;
     video.playsInline = true;
 
-    out.appendChild(video);
-    video.play().catch(()=>{});
+    output.appendChild(video);
 
-    status.textContent = "✅ Video ready";
+    video.addEventListener("loadeddata",()=>{
+      video.play().catch(()=>{});
+    });
 
-  } catch (err) {
+    status.textContent = "Finished ✔";
+  }catch(err){
     console.error(err);
-    status.textContent = "❌ Generation failed – check image URL and retry";
+    status.textContent =
+      "Generation failed. Please stay logged in and try again.";
   }
-};
+}
 </script>
-
-<div class="footer">
-<p>
-Powered by <strong>Puter.js</strong><br>
-Special thanks to the <a href="https://puter.com" target="_blank">Puter</a> team for enabling
-secure, client-side AI via their innovative <em>User-Pays</em> model.<br><br>
-
-Models used:<br>
-Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br><br>
-
-No API keys • No backend • Truly serverless AI video generation
-</p>
-</div>
 
 </body>
 </html>
