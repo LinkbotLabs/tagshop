@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
 <title>Tagshop – Free AI Video Generator</title>
-
-<!-- Puter SDK -->
 <script src="https://js.puter.com/v2/"></script>
 
 <style>
@@ -17,21 +14,14 @@ body{
   margin:auto;
   padding:20px;
 }
-h1{color:#00e5ff}
-textarea,input{
+textarea,input,button{
   width:100%;
-  padding:10px;
   margin-top:10px;
-  border-radius:6px;
+  padding:12px;
+  border-radius:8px;
   border:none;
-  background:#1a1a1a;
-  color:#fff;
 }
 button{
-  margin-top:12px;
-  padding:12px 18px;
-  border:none;
-  border-radius:8px;
   background:#00e5ff;
   color:#000;
   font-weight:700;
@@ -42,90 +32,39 @@ video{
   margin-top:20px;
   border-radius:12px;
 }
-.status{
-  margin-top:10px;
-  font-size:14px;
-  color:#aaa;
-}
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:10px;
-}
-.ok{background:#1fc27e;color:#000}
-.no{background:#ff5f6d;color:#000}
+.status{margin-top:10px;color:#aaa}
 </style>
 </head>
 
 <body>
 
-<h1>🎬 Tagshop Free AI Video</h1>
-<p>Powered by <strong>Puter.js</strong> · No API keys · Browser only</p>
+<h1>🎬 Free AI Video Generator</h1>
+<p>Powered by <strong>Puter.js</strong></p>
 
-<div id="loginBadge" class="badge no">Not logged in</div>
-
-<button onclick="login()">Login with Puter</button>
-
-<hr style="margin:30px 0;border:1px solid #222">
-
-<h2>🖼️ Image → Video</h2>
-
-<textarea id="prompt" rows="4">
-A clean animated tech advertisement scene,
-futuristic UI, neon cyan highlights,
-smooth motion, professional style
+<textarea id="prompt">
+A futuristic animated advertisement showing a free AI text to video generator website
 </textarea>
 
 <input id="imageUrl"
 value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"/>
 
-<button onclick="generate()">Generate Video</button>
+<button onclick="generate()">Login & Generate Video</button>
 
 <div id="status" class="status"></div>
 <div id="output"></div>
 
 <script>
-/* ---------- LOGIN ---------- */
-async function login(){
-  try{
-    await puter.auth.signIn();
-    await waitForLogin();
-    setLoggedIn(true);
-  }catch(e){
-    console.error(e);
-  }
-}
-
-function setLoggedIn(ok){
-  const badge = document.getElementById("loginBadge");
-  badge.textContent = ok ? "Logged in to Puter" : "Not logged in";
-  badge.className = "badge " + (ok ? "ok" : "no");
-}
-
-async function waitForLogin(){
-  while(!puter.auth.isSignedIn){
-    await new Promise(r=>setTimeout(r,300));
-  }
-}
-
-/* ---------- GENERATE ---------- */
 async function generate(){
   const status = document.getElementById("status");
   const output = document.getElementById("output");
   output.innerHTML = "";
 
-  status.textContent = "Checking login…";
-
-  if(!puter.auth.isSignedIn){
-    await login();
-  }
-
-  status.textContent = "Generating video…";
-
   try{
+    status.textContent = "Signing in to Puter…";
+    await puter.auth.signIn(); // ✅ OFFICIAL PUTER LOGIN
+
+    status.textContent = "Generating video…";
+
     const video = await puter.ai.txt2vid(
       document.getElementById("prompt").value,
       {
@@ -140,15 +79,13 @@ async function generate(){
 
     output.appendChild(video);
 
-    video.addEventListener("loadeddata",()=>{
-      video.play().catch(()=>{});
-    });
+    video.onloadeddata = () => video.play().catch(()=>{});
+    status.textContent = "Done ✔";
 
-    status.textContent = "Finished ✔";
   }catch(err){
     console.error(err);
     status.textContent =
-      "Generation failed. Please stay logged in and try again.";
+      "❌ Puter login or generation failed. Please allow popups and try again.";
   }
 }
 </script>
