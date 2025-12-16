@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Wan 2.2 AI Video Generator (No API Key)</title>
+
+    <!-- Puter.js -->
+    <script src="https://js.puter.com/v2/"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0f0f0f;
+            color: #f5f5f5;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #00e5ff;
+        }
+        button {
+            padding: 12px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background: #00e5ff;
+            color: #000;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        button:hover {
+            opacity: 0.85;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+        }
+        video {
+            margin-top: 20px;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #aaa;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🎬 Free Wan 2.2 AI Video Generator</h1>
+<p>
+    Generate AI videos using <strong>Wan 2.2</strong> models directly in your browser.
+    No API keys. No backend. Powered by <strong>Puter.js</strong>.
+</p>
+
+<hr/>
+
+<h2>📝 Text → Video (Wan 2.2 T2V)</h2>
+
+<textarea id="textPrompt" rows="3">
+A fox sprinting through a snow-covered forest at dusk
+</textarea>
+
+<button onclick="generateTextVideo()">Generate Video</button>
+<div id="textStatus" class="status"></div>
+
+<hr/>
+
+<h2>🖼️ Image → Video (Wan 2.2 I2V)</h2>
+
+<textarea id="imagePrompt" rows="4">
+A dynamic graffiti art character. A boy painted with spray paint comes to life from a concrete wall. He sings an English rap song at a very fast pace while striking a classic, energetic rapper pose.
+</textarea>
+
+<input id="imageUrl" type="text"
+value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"/>
+
+<button onclick="generateImageVideo()">Generate Video</button>
+<div id="imageStatus" class="status"></div>
+
+<script>
+/* -------- Text to Video -------- */
+function generateTextVideo() {
+    const status = document.getElementById("textStatus");
+    status.textContent = "Generating video...";
+
+    const startTime = Date.now();
+
+    puter.ai.txt2vid(
+        document.getElementById("textPrompt").value,
+        { model: "Wan-AI/Wan2.2-T2V-A14B" }
+    )
+    .then(video => {
+        document.body.appendChild(video);
+        video.addEventListener("loadeddata", () => video.play().catch(()=>{}));
+
+        const total = ((Date.now() - startTime)/1000).toFixed(1);
+        status.textContent = `Finished in ${total} seconds`;
+    })
+    .catch(err => {
+        console.error(err);
+        status.textContent = "Error: " + err.message;
+    });
+}
+
+/* -------- Image to Video -------- */
+function generateImageVideo() {
+    const status = document.getElementById("imageStatus");
+    status.textContent = "Generating video...";
+
+    const startTime = Date.now();
+
+    puter.ai.txt2vid(
+        document.getElementById("imagePrompt").value,
+        {
+            model: "Wan-AI/Wan2.2-I2V-A14B",
+            image_url: document.getElementById("imageUrl").value
+        }
+    )
+    .then(video => {
+        document.body.appendChild(video);
+        video.addEventListener("loadeddata", () => video.play().catch(()=>{}));
+
+        const total = ((Date.now() - startTime)/1000).toFixed(1);
+        status.textContent = `Finished in ${total} seconds`;
+    })
+    .catch(err => {
+        console.error(err);
+        status.textContent = "Error: " + err.message;
+    });
+}
+</script>
+
+<footer>
+    <p>
+        Free, Unlimited Wan AI via Puter.js<br/>
+        Models: Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br/>
+        User-Pays model · No API keys · No backend
+    </p>
+</footer>
+
+</body>
+</html>
