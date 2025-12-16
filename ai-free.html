@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wan 2.2 AI Video Generator — Powered by Puter</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Free Wan 2.2 AI Video Generator</title>
 
+<!-- Puter.js -->
 <script src="https://js.puter.com/v2/"></script>
 
 <style>
-body{
-  font-family:system-ui,Arial;
+body {
+  font-family: system-ui, Arial;
   background:#0f0f0f;
   color:#f5f5f5;
-  max-width:920px;
+  max-width:900px;
   margin:auto;
   padding:20px;
 }
-h1,h2{color:#00e5ff;}
-button{
+h1,h2 { color:#00e5ff; }
+button {
   padding:12px 18px;
   border:none;
   border-radius:8px;
@@ -25,12 +26,13 @@ button{
   color:#000;
   font-weight:800;
   cursor:pointer;
+  margin-top:8px;
 }
-button.secondary{
-  background:#222;
-  color:#00e5ff;
+button:disabled {
+  opacity:0.4;
+  cursor:not-allowed;
 }
-textarea,input,select{
+textarea,input {
   width:100%;
   margin-top:8px;
   padding:10px;
@@ -39,208 +41,171 @@ textarea,input,select{
   background:#1a1a1a;
   color:#fff;
 }
-video{
-  width:100%;
+video {
   margin-top:16px;
+  width:100%;
   border-radius:12px;
 }
-.status{margin-top:8px;color:#aaa;font-style:italic;}
-.badge{
+.status {
+  margin-top:8px;
+  color:#aaa;
+  font-style:italic;
+}
+.badge {
   display:inline-block;
-  padding:5px 12px;
+  padding:6px 12px;
   border-radius:14px;
   font-size:12px;
-  font-weight:800;
+  font-weight:700;
 }
-.badge.ok{background:#1fc27e;color:#000;}
-.badge.no{background:#ff5f6d;color:#000;}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-hr{border:1px solid #222;margin:30px 0;}
-.footer{
+.ok { background:#1fc27e; color:#000; }
+.no { background:#ff5f6d; color:#000; }
+hr { margin:32px 0; border:1px solid #222; }
+.footer {
   margin-top:40px;
+  text-align:center;
   font-size:13px;
   color:#888;
-  text-align:center;
 }
-.footer a{color:#00e5ff;text-decoration:none;}
+.footer a { color:#00e5ff; text-decoration:none; }
 </style>
 </head>
 
 <body>
 
-<h1>🎬 Wan 2.2 AI Video Generator</h1>
+<h1>🎬 Free Wan 2.2 AI Video Generator</h1>
 <p>No API keys • No backend • Runs entirely in your browser</p>
 
-<div id="loginBadge" class="badge no">Not signed in</div>
-<div class="actions">
-  <button onclick="signIn()">Sign in with Puter</button>
-</div>
+<div id="loginBadge" class="badge no">Not logged in</div><br><br>
+
+<button id="loginBtn">🔐 Sign in with Puter</button>
 
 <hr>
 
-<!-- ================= TEXT TO VIDEO ================= -->
-
-<h2>📝 Section 1 — Text → Video</h2>
-
-<select id="t2vFormat">
-  <option value="vertical">Vertical (9:16)</option>
-  <option value="square">Square (1:1)</option>
-  <option value="landscape">Landscape (16:9)</option>
-</select>
+<!-- SECTION 1: TEXT TO VIDEO -->
+<h2>📝 Text → Video (Wan 2.2)</h2>
 
 <textarea id="t2vPrompt" rows="4">
-A cartoon pigeon standing on a satellite dish, cinematic sunset
+A colorful cartoon pigeon talking directly to the camera,
+exaggerated beak movement, expressive eyes,
+playful cartoon style, smooth continuous animation lasting about 10 seconds
 </textarea>
 
-<div class="actions">
-  <button onclick="generateT2V()">Generate Text → Video</button>
-</div>
-
+<button id="t2vBtn" disabled>🎬 Generate Text → Video</button>
 <div id="t2vStatus" class="status"></div>
 <div id="t2vOutput"></div>
 
 <hr>
 
-<!-- ================= IMAGE TO VIDEO ================= -->
-
-<h2>🖼️ Section 2 — Image → Video</h2>
-
-<select id="i2vFormat">
-  <option value="vertical">Vertical (9:16)</option>
-  <option value="square">Square (1:1)</option>
-  <option value="landscape">Landscape (16:9)</option>
-</select>
+<!-- SECTION 2: IMAGE TO VIDEO -->
+<h2>🖼️ Image → Video (Wan 2.2)</h2>
 
 <textarea id="i2vPrompt" rows="4">
-A graffiti-style animated pigeon comes to life, high energy, cartoon style
+A cartoon character comes to life and starts talking,
+animated mouth movement, expressive gestures,
+playful cartoon style, extended motion
 </textarea>
 
-<input id="i2vImage" placeholder="Public HTTPS image URL required">
+<input id="i2vImage" placeholder="Paste image URL here" />
 
-<div class="actions">
-  <button onclick="generateI2V()">Generate Image → Video</button>
-  <button class="secondary" onclick="clearImage()">Clear Image</button>
-  <button class="secondary" onclick="loadExample()">Load Example Image</button>
-</div>
-
+<button id="i2vBtn" disabled>🎬 Generate Image → Video</button>
 <div id="i2vStatus" class="status"></div>
 <div id="i2vOutput"></div>
 
-<!-- ================= SCRIPT ================= -->
-
 <script>
-async function signIn(){
-  if(await puter.auth.isSignedIn()){
-    showSignedIn();
-    return;
+let isAuthed = false;
+
+/* ---------- LOGIN ---------- */
+document.getElementById("loginBtn").onclick = async () => {
+  const badge = document.getElementById("loginBadge");
+  badge.textContent = "Opening login…";
+
+  try {
+    await puter.auth.signIn({ popup:true });
+
+    isAuthed = true;
+    badge.textContent = "Logged in to Puter";
+    badge.className = "badge ok";
+
+    document.getElementById("t2vBtn").disabled = false;
+    document.getElementById("i2vBtn").disabled = false;
+
+  } catch {
+    badge.textContent = "Login cancelled";
+    badge.className = "badge no";
   }
-  try{
-    await puter.auth.signIn();
-    showSignedIn();
-  }catch{}
-}
-
-function showSignedIn(){
-  const badge=document.getElementById("loginBadge");
-  badge.textContent="Signed in to Puter ✓";
-  badge.className="badge ok";
-}
-
-function formatHint(format){
-  if(format==="vertical") return "vertical video, 9:16 aspect ratio";
-  if(format==="square") return "square video, 1:1 aspect ratio";
-  return "landscape video, 16:9 aspect ratio";
-}
+};
 
 /* ---------- TEXT TO VIDEO ---------- */
-async function generateT2V(){
-  const status=document.getElementById("t2vStatus");
-  const out=document.getElementById("t2vOutput");
-  out.innerHTML="";
+document.getElementById("t2vBtn").onclick = async () => {
+  const status = document.getElementById("t2vStatus");
+  const out = document.getElementById("t2vOutput");
+  out.innerHTML = "";
+  status.textContent = "Generating video…";
 
-  if(!await puter.auth.isSignedIn()){
-    status.textContent="Please sign in first.";
-    return;
-  }
-
-  const prompt=document.getElementById("t2vPrompt").value;
-  const format=document.getElementById("t2vFormat").value;
-
-  status.textContent="Generating text-to-video…";
-
-  try{
-    const video=await puter.ai.txt2vid(
-      prompt + ". " + formatHint(format),
+  try {
+    const video = await puter.ai.txt2vid(
+      document.getElementById("t2vPrompt").value,
       { model:"Wan-AI/Wan2.2-T2V-A14B" }
     );
 
-    video.controls=true;
-    video.muted=true;
+    video.controls = true;
+    video.muted = true;
+    video.playsInline = true;
+
     out.appendChild(video);
     video.play().catch(()=>{});
-    status.textContent="Text → Video complete.";
-  }catch{
-    status.textContent="Generation failed. Try again.";
+
+    status.textContent = "✅ Video ready";
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "❌ Generation failed – stay logged in and try again";
   }
-}
+};
 
 /* ---------- IMAGE TO VIDEO ---------- */
-async function generateI2V(){
-  const status=document.getElementById("i2vStatus");
-  const out=document.getElementById("i2vOutput");
-  out.innerHTML="";
+document.getElementById("i2vBtn").onclick = async () => {
+  const status = document.getElementById("i2vStatus");
+  const out = document.getElementById("i2vOutput");
+  out.innerHTML = "";
+  status.textContent = "Generating video…";
 
-  if(!await puter.auth.isSignedIn()){
-    status.textContent="Please sign in first.";
-    return;
-  }
-
-  const prompt=document.getElementById("i2vPrompt").value;
-  const image=document.getElementById("i2vImage").value;
-  const format=document.getElementById("i2vFormat").value;
-
-  if(!image){
-    status.textContent="Image URL is required.";
-    return;
-  }
-
-  status.textContent="Generating image-to-video…";
-
-  try{
-    const video=await puter.ai.txt2vid(
-      prompt + ". " + formatHint(format),
+  try {
+    const video = await puter.ai.txt2vid(
+      document.getElementById("i2vPrompt").value,
       {
         model:"Wan-AI/Wan2.2-I2V-A14B",
-        image_url:image
+        image_url: document.getElementById("i2vImage").value
       }
     );
 
-    video.controls=true;
-    video.muted=true;
+    video.controls = true;
+    video.muted = true;
+    video.playsInline = true;
+
     out.appendChild(video);
     video.play().catch(()=>{});
-    status.textContent="Image → Video complete.";
-  }catch{
-    status.textContent="Generation failed. Check image URL.";
-  }
-}
 
-/* ---------- IMAGE HELPERS ---------- */
-function clearImage(){
-  document.getElementById("i2vImage").value="";
-}
-function loadExample(){
-  document.getElementById("i2vImage").value=
-  "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png";
-}
+    status.textContent = "✅ Video ready";
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "❌ Generation failed – check image URL";
+  }
+};
 </script>
 
 <div class="footer">
 <p>
-Powered by <strong>Puter.js</strong> — special thanks to the
-<a href="https://puter.com" target="_blank">Puter</a> team for enabling
+Powered by <strong>Puter.js</strong><br>
+Special thanks to the <a href="https://puter.com" target="_blank">Puter</a> team for enabling
 secure, client-side AI via their innovative <em>User-Pays</em> model.<br><br>
-Models used: Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B
+
+Models used:<br>
+Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br><br>
+
+No API keys • No backend • Truly serverless AI video generation
 </p>
 </div>
 
