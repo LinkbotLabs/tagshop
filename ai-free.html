@@ -1,157 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Free Wan 2.2 AI Video Generator (No API Key)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Free Wan 2.2 AI Video Generator</title>
 
-    <!-- Puter.js -->
-    <script src="https://js.puter.com/v2/"></script>
+<!-- Puter.js -->
+<script src="https://js.puter.com/v2/"></script>
 
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0f0f0f;
-            color: #f5f5f5;
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: #00e5ff;
-        }
-        button {
-            padding: 12px 18px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            background: #00e5ff;
-            color: #000;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-        button:hover {
-            opacity: 0.85;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 6px;
-            border: none;
-            font-size: 14px;
-        }
-        video {
-            margin-top: 20px;
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        .status {
-            margin-top: 10px;
-            font-style: italic;
-            color: #aaa;
-        }
-        footer {
-            margin-top: 40px;
-            font-size: 13px;
-            color: #888;
-        }
-    </style>
+<style>
+body {
+  font-family: system-ui, Arial;
+  background:#0f0f0f;
+  color:#f5f5f5;
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+h1,h2 { color:#00e5ff; }
+button {
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  background:#00e5ff;
+  color:#000;
+  font-weight:800;
+  cursor:pointer;
+  margin-top:8px;
+}
+button.secondary {
+  background:#222;
+  color:#00e5ff;
+}
+textarea,input,select {
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  background:#1a1a1a;
+  color:#fff;
+}
+video {
+  margin-top:16px;
+  width:100%;
+  border-radius:12px;
+}
+.status { margin-top:8px; color:#aaa; font-style:italic; }
+.badge {
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:700;
+}
+.badge.ok { background:#1fc27e; color:#000; }
+.badge.no { background:#ff5f6d; color:#000; }
+.footer {
+  margin-top:40px;
+  text-align:center;
+  font-size:13px;
+  color:#888;
+}
+.footer a { color:#00e5ff; text-decoration:none; }
+hr { margin:30px 0; border:1px solid #222; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; }
+</style>
 </head>
 
 <body>
 
 <h1>🎬 Free Wan 2.2 AI Video Generator</h1>
 <p>
-    Generate AI videos using <strong>Wan 2.2</strong> models directly in your browser.
-    No API keys. No backend. Powered by <strong>Puter.js</strong>.
+No API keys • No backend • Runs entirely in your browser
 </p>
 
-<hr/>
+<div id="loginStatus" class="badge no">Not logged in</div>
 
-<h2>📝 Text → Video (Wan 2.2 T2V)</h2>
+<hr>
 
-<textarea id="textPrompt" rows="3">
-A fox sprinting through a snow-covered forest at dusk
+<h2>⚙️ Model</h2>
+<select id="modelSelect">
+  <option value="Wan-AI/Wan2.2-T2V-A14B">Text → Video (Wan 2.2 T2V)</option>
+  <option value="Wan-AI/Wan2.2-I2V-A14B">Image → Video (Wan 2.2 I2V)</option>
+</select>
+
+<textarea id="prompt" rows="4">
+A cinematic drone shot of mountains at sunrise
 </textarea>
 
-<button onclick="generateTextVideo()">Generate Video</button>
-<div id="textStatus" class="status"></div>
+<input id="imageUrl" placeholder="Image URL (only for Image → Video)" />
 
-<hr/>
+<div class="actions">
+  <button onclick="generateVideo()">Generate Video</button>
+  <button class="secondary" onclick="signIn()">Login</button>
+</div>
 
-<h2>🖼️ Image → Video (Wan 2.2 I2V)</h2>
+<div id="status" class="status"></div>
 
-<textarea id="imagePrompt" rows="4">
-A dynamic graffiti art character. A boy painted with spray paint comes to life from a concrete wall. He sings an English rap song at a very fast pace while striking a classic, energetic rapper pose.
-</textarea>
-
-<input id="imageUrl" type="text"
-value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"/>
-
-<button onclick="generateImageVideo()">Generate Video</button>
-<div id="imageStatus" class="status"></div>
+<div id="videoWrap"></div>
 
 <script>
-/* -------- Text to Video -------- */
-function generateTextVideo() {
-    const status = document.getElementById("textStatus");
-    status.textContent = "Generating video...";
+let loggedIn = false;
 
-    const startTime = Date.now();
-
-    puter.ai.txt2vid(
-        document.getElementById("textPrompt").value,
-        { model: "Wan-AI/Wan2.2-T2V-A14B" }
-    )
-    .then(video => {
-        document.body.appendChild(video);
-        video.addEventListener("loadeddata", () => video.play().catch(()=>{}));
-
-        const total = ((Date.now() - startTime)/1000).toFixed(1);
-        status.textContent = `Finished in ${total} seconds`;
-    })
-    .catch(err => {
-        console.error(err);
-        status.textContent = "Error: " + err.message;
-    });
+/* ---------- AUTH ---------- */
+async function signIn(){
+  try{
+    await puter.auth.signIn();
+    loggedIn = true;
+    document.getElementById("loginStatus").textContent = "Logged in to Puter";
+    document.getElementById("loginStatus").className = "badge ok";
+  }catch{}
 }
 
-/* -------- Image to Video -------- */
-function generateImageVideo() {
-    const status = document.getElementById("imageStatus");
-    status.textContent = "Generating video...";
+/* ---------- GENERATE ---------- */
+async function generateVideo(){
+  const status = document.getElementById("status");
+  const wrap = document.getElementById("videoWrap");
+  wrap.innerHTML = "";
 
-    const startTime = Date.now();
+  if(!loggedIn){
+    status.textContent = "Logging into Puter…";
+    await signIn();
+  }
 
-    puter.ai.txt2vid(
-        document.getElementById("imagePrompt").value,
-        {
-            model: "Wan-AI/Wan2.2-I2V-A14B",
-            image_url: document.getElementById("imageUrl").value
-        }
-    )
-    .then(video => {
-        document.body.appendChild(video);
-        video.addEventListener("loadeddata", () => video.play().catch(()=>{}));
+  const model = document.getElementById("modelSelect").value;
+  const prompt = document.getElementById("prompt").value;
+  const imageUrl = document.getElementById("imageUrl").value;
 
-        const total = ((Date.now() - startTime)/1000).toFixed(1);
-        status.textContent = `Finished in ${total} seconds`;
-    })
-    .catch(err => {
-        console.error(err);
-        status.textContent = "Error: " + err.message;
+  status.textContent = "Generating video…";
+  const start = Date.now();
+
+  try{
+    const video = await puter.ai.txt2vid(prompt,{
+      model,
+      image_url: model.includes("I2V") ? imageUrl : undefined
     });
+
+    video.muted = true;
+    video.playsInline = true;
+    video.controls = true;
+
+    wrap.appendChild(video);
+
+    video.addEventListener("loadeddata",()=>{
+      video.play().catch(()=>{});
+    });
+
+    const time = ((Date.now()-start)/1000).toFixed(1);
+    status.textContent = `Finished in ${time}s`;
+
+    addDownload(video);
+
+  }catch(err){
+    console.error(err);
+    status.textContent = "Error: " + (err?.message || err || "Unknown error");
+  }
+}
+
+/* ---------- DOWNLOAD ---------- */
+function addDownload(video){
+  const btn = document.createElement("button");
+  btn.textContent = "⬇ Download Video";
+  btn.className = "secondary";
+  btn.onclick = ()=>{
+    const a = document.createElement("a");
+    a.href = video.src;
+    a.download = "wan-ai-video.mp4";
+    a.click();
+  };
+  document.getElementById("videoWrap").appendChild(btn);
 }
 </script>
 
-<footer>
-    <p>
-        Free, Unlimited Wan AI via Puter.js<br/>
-        Models: Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br/>
-        User-Pays model · No API keys · No backend
-    </p>
-</footer>
+<div class="footer">
+<p>
+Powered by <strong>Puter.js</strong>.  
+Special thanks to the <a href="https://puter.com" target="_blank">Puter</a> team for enabling
+secure, client-side AI via their innovative <em>User-Pays</em> model.<br><br>
+
+Models used:<br>
+Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B<br><br>
+
+No API keys • No backend • Truly serverless AI video generation
+</p>
+</div>
 
 </body>
 </html>
