@@ -115,6 +115,15 @@ playful cartoon style, extended motion
 <script>
 let isAuthed = false;
 
+/* ---------- ENSURE PUTER READY ---------- */
+async function ensurePuterReady(){
+  if (puter.ready) {
+    await puter.ready;
+  } else {
+    await new Promise(r => setTimeout(r, 1500));
+  }
+}
+
 /* ---------- LOGIN ---------- */
 document.getElementById("loginBtn").onclick = async () => {
   const badge = document.getElementById("loginBadge");
@@ -122,6 +131,7 @@ document.getElementById("loginBtn").onclick = async () => {
 
   try {
     await puter.auth.signIn({ popup:true });
+    await ensurePuterReady();
 
     isAuthed = true;
     badge.textContent = "Logged in to Puter";
@@ -138,12 +148,16 @@ document.getElementById("loginBtn").onclick = async () => {
 
 /* ---------- TEXT TO VIDEO ---------- */
 document.getElementById("t2vBtn").onclick = async () => {
+  if(!isAuthed) return;
+
   const status = document.getElementById("t2vStatus");
   const out = document.getElementById("t2vOutput");
   out.innerHTML = "";
   status.textContent = "Generating video…";
 
   try {
+    await ensurePuterReady();
+
     const video = await puter.ai.txt2vid(
       document.getElementById("t2vPrompt").value,
       { model:"Wan-AI/Wan2.2-T2V-A14B" }
@@ -160,18 +174,22 @@ document.getElementById("t2vBtn").onclick = async () => {
 
   } catch (err) {
     console.error(err);
-    status.textContent = "❌ Generation failed – stay logged in and try again";
+    status.textContent = "❌ Generation failed – please wait and try again";
   }
 };
 
 /* ---------- IMAGE TO VIDEO ---------- */
 document.getElementById("i2vBtn").onclick = async () => {
+  if(!isAuthed) return;
+
   const status = document.getElementById("i2vStatus");
   const out = document.getElementById("i2vOutput");
   out.innerHTML = "";
   status.textContent = "Generating video…";
 
   try {
+    await ensurePuterReady();
+
     const video = await puter.ai.txt2vid(
       document.getElementById("i2vPrompt").value,
       {
@@ -191,7 +209,7 @@ document.getElementById("i2vBtn").onclick = async () => {
 
   } catch (err) {
     console.error(err);
-    status.textContent = "❌ Generation failed – check image URL";
+    status.textContent = "❌ Generation failed – check image URL and retry";
   }
 };
 </script>
