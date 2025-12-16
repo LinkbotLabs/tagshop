@@ -1,76 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>TagShop – Free AI Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>TagShop AI Generator</title>
+  <script src="https://js.puter.com/v2/"></script>
 </head>
+
 <body>
 
 <h1>TagShop AI Generator</h1>
 <p>Free AI Image & Video generation powered by Puter</p>
 
-<textarea
-  id="prompt"
-  placeholder="Describe what you want to generate..."
-  style="width:100%;max-width:600px;height:80px;"
-></textarea>
+<!-- OFFICIAL PUTER LOGIN -->
+<button id="loginBtn">🔐 Login with Puter</button>
 
-<br><br>
+<hr>
 
-<button id="imageBtn">Generate Image</button>
-<button id="videoBtn">Generate Video (Wan 2.2)</button>
+<h2>Generate Image</h2>
+<button id="imgBtn">Generate Image</button>
 
-<p id="status"></p>
+<h2>Generate Video (Wan 2.2)</h2>
+<button id="vidBtn">Generate Video</button>
 
+<div id="status"></div>
 <div id="output"></div>
 
-<!-- OFFICIAL PUTER SCRIPT -->
-<script src="https://js.puter.com/v2/"></script>
-
 <script>
-  const output = document.getElementById('output');
-  const status = document.getElementById('status');
-  const promptInput = document.getElementById('prompt');
+const status = document.getElementById("status");
+const output = document.getElementById("output");
 
-  function clearOutput() {
-    output.innerHTML = '';
+/* OFFICIAL LOGIN */
+document.getElementById("loginBtn").onclick = async () => {
+  await puter.auth.signIn();
+  status.textContent = "✅ Logged in with Puter";
+};
+
+/* IMAGE */
+document.getElementById("imgBtn").onclick = async () => {
+  status.textContent = "Generating image...";
+  output.innerHTML = "";
+
+  try {
+    const img = await puter.ai.txt2img(
+      "A futuristic AI pigeon mascot, neon style"
+    );
+    output.appendChild(img);
+    status.textContent = "Image ready ✔";
+  } catch (e) {
+    status.textContent = JSON.stringify(e);
   }
+};
 
-  document.getElementById('imageBtn').onclick = async () => {
-    clearOutput();
-    status.textContent = 'Generating image…';
+/* VIDEO */
+document.getElementById("vidBtn").onclick = async () => {
+  status.textContent = "Generating video...";
+  output.innerHTML = "";
 
-    try {
-      const img = await puter.ai.txt2img(promptInput.value);
-      clearOutput();
-      output.appendChild(img);
-      status.textContent = 'Done';
-    } catch (err) {
-      status.textContent = 'Error';
-      output.textContent = JSON.stringify(err);
-    }
-  };
-
-  document.getElementById('videoBtn').onclick = async () => {
-    clearOutput();
-    status.textContent = 'Generating video…';
-
-    try {
-      const video = await puter.ai.txt2vid(
-        promptInput.value,
-        { model: "Wan-AI/Wan2.2-T2V-A14B" }
-      );
-
-      clearOutput();
-      output.appendChild(video);
-      video.play().catch(() => {});
-      status.textContent = 'Done';
-    } catch (err) {
-      status.textContent = 'Error';
-      output.textContent = JSON.stringify(err);
-    }
-  };
+  try {
+    const video = await puter.ai.txt2vid(
+      "A cartoon pigeon explaining AI in a funny way",
+      { model: "Wan-AI/Wan2.2-T2V-A14B" }
+    );
+    output.appendChild(video);
+    video.play().catch(()=>{});
+    status.textContent = "Video ready ✔";
+  } catch (e) {
+    status.textContent = JSON.stringify(e);
+  }
+};
 </script>
 
 </body>
