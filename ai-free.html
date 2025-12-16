@@ -1,230 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tagshop – Free AI Video Generator</title>
-
-<!-- OFFICIAL PUTER SDK -->
-<script src="https://js.puter.com/v2/"></script>
-
-<style>
-body{
-  font-family:system-ui,Arial;
-  background:#0f0f0f;
-  color:#f5f5f5;
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-h1,h2,h3{color:#00e5ff}
-textarea,input,select,button{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  font-size:14px;
-}
-textarea,input,select{
-  background:#1a1a1a;
-  color:#fff;
-}
-button{
-  background:#00e5ff;
-  color:#000;
-  font-weight:700;
-  cursor:pointer;
-}
-button.secondary{
-  background:#222;
-  color:#00e5ff;
-}
-video{
-  width:100%;
-  margin-top:20px;
-  border-radius:12px;
-}
-.status{
-  margin-top:10px;
-  font-style:italic;
-  color:#aaa;
-}
-.section{
-  margin-top:40px;
-  padding-top:20px;
-  border-top:1px solid #222;
-}
-.footer{
-  margin-top:50px;
-  font-size:13px;
-  color:#888;
-  text-align:center;
-}
-.footer a{color:#00e5ff;text-decoration:none}
-</style>
+  <meta charset="UTF-8">
+  <title>TagShop – Free AI Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 
-<h1>🎬 Free AI Video Generator</h1>
-<p>
-No API keys • No backend • Runs fully in your browser<br>
-Powered by <strong>Puter.js</strong> (User-Pays)
-</p>
+<h1>TagShop AI Generator</h1>
+<p>Free AI Image & Video generation powered by Puter</p>
 
-<div id="status" class="status"></div>
+<textarea
+  id="prompt"
+  placeholder="Describe what you want to generate..."
+  style="width:100%;max-width:600px;height:80px;"
+></textarea>
+
+<br><br>
+
+<button id="imageBtn">Generate Image</button>
+<button id="videoBtn">Generate Video (Wan 2.2)</button>
+
+<p id="status"></p>
+
 <div id="output"></div>
 
-<!-- ================= TEXT TO VIDEO ================= -->
-<div class="section">
-<h2>📝 Text → Video (Wan 2.2)</h2>
+<!-- OFFICIAL PUTER SCRIPT -->
+<script src="https://js.puter.com/v2/"></script>
 
-<textarea id="t2vPrompt" rows="3">
-A colorful cartoon pigeon talking directly to the camera, comedy style, energetic, animated
-</textarea>
-
-<button onclick="generateT2V()">Login & Generate Text → Video</button>
-</div>
-
-<!-- ================= IMAGE TO VIDEO ================= -->
-<div class="section">
-<h2>🖼️ Image → Video (Wan 2.2)</h2>
-
-<textarea id="i2vPrompt" rows="4">
-A bold animated advertisement showing a free AI text to video generator website,
-dark UI, neon cyan highlights, futuristic tech style
-</textarea>
-
-<input id="imageUrl"
-value="https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png" />
-
-<button onclick="generateI2V()">Login & Generate Image → Video</button>
-</div>
-
-<!-- ================= SEEDANCE ================= -->
-<div class="section">
-<h2>⚡ Seedance Video (Fast)</h2>
-
-<select id="seedanceModel">
-  <option value="ByteDance/Seedance-1.0-lite">Seedance 1.0 Lite</option>
-  <option value="ByteDance/Seedance-1.0-pro">Seedance 1.0 Pro</option>
-</select>
-
-<select id="seedanceSize">
-  <option value="">Default Size</option>
-  <option value="416x960">Vertical (Shorts/Reels)</option>
-  <option value="640x640">Square</option>
-  <option value="864x480">Landscape</option>
-</select>
-
-<textarea id="seedancePrompt" rows="3">
-A fast cinematic promo showing a modern AI video generator website
-</textarea>
-
-<button onclick="generateSeedance()">Login & Generate Seedance Video</button>
-</div>
-
-<!-- ================= SCRIPT ================= -->
 <script>
-function clearOutput(){
-  document.getElementById("output").innerHTML = "";
-}
+  const output = document.getElementById('output');
+  const status = document.getElementById('status');
+  const promptInput = document.getElementById('prompt');
 
-function showVideo(video){
-  video.controls = true;
-  video.muted = true;
-  video.playsInline = true;
-  document.getElementById("output").appendChild(video);
-  video.addEventListener("loadeddata",()=>video.play().catch(()=>{}));
-}
-
-/* -------- TEXT → VIDEO -------- */
-async function generateT2V(){
-  clearOutput();
-  const status = document.getElementById("status");
-  status.textContent = "Signing in to Puter…";
-
-  try{
-    await puter.auth.signIn(); // ✅ OFFICIAL LOGIN
-
-    status.textContent = "Generating Text → Video…";
-    const video = await puter.ai.txt2vid(
-      document.getElementById("t2vPrompt").value,
-      { model:"Wan-AI/Wan2.2-T2V-A14B" }
-    );
-    showVideo(video);
-    status.textContent = "Finished ✔";
-  }catch(err){
-    console.error(err);
-    status.textContent = "Text → Video busy or unavailable. Try Image → Video.";
+  function clearOutput() {
+    output.innerHTML = '';
   }
-}
 
-/* -------- IMAGE → VIDEO -------- */
-async function generateI2V(){
-  clearOutput();
-  const status = document.getElementById("status");
-  status.textContent = "Signing in to Puter…";
+  document.getElementById('imageBtn').onclick = async () => {
+    clearOutput();
+    status.textContent = 'Generating image…';
 
-  try{
-    await puter.auth.signIn();
-
-    status.textContent = "Generating Image → Video…";
-    const video = await puter.ai.txt2vid(
-      document.getElementById("i2vPrompt").value,
-      {
-        model:"Wan-AI/Wan2.2-I2V-A14B",
-        image_url:document.getElementById("imageUrl").value
-      }
-    );
-    showVideo(video);
-    status.textContent = "Finished ✔";
-  }catch(err){
-    console.error(err);
-    status.textContent = "Generation failed – stay logged in and try again.";
-  }
-}
-
-/* -------- SEEDANCE -------- */
-async function generateSeedance(){
-  clearOutput();
-  const status = document.getElementById("status");
-  status.textContent = "Signing in to Puter…";
-
-  try{
-    await puter.auth.signIn();
-
-    const model = document.getElementById("seedanceModel").value;
-    const size = document.getElementById("seedanceSize").value;
-    const prompt = document.getElementById("seedancePrompt").value;
-
-    let opts = { model };
-    if(size){
-      const [w,h] = size.split("x");
-      opts.width = Number(w);
-      opts.height = Number(h);
+    try {
+      const img = await puter.ai.txt2img(promptInput.value);
+      clearOutput();
+      output.appendChild(img);
+      status.textContent = 'Done';
+    } catch (err) {
+      status.textContent = 'Error';
+      output.textContent = JSON.stringify(err);
     }
+  };
 
-    status.textContent = "Generating Seedance video…";
-    const video = await puter.ai.txt2vid(prompt, opts);
-    showVideo(video);
-    status.textContent = "Finished ✔";
-  }catch(err){
-    console.error(err);
-    status.textContent = "Seedance generation failed.";
-  }
-}
+  document.getElementById('videoBtn').onclick = async () => {
+    clearOutput();
+    status.textContent = 'Generating video…';
+
+    try {
+      const video = await puter.ai.txt2vid(
+        promptInput.value,
+        { model: "Wan-AI/Wan2.2-T2V-A14B" }
+      );
+
+      clearOutput();
+      output.appendChild(video);
+      video.play().catch(() => {});
+      status.textContent = 'Done';
+    } catch (err) {
+      status.textContent = 'Error';
+      output.textContent = JSON.stringify(err);
+    }
+  };
 </script>
-
-<div class="footer">
-<p>
-Special thanks to <a href="https://puter.com" target="_blank">Puter</a> for pioneering
-secure client-side AI with the <strong>User-Pays</strong> model.<br><br>
-Models used:<br>
-Wan-AI/Wan2.2-T2V-A14B · Wan-AI/Wan2.2-I2V-A14B · Seedance 1.0 Lite / Pro
-</p>
-</div>
 
 </body>
 </html>
