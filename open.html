@@ -2,32 +2,27 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Open in Browser</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
-    a {
-      display: inline-block;
-      padding: 16px 24px;
-      background: black;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      border-radius: 8px;
-      
-    }
-  </style>
-</head>
-<body>
-  <h2>Open in Browser</h2>
-  <p>TikTok & Facebook block login popups.</p>
-  <p>Please open this page in Safari or Chrome.</p>
+  <title>Open TagShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <a href="https://puter.com/app/tagshop" target="_blank">
-    Open TagShop
-  </a>
+  <script>
+    function openBrowser() {
+      window.location.href = "https://puter.com/app/tagshop";
+    }
+  </script>
+</head>
+
+<body style="font-family:sans-serif;text-align:center;padding:40px;">
+  <h2>TagShop AI</h2>
+  <p>TikTok & Facebook block secure login.</p>
+  <p>Please open in your browser.</p>
+
+  <button onclick="openBrowser()" style="font-size:18px;padding:12px 20px;">
+    Open in Browser
+  </button>
+
+  <p style="margin-top:20px;font-size:12px;">
+    If nothing happens, tap ⋮ or ••• and choose “Open in browser”
+  </p>
 </body>
 </html>
