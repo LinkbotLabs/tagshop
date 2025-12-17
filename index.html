@@ -123,10 +123,11 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
     padding:22px;
     box-shadow:0 0 20px rgba(255,225,105,0.5);
   ">
-    <h2 style="color:#ffe169;">Open in Browser</h2>
+    <h2 style="color:#ffe169;">⚠️ Open in Real Browser Required</h2>
     <p style="font-size:14px;line-height:1.6;">
-      TikTok & Facebook block AI login.<br><br>
-      Open Tagshop in Safari or Chrome to continue.
+      Tagshop AI tools need Puter.com login.<br><br>
+      In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>
+      Tap the button below → it will open in Safari/Chrome!
     </p>
     <button id="openBrowserBtn"
       style="margin-top:14px;background:#ffe169;color:#000;
@@ -135,7 +136,7 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
       🚀 Open in Browser
     </button>
     <p style="font-size:12px;opacity:0.7;margin-top:10px;">
-      If needed: tap ⋯ → “Open in browser”
+      If no luck: tap ⋯ (three dots) → “Open in browser” or “Share → Safari”
     </p>
   </div>
 </div>
@@ -146,6 +147,11 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <script>
 // ---------- IMPROVED IN-APP BROWSER DETECTION & BLOCKER ----------
 (function(){
+  // Skip if already attempted external open
+  if (location.search.includes("openExternal=1") || location.search.includes("opened=1")) {
+    return;
+  }
+
   const ua = navigator.userAgent.toLowerCase();
   const isMobile = /iphone|ipad|ipod|android/i.test(ua);
   const isInApp = 
@@ -167,21 +173,18 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
     bridge.querySelector('p').innerHTML = 
       "Tagshop AI tools need Puter.com login.<br><br>" +
       "In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>" +
-      "Open in Safari or Chrome for full access!";
+      "Tap the button below → it will open in Safari/Chrome!";
 
     document.getElementById("openBrowserBtn").onclick = () => {
-      let cleanUrl = location.href.split("?")[0];
-      
-      location.href = "x-safari-" + cleanUrl;
-      
+      const cleanUrl = location.href.split("?")[0];
+
+      // Most reliable method for TikTok iOS: use inappredirect.com (free service that forces external browser)
+      window.location.href = "https://www.inappredirect.com/?url=" + encodeURIComponent(cleanUrl + "?opened=1");
+
+      // Fallback: direct clean URL
       setTimeout(() => {
-        location.href = "intent://" + cleanUrl.replace(/^https?:\/\//, '') + 
-                        "#Intent;scheme=https;package=com.android.chrome;end";
-      }, 500);
-      
-      setTimeout(() => {
-        location.href = cleanUrl + "?openExternal=1";
-      }, 1500);
+        window.location.href = cleanUrl + "?opened=1";
+      }, 800);
     };
   }
 })();
