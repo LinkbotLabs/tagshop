@@ -104,9 +104,64 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <!-- Floating My Wall button -->
 <button onclick="window.location.href='mywall.html'" style="position:fixed; bottom:20px; right:20px; background:#000; color:#ffe169; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; box-shadow:0 0 8px rgba(255,225,105,0.7);">My Wall</button>
 
+<!-- 🔒 IN-APP BROWSER BLOCKER -->
+<div id="browser-bridge" style="
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.95);
+  color:#fff; z-index:100000;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:24px;
+">
+  <div style="
+    max-width:420px;
+    background:rgba(20,20,20,0.95);
+    border:2px solid #ffe169;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 0 20px rgba(255,225,105,0.5);
+  ">
+    <h2 style="color:#ffe169;">Open in Browser</h2>
+    <p style="font-size:14px;line-height:1.6;">
+      TikTok & Facebook block AI login.<br><br>
+      Open Tagshop in Safari or Chrome to continue.
+    </p>
+    <button id="openBrowserBtn"
+      style="margin-top:14px;background:#ffe169;color:#000;
+      border-radius:10px;padding:12px 18px;
+      font-weight:800;font-size:15px;">
+      🚀 Open in Browser
+    </button>
+    <p style="font-size:12px;opacity:0.7;margin-top:10px;">
+      If needed: tap ⋯ → “Open in browser”
+    </p>
+  </div>
+</div>
+
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
+/* ---------- IN-APP BROWSER DETECTION (RUNS FIRST) ---------- */
+(function(){
+  const ua = navigator.userAgent || "";
+  const isInApp = /FBAN|FBAV|Instagram|TikTok|Line|Snapchat/i.test(ua);
+
+  if (isInApp) {
+    const bridge = document.getElementById("browser-bridge");
+    const btn = document.getElementById("openBrowserBtn");
+    if (!bridge || !btn) return;
+
+    bridge.style.display = "flex";
+
+    btn.onclick = () => {
+      const cleanUrl = location.href.split("?")[0];
+      location.href = cleanUrl + "?openExternal=1";
+    };
+  }
+})();
+
 /* ---------- CONFIG ---------- */
 const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CSE_ID = "f7e219616fe1d4629";
