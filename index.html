@@ -143,24 +143,57 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
-/* ---------- IN-APP BROWSER DETECTION (RUNS FIRST) ---------- */
-(function(){
-  const ua = navigator.userAgent || "";
-  const isInApp = /FBAN|FBAV|Instagram|TikTok|Line|Snapchat/i.test(ua);
 
-  if (isInApp) {
+<script>
+// ---------- IMPROVED IN-APP BROWSER DETECTION & BLOCKER ----------
+(function(){
+  // Broader detection: checks for common in-app signs
+  const ua = navigator.userAgent.toLowerCase();
+  const isMobile = /iphone|ipad|ipod|android/i.test(ua);
+  const isInApp = 
+    (ua.includes('fb') || ua.includes('fbav') || ua.includes('fban')) || // Facebook/Meta
+    ua.includes('instagram') ||
+    ua.includes('tiktok') ||
+    ua.includes('snapchat') ||
+    ua.includes('line') ||
+    (isMobile && 'standalone' in navigator && !navigator.standalone) || // iOS PWA not installed
+    (window.matchMedia('(display-mode: browser)').matches === false) || // Not in real browser
+    !('ontouchstart' in window === false); // Crude but helps
+
+  if (isInApp || isMobile) {  // Show on mobile + suspected in-app
     const bridge = document.getElementById("browser-bridge");
-    const btn = document.getElementById("openBrowserBtn");
-    if (!bridge || !btn) return;
+    if (!bridge) return;
 
     bridge.style.display = "flex";
 
-    btn.onclick = () => {
-      const cleanUrl = location.href.split("?")[0];
-      location.href = cleanUrl + "?openExternal=1";
+    // Update message to be clearer
+    bridge.querySelector('h2').innerText = "⚠️ Open in Real Browser Required";
+    bridge.querySelector('p').innerHTML = 
+      "Tagshop AI tools need Puter.com login.<br><br>" +
+      "In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>" +
+      "Open in Safari or Chrome for full access!";
+
+    // Button: Add ?openExternal=1 to avoid loops, then try universal open tricks
+    document.getElementById("openBrowserBtn").onclick = () => {
+      let cleanUrl = location.href.split("?")[0];
+      
+      // Try iOS Safari force (works on many versions)
+      location.href = "x-safari-" + cleanUrl;
+      
+      // Fallback: Android Chrome intent
+      setTimeout(() => {
+        location.href = "intent://" + cleanUrl.replace(/^https?:\/\//, '') + 
+                        "#Intent;scheme=https;package=com.android.chrome;end";
+      }, 500);
+      
+      // Final fallback
+      setTimeout(() => {
+        location.href = cleanUrl + "?openExternal=1";
+      }, 1500);
     };
   }
 })();
+</script>
 
 /* ---------- CONFIG ---------- */
 const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
