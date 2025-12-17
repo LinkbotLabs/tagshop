@@ -143,59 +143,50 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
-
 <script>
 // ---------- IMPROVED IN-APP BROWSER DETECTION & BLOCKER ----------
 (function(){
-  // Broader detection: checks for common in-app signs
   const ua = navigator.userAgent.toLowerCase();
   const isMobile = /iphone|ipad|ipod|android/i.test(ua);
   const isInApp = 
-    (ua.includes('fb') || ua.includes('fbav') || ua.includes('fban')) || // Facebook/Meta
+    (ua.includes('fb') || ua.includes('fbav') || ua.includes('fban')) ||
     ua.includes('instagram') ||
     ua.includes('tiktok') ||
     ua.includes('snapchat') ||
     ua.includes('line') ||
-    (isMobile && 'standalone' in navigator && !navigator.standalone) || // iOS PWA not installed
-    (window.matchMedia('(display-mode: browser)').matches === false) || // Not in real browser
-    !('ontouchstart' in window === false); // Crude but helps
+    (isMobile && 'standalone' in navigator && !navigator.standalone) ||
+    (window.matchMedia('(display-mode: browser)').matches === false);
 
-  if (isInApp || isMobile) {  // Show on mobile + suspected in-app
+  if (isInApp || isMobile) {
     const bridge = document.getElementById("browser-bridge");
     if (!bridge) return;
 
     bridge.style.display = "flex";
 
-    // Update message to be clearer
     bridge.querySelector('h2').innerText = "⚠️ Open in Real Browser Required";
     bridge.querySelector('p').innerHTML = 
       "Tagshop AI tools need Puter.com login.<br><br>" +
       "In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>" +
       "Open in Safari or Chrome for full access!";
 
-    // Button: Add ?openExternal=1 to avoid loops, then try universal open tricks
     document.getElementById("openBrowserBtn").onclick = () => {
       let cleanUrl = location.href.split("?")[0];
       
-      // Try iOS Safari force (works on many versions)
       location.href = "x-safari-" + cleanUrl;
       
-      // Fallback: Android Chrome intent
       setTimeout(() => {
         location.href = "intent://" + cleanUrl.replace(/^https?:\/\//, '') + 
                         "#Intent;scheme=https;package=com.android.chrome;end";
       }, 500);
       
-      // Final fallback
       setTimeout(() => {
         location.href = cleanUrl + "?openExternal=1";
       }, 1500);
     };
   }
 })();
-</script>
 
-/* ---------- CONFIG ---------- */
+// ---------- CONFIG ----------
 const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CSE_ID = "f7e219616fe1d4629";
 
@@ -203,7 +194,7 @@ const CSE_ID = "f7e219616fe1d4629";
 function log(msg){ 
   console.log(msg); 
   const logEl = document.getElementById("console-log"); 
-  logEl.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`; 
+  if (logEl) logEl.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`; 
 }
 
 /* ---------- LIGHT/DARK TOGGLE ---------- */
@@ -235,7 +226,7 @@ document.getElementById("search-run").addEventListener("click", async ()=>{
           <img src="${thumb}" onclick="window.open('${item.link}','_blank')" />
           <div style="font-size:12px; margin-top:4px;">${item.title}</div>
           <div class="product-btns">
-            <button onclick="addToWall('${item.title}','${thumb}','${item.link}')">Add to Wall</button>
+            <button onclick="addToWall('${item.title.replace(/'/g, "\\'")}','${thumb}','${item.link}')">Add to Wall</button>
             <button onclick="viewWall()">View Wall</button>
           </div>
         `;
@@ -268,7 +259,6 @@ function viewWall(){ window.location.href = "mywall.html"; }
 
 /* ---------- AI CHAT ---------- */
 function putText(el, text){ el.innerHTML = text ?? ''; }
-function appendText(el, text){ el.innerHTML += text ?? ''; }
 function normalizeNonStream(resp){
   if (!resp) return "";
   if (typeof resp === "string") return resp;
@@ -318,16 +308,18 @@ document.getElementById("aiai-run").addEventListener("click", async ()=>{
 /* ---------- TOGGLE LOGS ---------- */
 document.getElementById("toggle-log").addEventListener("click", ()=>{
   const el = document.getElementById("console-log");
-  el.style.display = el.style.display==="none"?"block":"none";
+  if (el) el.style.display = el.style.display==="none"?"block":"none";
 });
 
 /* ---------- QR MODAL ---------- */
 const qrImg = document.getElementById("wiseQR");
 const modal = document.getElementById("qrModal");
 const closeQR = document.getElementById("closeQR");
-qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
-closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
-modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
+if (qrImg && modal && closeQR) {
+  qrImg.addEventListener("click", ()=>{ modal.style.display = "flex"; });
+  closeQR.addEventListener("click", ()=>{ modal.style.display = "none"; });
+  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.display = "none"; });
+}
 
 /* ---------- POPUP + DONATION INTEGRATION ---------- */
 (function(){
@@ -335,7 +327,6 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
   const SECRET_PASSWORD = "tagshopme";
   let actionCount = 0, MAX_ACTIONS = 3;
 
-  // Track button clicks to trigger popup
   document.body.addEventListener("click", e=>{
     if(e.target.tagName==="BUTTON" || e.target.closest("button")){
       actionCount++;
@@ -382,10 +373,9 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
     `;
 
     box.querySelector("#agreeBtn").addEventListener("click", ()=>{
-      // Mark user as agreed
       localStorage.setItem(AGREE_KEY,"true");
-      overlay.remove(); // Close welcome popup
-      showDonation();   // Optionally show donation
+      overlay.remove();
+      showDonation();
     });
   }
 
@@ -422,7 +412,6 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
 
     const qr = new QRious({ element: document.getElementById("qrCanvas"), size:180, value:"https://wise.com/pay/me/davids14542/5usd" });
 
-    // Currency buttons
     box.querySelectorAll("[data-amt]").forEach(btn=>{
       btn.addEventListener("click",()=>{
         const v = btn.dataset.amt;
@@ -432,7 +421,6 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
       });
     });
 
-    // Password unlock
     box.querySelector("#unlockBtn").addEventListener("click", ()=>{
       const val = box.querySelector("#unlockPass").value.trim();
       if(val === SECRET_PASSWORD){
@@ -449,5 +437,6 @@ modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.style.displa
   }
 })();
 </script>
+
 </body>
 </html>
