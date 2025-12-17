@@ -123,11 +123,11 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
     padding:22px;
     box-shadow:0 0 20px rgba(255,225,105,0.5);
   ">
-    <h2 style="color:#ffe169;">⚠️ Open in Real Browser Required</h2>
+    <h2 style="color:#ffe169;">⚠️ Must Open in Safari/Chrome!</h2>
     <p style="font-size:14px;line-height:1.6;">
-      Tagshop AI tools need Puter.com login.<br><br>
-      In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>
-      Tap the button below → it will open in Safari/Chrome!
+      Tagshop AI tools (chat, image-to-video, etc.) require Puter.com registration/login.<br><br>
+      TikTok/Facebook/Instagram in-app browsers BLOCK popups and logins → features won't work!<br><br>
+      Tap the button → opens in real browser → register once → full access!
     </p>
     <button id="openBrowserBtn"
       style="margin-top:14px;background:#ffe169;color:#000;
@@ -136,7 +136,7 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
       🚀 Open in Browser
     </button>
     <p style="font-size:12px;opacity:0.7;margin-top:10px;">
-      If no luck: tap ⋯ (three dots) → “Open in browser” or “Share → Safari”
+      If button fails: tap ⋯ (three dots) → “Open in browser” or “Share → Safari/Chrome”
     </p>
   </div>
 </div>
@@ -147,8 +147,8 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <script>
 // ---------- IMPROVED IN-APP BROWSER DETECTION & BLOCKER ----------
 (function(){
-  // Skip if already attempted external open
-  if (location.search.includes("openExternal=1") || location.search.includes("opened=1")) {
+  // Skip overlay if we already tried to open externally
+  if (location.search.includes("opened=1") || location.search.includes("openExternal=1")) {
     return;
   }
 
@@ -169,22 +169,28 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 
     bridge.style.display = "flex";
 
-    bridge.querySelector('h2').innerText = "⚠️ Open in Real Browser Required";
+    // Updated clearer message
+    bridge.querySelector('h2').innerText = "⚠️ Must Open in Safari/Chrome!";
     bridge.querySelector('p').innerHTML = 
-      "Tagshop AI tools need Puter.com login.<br><br>" +
-      "In-app browsers (TikTok, Facebook, Instagram) block logins.<br><br>" +
-      "Tap the button below → it will open in Safari/Chrome!";
+      "Tagshop AI tools (chat, image-to-video, etc.) require Puter.com registration/login.<br><br>" +
+      "TikTok/Facebook/Instagram in-app browsers BLOCK popups and logins → features won't work!<br><br>" +
+      "Tap the button → opens in real browser → register once → full access!";
 
     document.getElementById("openBrowserBtn").onclick = () => {
       const cleanUrl = location.href.split("?")[0];
 
-      // Most reliable method for TikTok iOS: use inappredirect.com (free service that forces external browser)
+      // Primary: Use reliable bypass service (inappredirect.com is active and working in 2025)
       window.location.href = "https://www.inappredirect.com/?url=" + encodeURIComponent(cleanUrl + "?opened=1");
 
-      // Fallback: direct clean URL
+      // Fallback 1: Direct reload with param
       setTimeout(() => {
         window.location.href = cleanUrl + "?opened=1";
-      }, 800);
+      }, 600);
+
+      // Fallback 2: Try another service if needed (comment out if not required)
+      // setTimeout(() => {
+      //   window.location.href = "https://link-to-browser.com/?url=" + encodeURIComponent(cleanUrl + "?opened=1");
+      // }, 1200);
     };
   }
 })();
