@@ -125,18 +125,22 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
   ">
     <h2 style="color:#ffe169;">⚠️ Must Open in Safari or Chrome!</h2>
     <p style="font-size:14px;line-height:1.6;">
-      Tagshop AI tools (chat, image-to-video, etc.) require Puter.com registration/login.<br><br>
-      TikTok's in-app browser BLOCKS the login popup → you get a white/blank page.<br><br>
-      Tap the button below to open in real browser → register once → everything works!
+      Tagshop AI tools require Puter.com registration/login popup.<br><br>
+      TikTok's in-app browser BLOCKS popups → you get a white/blank page.<br><br>
+      If the button below doesn't work automatically:<br>
+      1. Tap the back arrow ←<br>
+      2. Tap ⋯ (three dots) in the top-right<br>
+      3. Choose “Open in Safari” (iPhone) or “Open in Chrome” (Android)<br><br>
+      Register once → full access to all tools!
     </p>
     <button id="openBrowserBtn"
       style="margin-top:14px;background:#ffe169;color:#000;
       border-radius:10px;padding:12px 18px;
       font-weight:800;font-size:15px;">
-      🚀 Open in Browser
+      🚀 Try Auto-Open in Browser
     </button>
     <p style="font-size:12px;opacity:0.7;margin-top:10px;">
-      If it hangs or fails: tap back, then ⋯ → “Open in Safari”
+      Manual steps above work 100% if button fails
     </p>
   </div>
 </div>
@@ -147,8 +151,8 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 <script>
 // ---------- IN-APP BROWSER DETECTION & BLOCKER ----------
 (function(){
-  // Don't show overlay if we already redirected
-  if (location.search.includes("opened=1") || location.search.includes("openExternal=1")) {
+  // Skip overlay if we already have the param
+  if (location.search.includes("opened=1")) {
     return;
   }
 
@@ -171,14 +175,11 @@ input, select, textarea { width:100%; padding:8px; border-radius:6px; border:1px
 
     document.getElementById("openBrowserBtn").onclick = () => {
       const cleanUrl = location.href.split("?")[0];
+      // Simple reload with param to hide overlay next time
+      window.location.href = cleanUrl + "?opened=1";
 
-      // Primary reliable bypass (link-to-browser.com – very stable in 2025, rarely hangs)
-      window.location.href = "https://link-to-browser.com/?url=" + encodeURIComponent(cleanUrl + "?opened=1");
-
-      // Fallback direct reload
-      setTimeout(() => {
-        window.location.href = cleanUrl + "?opened=1";
-      }, 800);
+      // Helpful alert with manual instructions
+      alert("Trying to open in your real browser...\n\nIf nothing happens:\n1. Tap back ←\n2. Tap ⋯ (top-right)\n3. Choose 'Open in Safari' or 'Open in Chrome'");
     };
   }
 })();
