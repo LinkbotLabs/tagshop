@@ -7,112 +7,132 @@
 
 <style>
 :root{
- --bg:#000;
- --card:#111;
- --border:#222;
- --text:#fff;
- --accent:#00ffff;
- --gold:#ffe169;
+  --bg:#000;
+  --card:#111;
+  --border:#222;
+  --text:#fff;
+  --accent:#00ffff;
+  --gold:#ffe169;
 }
 body{
- margin:0;
- font-family:system-ui;
- background:var(--bg);
- color:var(--text);
+  margin:0;
+  font-family:system-ui;
+  background:var(--bg);
+  color:var(--text);
 }
 header{
- background:#000;
- padding:14px;
- border-bottom:1px solid var(--border);
- text-align:center;
+  background:#000;
+  padding:14px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
 }
 header h1{margin:0;font-size:22px;color:var(--gold);}
 header .sub{font-size:12px;color:#aaa;margin-top:4px;}
 .trust{
- display:flex;
- justify-content:center;
- gap:12px;
- font-size:11px;
- color:#aaa;
- margin-top:8px;
- flex-wrap:wrap;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  font-size:11px;
+  color:#aaa;
+  margin-top:8px;
+  flex-wrap:wrap;
 }
 main{padding:10px;}
 .card{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:14px;
- padding:14px;
- margin-top:12px;
- font-size:13px;
- line-height:1.6;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-top:12px;
+  font-size:13px;
+  line-height:1.6;
 }
 input{
- width:100%;
- background:#000;
- border:1px solid var(--border);
- border-radius:10px;
- padding:12px;
- color:#fff;
- font-size:14px;
- margin-bottom:8px;
+  width:100%;
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  color:#fff;
+  font-size:14px;
+  margin-bottom:8px;
 }
-label{font-size:12px;color:#aaa;}
 button{
- border:none;
- border-radius:10px;
- padding:12px;
- font-weight:900;
- cursor:pointer;
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-weight:800;
+  cursor:pointer;
 }
 .buy{background:var(--accent);color:#000;}
 .whatsapp{background:#25D366;color:#000;}
-.buybar{
- position:fixed;
- bottom:0; left:0; right:0;
- background:#000;
- border-top:1px solid var(--border);
- padding:10px;
- display:flex;
- gap:8px;
- z-index:999;
-}
 .grid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
- gap:10px;
- margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:12px;
+  margin-top:12px;
 }
 .product{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:10px;
- padding:6px;
- text-align:center;
- font-size:12px;
+  background:#111;
+  border:1px solid #222;
+  border-radius:10px;
+  padding:6px;
+  text-align:center;
 }
 .product img{
- width:100%;
- border-radius:6px;
- cursor:pointer;
+  width:100%;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
 }
-.overlay{
- position:fixed;
- inset:0;
- background:rgba(0,0,0,0.95);
- display:flex;
- justify-content:center;
- align-items:center;
- z-index:1000;
- display:none;
+.product img:hover{transform:scale(1.05);}
+.product-title{
+  font-size:12px;
+  margin-top:4px;
 }
-.overlay-content{
- background:#111;
- border:2px solid var(--accent);
- border-radius:12px;
- padding:20px;
- max-width:360px;
- color:#fff;
+.product button{
+  width:100%;
+  margin-top:6px;
+  font-size:12px;
+  cursor:pointer;
+}
+.buybar{
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:#000;
+  border-top:1px solid var(--border);
+  padding:10px;
+  display:flex;
+  gap:8px;
+  z-index:999;
+}
+.footer{
+  text-align:center;
+  font-size:11px;
+  color:#777;
+  margin-top:30px;
+  padding-bottom:100px;
+}
+#overlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+#overlay-box{
+  background:#111;
+  border:2px solid var(--accent);
+  border-radius:12px;
+  padding:20px;
+  max-width:320px;
+  text-align:center;
+  color:#fff;
+}
+#overlay-box h3{
+  color:var(--accent);
+  margin-top:0;
 }
 </style>
 </head>
@@ -123,38 +143,46 @@ button{
 <h1>⌚ Tagshop Watches</h1>
 <div class="sub">UK concierge store • Verified DHgate supplier</div>
 <div class="trust">
-<div>✔ UK delivery included</div>
+<div>✔ Access to top timepieces</div>
+<div>✔ Free fast shipping to UK</div>
 <div>✔ Secure Wise checkout</div>
-<div>✔ 30% concierge fee</div>
 <div>✔ Seller 21945990</div>
 </div>
 </header>
 
 <main>
-
 <div class="card">
-<label>Search Men’s Watches</label>
-<input id="searchBox" placeholder="Enter keywords (e.g. mechanical, ceramic)">
+<input type="text" id="searchBox" placeholder="Search men's watches...">
 <button onclick="runSearch()">Search</button>
 </div>
 
 <div class="card">
-<h3>Product Wall</h3>
-<div id="productGrid" class="grid"></div>
+<h3>Results</h3>
+<div id="results" class="grid"></div>
+</div>
+
+<div class="card">
+<h3>Your Wall</h3>
+<div id="wall" class="grid"></div>
 </div>
 
 <div class="card">
 <b>How it works</b><br>
-1) Browse watches above<br>
-2) Click a product → opens DHgate<br>
-3) Press <b>Buy via Tagshop</b><br>
-4) UK consultants handle your order<br>
-5) Pay securely via Wise<br>
-6) Receive your watch with guaranteed UK delivery<br><br>
+1) Search for men's watches<br>
+2) Click product to view → add to wall<br>
+3) Pay securely via Wise<br>
+4) We handle UK delivery and tracking<br><br>
 <b>All prices include 30% service fee + UK delivery</b>
 </div>
-
 </main>
+
+<div id="overlay">
+  <div id="overlay-box">
+    <h3>Item Added!</h3>
+    <p>You can view your wall for top timepieces and UK delivery.</p>
+    <button onclick="document.getElementById('overlay').style.display='none'">Close</button>
+  </div>
+</div>
 
 <div class="buybar">
 <button class="buy" onclick="checkout()">Buy via Tagshop</button>
@@ -166,63 +194,90 @@ Tagshop sources from DHgate store 21945990.<br>
 We handle checkout, ordering and UK delivery.
 </div>
 
-<!-- UK checkout overlay -->
-<div id="overlay" class="overlay">
-<div class="overlay-content">
-<h3 style="color:var(--accent)">Your Concierge Fee Includes:</h3>
-<p>
-Access to the top timepieces, fast UK delivery, and guaranteed authentic products.<br>
-We handle ordering, tracking, and delivery so you receive a crafted timepiece you will be proud of.
-</p>
-<button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:10px;padding:10px;background:var(--accent);color:#000;border:none;border-radius:8px;">Close</button>
-</div>
-</div>
-
 <script>
+const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CSE_ID = "f7e219616fe1d4629";
 const WISE="https://wise.com/pay/me/davids14542";
 const WHATSAPP="https://wa.me/?text=";
-const API_KEY="YOUR_GOOGLE_API_KEY"; // insert your own
-const CSE_ID="YOUR_CSE_ID"; // insert your own
+const MAX_RESULTS = 50;
 
-// ===== Fetch products via Google PSE =====
+// Run Google Custom Search
 function runSearch(){
- const q=document.getElementById("searchBox").value || "mens watches";
- const query="site:dhgate.com/store/21945990 "+q;
- const url=`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(query)}&num=50`;
+  const query = document.getElementById("searchBox").value.trim();
+  if(!query) return;
+  const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(query)}&num=10`;
+  document.getElementById("results").innerHTML="Loading…";
 
- fetch(url)
- .then(res=>res.json())
- .then(data=>{
-   const grid=document.getElementById("productGrid");
-   grid.innerHTML="";
-   data.items?.forEach(item=>{
-     const img=item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
-     const link=item.link;
-     const title=item.title;
-     const div=document.createElement("div");
-     div.className="product";
-     div.innerHTML=`
-       <img src="${img}" onclick="window.open('${link}','_blank')">
-       <div>${title}</div>
-     `;
-     grid.appendChild(div);
-   });
- })
- .catch(e=>{
-   console.log(e);
-   document.getElementById("productGrid").innerHTML="<p style='color:#aaa'>No products found. Try again.</p>";
- });
+  fetch(url)
+    .then(res=>res.json())
+    .then(data=>{
+      const resultsEl = document.getElementById("results");
+      resultsEl.innerHTML="";
+      const items = data.items || [];
+      items.forEach(item=>{
+        const img = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
+        const div = document.createElement("div");
+        div.className="product";
+        div.innerHTML=`
+          <img src="${img}" onclick="addToWall('${item.title.replace(/'/g,"")}','${img}','${item.link}')">
+          <div class="product-title">${item.title}</div>
+        `;
+        resultsEl.appendChild(div);
+      });
+    })
+    .catch(err=>{console.log(err); document.getElementById("results").innerHTML="Error loading results";});
 }
 
-// ===== Checkout / WhatsApp =====
+// Add to Wall
+function addToWall(title,img,link){
+  let wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  if(wall.length>=MAX_RESULTS){
+    alert("Wall limit reached!");
+    return;
+  }
+  wall.push({title,img,link});
+  localStorage.setItem("tagshopWall",JSON.stringify(wall));
+  renderWall();
+  document.getElementById('overlay').style.display='flex';
+}
+
+// Render Wall
+function renderWall(){
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  const wallEl = document.getElementById("wall");
+  wallEl.innerHTML="";
+  wall.forEach(item=>{
+    const div = document.createElement("div");
+    div.className="product";
+    div.innerHTML=`
+      <img src="${item.img}" onclick="window.open('${item.link}','_blank')">
+      <div class="product-title">${item.title}</div>
+    `;
+    wallEl.appendChild(div);
+  });
+}
+
+// Checkout and WhatsApp
 function checkout(){
- document.getElementById('overlay').style.display='flex';
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  if(!wall.length){
+    alert("Add items to your wall first!");
+    return;
+  }
+  let msg = "Tagshop Watch Order\n\n";
+  wall.forEach((item,i)=>{msg+=`${i+1}) ${item.title} - ${item.link}\n`;});
+  window.open(WISE+"?message="+encodeURIComponent(msg),"_blank");
 }
 
 function whatsapp(){
- const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
- window.open(WHATSAPP+msg,"_blank");
+  let msg = "Hi Tagshop, I want to order these watches:\n";
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  wall.forEach((item,i)=>{msg+=`${i+1}) ${item.title} - ${item.link}\n`;});
+  window.open(WHATSAPP+encodeURIComponent(msg),"_blank");
 }
+
+// Initialize
+renderWall();
 </script>
 
 </body>
