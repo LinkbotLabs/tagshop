@@ -3,239 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tagshop Wall – Tagshop</title>
-<link rel="stylesheet" href="uniform-dark-glass.css">
+<title>Tagshop – Watch Concierge</title>
+
 <style>
-:root { --accent: #ffa500; --glow: #00FFFF; --text: #fff; --bg: #000; }
-body { background:var(--bg); color:var(--text); font-family:system-ui; padding:20px; margin:0; }
-h1 { text-align:center; margin-bottom:10px; color:#ffe169; }
-#affiliateIdDisplay { text-align:center; font-weight:bold; color:var(--accent); text-shadow:0 0 8px var(--accent); margin-bottom:10px; font-size:16px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; margin-top:20px; }
-.card { background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px; text-align:center; }
-.card img { max-width:100%; border-radius:6px; cursor:pointer; transition:0.3s; }
-.card img:hover { transform:scale(1.05); }
-button { margin-top:4px; background:var(--glow); border:none; border-radius:6px; cursor:pointer; color:#000; font-weight:700; padding:4px 8px; font-size:12px; }
-
-/* Affiliate Pop-Up */
-#affiliatePopup {
-  position:fixed; bottom:20px; right:20px; width:300px; max-width:90%;
-  background:rgba(0,0,0,0.95); backdrop-filter:blur(12px);
-  border:1px solid var(--accent); border-radius:16px; padding:16px; z-index:999;
-  color:#fff; display:none; box-shadow:0 4px 20px rgba(0,0,0,0.6);
+body{
+  background:#000;
+  color:#fff;
+  font-family:system-ui;
+  margin:0;
+  padding:15px;
 }
-#affiliatePopup h2 { color:var(--accent); font-size:16px; margin:0 0 10px 0; text-align:center; }
-#affiliatePopup input, #affiliatePopup button { margin:4px 0; font-size:12px; width:100%; padding:6px; border-radius:8px; }
-
-/* Affiliate Toggle Button */
-#affiliateToggle { 
-  position:fixed; bottom:20px; right:340px; background:#000; color:var(--accent); border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; 
+h1{
+  text-align:center;
+  color:#ffe169;
+  margin-bottom:6px;
+}
+.sub{
+  text-align:center;
+  color:#aaa;
+  font-size:13px;
+  margin-bottom:15px;
 }
 
-/* Social Buttons */
-.page-socials { position:fixed; bottom:20px; left:20px; display:flex; gap:6px; z-index:1000; }
-.social-btn { width:30px; height:30px; background:#000; color:#fff; border:none; border-radius:50%; font-weight:bold; cursor:pointer; font-size:14px; line-height:28px; text-align:center; }
-.social-btn:hover { opacity:0.8; }
-
-/* Visitor Count */
-#visitorCount { position:fixed; top:20px; right:20px; color:var(--glow); font-weight:bold; font-size:14px; }
-
-/* Home Button */
-#homeBtn {
-  position:fixed; bottom:20px; right:120px; background:#000; color:#ffe169; border:none; border-radius:16px; padding:10px 14px; font-weight:700; cursor:pointer; z-index:1000; box-shadow:0 0 8px rgba(255,225,105,0.7);
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;
 }
 
-/* Unlock Overlay */
-#unlockOverlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.95); display:flex; justify-content:center; align-items:center; z-index:9999; display:none;
+.card{
+  background:#111;
+  border-radius:12px;
+  padding:10px;
+  border:1px solid #222;
 }
-#unlockBox {
-  background:rgba(0,0,0,0.9); border:2px solid var(--glow); border-radius:12px; padding:20px; max-width:320px; text-align:center; color:#fff;
+
+.card img{
+  width:100%;
+  border-radius:10px;
+}
+
+.title{
+  font-weight:700;
+  font-size:14px;
+  margin-top:8px;
+}
+
+.desc{
+  font-size:12px;
+  color:#ccc;
+  margin:6px 0;
+}
+
+.price{
+  font-size:16px;
+  color:#00ffcc;
+  font-weight:800;
+}
+
+.small{
+  font-size:11px;
+  color:#aaa;
+}
+
+.buy{
+  background:#00ffcc;
+  color:#000;
+  border:none;
+  border-radius:8px;
+  width:100%;
+  padding:10px;
+  font-weight:800;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+.admin{
+  margin-top:6px;
+  font-size:11px;
+}
+
+.admin input{
+  width:100%;
+  margin:3px 0;
+  padding:5px;
+  border-radius:6px;
+  border:none;
+}
+
+.admin button{
+  width:100%;
+  background:#ffe169;
+  border:none;
+  border-radius:6px;
+  padding:6px;
+  font-weight:700;
 }
 </style>
 </head>
+
 <body>
 
-<h1 id="wallTitle">Tagshop Wall</h1>
-<div id="affiliateIdDisplay"></div>
-<div id="visitorCount">Visitors: 0</div>
-
-<div class="grid" id="wallGrid"></div>
-
-<!-- Affiliate Toggle Button -->
-<button id="affiliateToggle">Affiliate</button>
-
-<!-- Affiliate Pop-Up -->
-<div id="affiliatePopup">
-  <h2>Affiliate Activation</h2>
-  <input type="text" id="amazonAffiliate" placeholder="Amazon tag (e.g., mytag-20)">
-  <input type="text" id="temuAffiliate" placeholder="Temu tag">
-  <input type="text" id="lazadaAffiliate" placeholder="Lazada tag">
-  <input type="text" id="aliexpressAffiliate" placeholder="AliExpress tag">
-  <button id="saveAffiliate">Activate</button>
-  <div id="affiliateOutput" style="margin-top:6px; font-size:12px; color:var(--accent);"></div>
+<h1>🕰️ Tagshop Watch Concierge</h1>
+<div class="sub">
+All watches sourced from DHgate verified sellers • UK Delivery • No dropshipping
 </div>
 
-<!-- Social Media Buttons -->
-<div class="page-socials">
-  <button class="social-btn" onclick="window.open('https://facebook.com/@linkbotlabs','_blank')" title="F @linkbotlabs">F</button>
-  <button class="social-btn" onclick="window.open('https://x.com/@linkbotlabs','_blank')" title="X @linkbotlabs">X</button>
-  <button class="social-btn" onclick="window.open('https://tiktok.com/@linkbotlabs','_blank')" title="Tik @linkbotlabs">T</button>
-  <button class="social-btn" onclick="window.open('https://youtube.com/@linkbotlabs','_blank')" title="YT @linkbotlabs">Y</button>
-</div>
-
-<!-- Home Button -->
-<button id="homeBtn" onclick="window.location.href='index.html'">Home</button>
-
-<!-- Unlock Overlay -->
-<div id="unlockOverlay">
-  <div id="unlockBox">
-    <h3 style="color:var(--glow); margin-top:0;">10-Item Limit Reached!</h3>
-    <p>To add more, support the developer:</p>
-    <a href="https://wise.com/pay/me/davids14542" target="_blank" style="color:var(--glow); font-weight:bold;">Pay via Wise</a>
-    <p style="margin:10px 0 6px;">or enter password:</p>
-    <input type="password" id="unlockPassword" placeholder="Password" style="width:100%; padding:6px; border-radius:6px; margin-bottom:8px;">
-    <button id="unlockBtn" style="background:var(--glow); color:#000; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Unlock</button>
-    <button onclick="document.getElementById('unlockOverlay').style.display='none'" style="margin-left:6px; background:#444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Cancel</button>
-  </div>
-</div>
+<div class="grid" id="wall"></div>
 
 <script>
-// ===== Visitor Count =====
-let visitors = (parseInt(localStorage.getItem("visitorCount") || "0")) + 1;
-localStorage.setItem("visitorCount", visitors);
-document.getElementById("visitorCount").innerText = "Visitors: " + visitors;
+const MARKUP = 0.30;
+const WISE = "https://wise.com/pay/me/davids14542";
 
-// ===== Affiliate Handling =====
-const popup = document.getElementById("affiliatePopup");
-const toggleBtn = document.getElementById("affiliateToggle");
-const affiliateDisplay = document.getElementById("affiliateIdDisplay");
-
-toggleBtn.addEventListener("click", () => {
-  popup.style.display = popup.style.display === "block" ? "none" : "block";
-});
-
-// Load saved affiliate tags
-function loadAffiliateTags() {
-  const tags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
-  if (tags.amazon) document.getElementById("amazonAffiliate").value = tags.amazon;
-  if (tags.temu) document.getElementById("temuAffiliate").value = tags.temu;
-  if (tags.lazada) document.getElementById("lazadaAffiliate").value = tags.lazada;
-  if (tags.aliexpress) document.getElementById("aliexpressAffiliate").value = tags.aliexpress;
-
-  // Show first non-empty tag
-  const first = tags.amazon || tags.temu || tags.lazada || tags.aliexpress || "";
-  if (first) {
-    affiliateDisplay.innerText = "Affiliate ID: " + first;
-  }
+function getWall(){
+  return JSON.parse(localStorage.getItem("productWall") || "[]");
 }
 
-// Save Affiliate Tags
-document.getElementById("saveAffiliate").addEventListener("click", () => {
-  const amazon = document.getElementById("amazonAffiliate").value.trim();
-  const temu = document.getElementById("temuAffiliate").value.trim();
-  const lazada = document.getElementById("lazadaAffiliate").value.trim();
-  const aliexpress = document.getElementById("aliexpressAffiliate").value.trim();
+function saveWall(w){
+  localStorage.setItem("productWall", JSON.stringify(w));
+}
 
-  const tags = { amazon, temu, lazada, aliexpress };
-  localStorage.setItem("userAffiliateTags", JSON.stringify(tags));
+function render(){
+  const wall = getWall();
+  const div = document.getElementById("wall");
+  div.innerHTML = "";
 
-  document.getElementById("affiliateOutput").innerText = "Tags saved!";
+  wall.forEach((p,i)=>{
+    const base = (p.cost||0) + (p.ship||0);
+    const total = base * (1 + MARKUP);
 
-  // Update display and close popup
-  const firstId = amazon || temu || lazada || aliexpress;
-  if (firstId) {
-    affiliateDisplay.innerText = "Affiliate ID: " + firstId;
-  }
-  popup.style.display = "none"; // Close popup after save
-});
+    const card = document.createElement("div");
+    card.className="card";
 
-// ===== Product Wall =====
-const wallGrid = document.getElementById("wallGrid");
+    card.innerHTML = `
+      <img src="${p.thumb}">
+      <div class="title">${p.title}</div>
+      <div class="desc">${p.desc || "Premium men's luxury watch sourced from verified supplier."}</div>
+      <div class="price">£${total.toFixed(2)}</div>
+      <div class="small">UK Delivered • includes 30% concierge fee</div>
+      <button class="buy" onclick="order(${i})">Request This Watch 🇬🇧</button>
 
-function renderWall() {
-  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
-  wallGrid.innerHTML = "";
-  if (wall.length === 0) {
-    wallGrid.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#888; font-size:14px;'>Your wall is empty. Add products from the main page!</p>";
-    return;
-  }
-
-  wall.forEach((item, idx) => {
-    const div = document.createElement("div");
-    div.className = "card";
-    const affLink = buildAffiliateLink(item.link);
-    div.innerHTML = `
-      ${item.thumb ? `<img src="${item.thumb}" onclick="expandItem(${idx})">` : ""}
-      <div style="font-size:12px; margin-top:4px;"><strong>${item.title}</strong></div>
-      <a href="${affLink}" target="_blank" style="color:var(--accent); font-size:11px; text-decoration:none;">Buy Now</a><br>
-      <button onclick="removeItem(${idx})">Remove</button>
+      <div class="admin">
+        <input placeholder="DHgate cost £" id="c${i}" value="${p.cost||""}">
+        <input placeholder="Shipping £" id="s${i}" value="${p.ship||""}">
+        <input placeholder="Description" id="d${i}" value="${p.desc||""}">
+        <button onclick="save(${i})">Save</button>
+      </div>
     `;
-    wallGrid.appendChild(div);
+
+    div.appendChild(card);
   });
 }
 
-function removeItem(idx) {
-  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
-  wall.splice(idx, 1);
-  localStorage.setItem("productWall", JSON.stringify(wall));
-  renderWall();
+function save(i){
+  const wall = getWall();
+  wall[i].cost = parseFloat(document.getElementById("c"+i).value||0);
+  wall[i].ship = parseFloat(document.getElementById("s"+i).value||0);
+  wall[i].desc = document.getElementById("d"+i).value;
+  saveWall(wall);
+  render();
 }
 
-function expandItem(idx) {
-  const wall = JSON.parse(localStorage.getItem("productWall") || "[]");
-  const item = wall[idx];
-  alert(`Title: ${item.title}\nLink: ${item.link}`);
+function order(i){
+  const p = getWall()[i];
+  const base = (p.cost||0)+(p.ship||0);
+  const total = base * 1.30;
+
+  const msg = encodeURIComponent(
+    "Tagshop Watch Order\n\n"+
+    p.title+"\n\n"+
+    (p.desc||"")+"\n\n"+
+    "UK Delivered: £"+total.toFixed(2)
+  );
+
+  window.open(WISE+"?message="+msg,"_blank");
 }
 
-// Add to Wall (called from index.html)
-window.addToWall = function(title, thumb, link) {
-  let wall = JSON.parse(localStorage.getItem("productWall") || "[]");
-
-  if (wall.length >= 10 && !localStorage.getItem("wallUnlocked")) {
-    document.getElementById("unlockOverlay").style.display = "flex";
-    return;
-  }
-
-  wall.push({ title, thumb, link });
-  localStorage.setItem("productWall", JSON.stringify(wall));
-  renderWall();
-};
-
-// Unlock Wall
-document.getElementById("unlockBtn").addEventListener("click", () => {
-  const pass = document.getElementById("unlockPassword").value.trim();
-  if (pass === "tagshopme") {
-    localStorage.setItem("wallUnlocked", "true");
-    document.getElementById("unlockOverlay").style.display = "none";
-    alert("Wall unlocked! You can now add unlimited items.");
-  } else {
-    alert("Incorrect password.");
-  }
-});
-
-// ===== Build Affiliate Link =====
-function buildAffiliateLink(originalLink) {
-  const tags = JSON.parse(localStorage.getItem("userAffiliateTags") || "{}");
-  if (!originalLink) return "#";
-
-  if (originalLink.includes("amazon.com") && tags.amazon) {
-    return originalLink + (originalLink.includes("?") ? "&" : "?") + "tag=" + tags.amazon;
-  }
-  if (originalLink.includes("temu.com") && tags.temu) {
-    return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_id=" + tags.temu;
-  }
-  if ((originalLink.includes("lazada.") || originalLink.includes("lazada.co")) && tags.lazada) {
-    return originalLink + (originalLink.includes("?") ? "&" : "?") + "spm=" + tags.lazada;
-  }
-  if (originalLink.includes("aliexpress.com") && tags.aliexpress) {
-    return originalLink + (originalLink.includes("?") ? "&" : "?") + "aff_fcid=" + tags.aliexpress;
-  }
-  return originalLink;
-}
-
-// Initialize
-loadAffiliateTags();
-renderWall();
+render();
 </script>
+
 </body>
 </html>
