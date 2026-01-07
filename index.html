@@ -47,50 +47,40 @@ main{padding:10px;}
  font-size:13px;
  line-height:1.6;
 }
-input,textarea{
- width:100%;
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+ gap:10px;
+}
+.item{
  background:#000;
  border:1px solid var(--border);
  border-radius:10px;
- padding:12px;
- color:#fff;
- font-size:14px;
+ padding:6px;
+ text-align:center;
 }
-label{font-size:12px;color:#aaa;}
+.item img{width:100%;border-radius:8px;}
+.price{color:var(--gold);font-weight:bold;font-size:13px;margin-top:4px;}
 button{
+ width:100%;
  border:none;
  border-radius:10px;
- padding:14px;
- font-weight:900;
+ padding:10px;
+ font-weight:800;
  cursor:pointer;
 }
+.add{background:#222;color:#fff;margin-top:6px;}
 .buy{background:var(--accent);color:#000;}
-.whatsapp{background:#25D366;color:#000;}
 .buybar{
- position:fixed;
- bottom:0; left:0; right:0;
- background:#000;
- border-top:1px solid var(--border);
- padding:10px;
- display:flex;
- gap:8px;
- z-index:999;
+ position:fixed;bottom:0;left:0;right:0;
+ background:#000;border-top:1px solid var(--border);
+ padding:10px;display:flex;gap:8px;z-index:999;
 }
 .footer{
- text-align:center;
- font-size:11px;
- color:#777;
- margin-top:30px;
- padding-bottom:100px;
+ text-align:center;font-size:11px;color:#777;
+ margin-top:30px;padding-bottom:90px;
 }
-
-/* hide google ui */
-.gsc-control-cse,
-.gsc-search-box,
-.gsc-input,
-.gsc-search-button{
- display:none!important;
-}
+.gcse-search{display:none;}
 </style>
 </head>
 
@@ -98,116 +88,105 @@ button{
 
 <header>
 <h1>⌚ Tagshop Watches</h1>
-<div class="sub">UK concierge store • Asia sourcing experts</div>
+<div class="sub">UK concierge store • Verified DHgate supplier</div>
 <div class="trust">
 <div>✔ UK delivery included</div>
 <div>✔ Secure Wise checkout</div>
 <div>✔ 30% concierge fee</div>
-<div>✔ Verified supplier</div>
+<div>✔ Seller 21945990</div>
 </div>
 </header>
 
 <main>
 
-<!-- LOCKED DHGATE WALL -->
+<!-- GOOGLE DHGATE WALL -->
 <script async src="https://cse.google.com/cse.js?cx=f7e219616fe1d4629"></script>
+<div id="gsearch" class="gcse-searchresults-only"></div>
 
-<div class="gcse-searchresults-only"
-data-query="site:dhgate.com/product mens watch automatic mechanical ceramic box"
-data-linkTarget="_blank"></div>
+<script>
+window.onload = () => {
+  const q = "site:dhgate.com/store/21945990 mens watches high quality with box";
+  const iframe = document.querySelector("iframe");
+  setTimeout(()=> {
+    const input = document.querySelector("input.gsc-input");
+    if(input){
+      input.value = q;
+      input.form.submit();
+    }
+  },1500);
+};
+</script>
 
 <div class="card">
-<b>Why Tagshop</b><br>
-We are Asia-based sourcing experts with UK consultants.  
-We verify suppliers, inspect reviews, and select the best value timepieces.  
-You receive a crafted watch you will be proud to wear — without China-market risk.
+<b>Your Watch Wall</b>
+<div id="wall" class="grid"></div>
 </div>
 
 <div class="card">
-<b>How ordering works</b><br>
-1) Browse watches above<br>
-2) Tap one → copy the DHgate link<br>
-3) Paste it below<br>
-4) Pay securely via Wise<br>
-5) We order from our verified supplier<br>
-6) Your watch ships to your UK address<br><br>
-<b>All prices include our 30% concierge service & UK delivery</b>
-</div>
-
-<div class="card">
-<label>Paste DHgate product link</label>
-<input id="productLink" placeholder="https://www.dhgate.com/product/...">
-
-<label>DHgate price (USD)</label>
-<input id="usd" placeholder="e.g. 120" oninput="estimate()">
-
-<label>Your UK price (GBP)</label>
-<input id="gbp" readonly>
-</div>
-
-<div class="card">
-<label>Full name</label>
-<input id="name">
-
-<label>UK delivery address</label>
-<textarea id="address" rows="3"></textarea>
-</div>
-
-<div class="card">
-<b>Delivery</b><br>
-7–14 days to the UK. Tracking provided.
-</div>
-
-<div class="card">
-<b>Protection</b><br>
-If your watch is not delivered or incorrect, we reorder or refund.
+<b>How it works</b><br>
+We are Asian sourcing experts working with UK buyers.  
+We select high-quality DHgate suppliers and provide fast UK delivery.  
+You browse, we purchase and deliver.  
+<b>All prices include 30% service fee + UK shipping.</b>
 </div>
 
 </main>
 
 <div class="buybar">
 <button class="buy" onclick="checkout()">Buy via Tagshop</button>
-<button class="whatsapp" onclick="whatsapp()">WhatsApp</button>
 </div>
 
 <div class="footer">
-Tagshop operates as a purchasing & sourcing agent.  
-All products supplied via DHgate verified merchants.
+Tagshop is a UK sourcing concierge.<br>
+Products are sourced from DHgate store 21945990.
 </div>
 
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
-const WHATSAPP="https://wa.me/?text=";
 
-function estimate(){
- const usd=parseFloat(document.getElementById("usd").value||0);
- if(!usd) return;
- const withFee=usd*1.3;
- const gbp=(withFee*0.79+8).toFixed(2);
- document.getElementById("gbp").value="£"+gbp;
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a");
+  if(a && a.href.includes("dhgate.com/product")){
+    e.preventDefault();
+    addItem(a.href);
+  }
+});
+
+function addItem(link){
+ fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(link))
+ .then(r=>r.text())
+ .then(html=>{
+   const doc=new DOMParser().parseFromString(html,"text/html");
+   const img=doc.querySelector("img")?.src||"";
+   const title=doc.querySelector("h1")?.innerText||"Watch";
+   const price=parseFloat(doc.body.innerText.match(/\$[0-9]+/))||0;
+   const wall=JSON.parse(localStorage.getItem("wall")||"[]");
+   wall.push({title,img,price,link});
+   localStorage.setItem("wall",JSON.stringify(wall));
+   renderWall();
+ });
 }
+
+function renderWall(){
+ const wall=JSON.parse(localStorage.getItem("wall")||"[]");
+ const el=document.getElementById("wall");
+ el.innerHTML="";
+ wall.forEach(i=>{
+   const uk=(i.price*1.3*0.79+8).toFixed(2);
+   el.innerHTML+=`
+   <div class="item">
+    <img src="${i.img}">
+    <div>${i.title}</div>
+    <div class="price">£${uk}</div>
+   </div>`;
+ });
+}
+renderWall();
 
 function checkout(){
- const link=document.getElementById("productLink").value;
- const name=document.getElementById("name").value;
- const addr=document.getElementById("address").value;
- const price=document.getElementById("gbp").value;
-
- const msg=encodeURIComponent(
-`Tagshop Watch Order
-
-Product: ${link}
-Name: ${name}
-UK Address: ${addr}
-Total: ${price}`
- );
-
+ const wall=JSON.parse(localStorage.getItem("wall")||"[]");
+ const msg=encodeURIComponent("Tagshop Order\n"+wall.map(i=>i.link).join("\n"));
  window.open(WISE+"?message="+msg,"_blank");
-}
-
-function whatsapp(){
- const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
- window.open(WHATSAPP+msg,"_blank");
 }
 </script>
 
