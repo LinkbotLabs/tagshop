@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tagshop Watches – UK Concierge Store</title>
 <style>
@@ -13,104 +13,25 @@
  --accent:#00ffff;
  --gold:#ffe169;
 }
-body{
- margin:0;
- font-family:system-ui;
- background:var(--bg);
- color:var(--text);
- padding:16px;
-}
-header{
- background:#000;
- padding:14px;
- border-bottom:1px solid var(--border);
- text-align:center;
-}
+body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text);}
+header{background:#000;padding:14px;border-bottom:1px solid var(--border);text-align:center;}
 header h1{margin:0;font-size:22px;color:var(--gold);}
 header .sub{font-size:12px;color:#aaa;margin-top:4px;}
-.trust{
- display:flex;
- justify-content:center;
- gap:12px;
- font-size:11px;
- color:#aaa;
- margin-top:8px;
- flex-wrap:wrap;
-}
+.trust{display:flex;justify-content:center;gap:12px;font-size:11px;color:#aaa;margin-top:8px;flex-wrap:wrap;}
 main{padding:10px;}
-input{
- width:100%;
- padding:12px;
- border-radius:8px;
- border:1px solid var(--border);
- background:#000;
- color:#fff;
- margin-bottom:8px;
- font-size:14px;
-}
-button{
- border:none;
- border-radius:8px;
- padding:10px 14px;
- font-weight:700;
- cursor:pointer;
-}
-.search-btn{background:var(--accent);color:#000;margin-bottom:16px;}
-.grid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
- gap:12px;
-}
-.product{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:10px;
- padding:6px;
- text-align:center;
-}
-.product img{
- width:100%;
- border-radius:6px;
- margin-bottom:6px;
-}
-.product-title{
- font-size:12px;
- margin-bottom:4px;
-}
-.product-price{
- font-size:12px;
- color:var(--gold);
- margin-bottom:4px;
-}
-.buy{background:var(--accent);color:#000;margin-top:4px;width:100%;padding:6px;}
-.view{background:#444;color:#fff;margin-top:4px;width:100%;padding:6px;}
-.buybar{
- position:fixed;
- bottom:0; left:0; right:0;
- background:#000;
- border-top:1px solid var(--border);
- padding:10px;
- display:flex;
- gap:8px;
- z-index:999;
-}
-.buybar button{
- flex:1;
- border:none;
- border-radius:10px;
- padding:14px;
- font-weight:900;
- font-size:15px;
- cursor:pointer;
-}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:12px;font-size:13px;line-height:1.6;}
+input,textarea{width:100%;background:#000;border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-size:14px;}
+label{font-size:12px;color:#aaa;}
+button{border:none;border-radius:10px;padding:10px;font-weight:900;cursor:pointer;}
+.buy{background:var(--accent);color:#000;}
 .whatsapp{background:#25D366;color:#000;}
-.footer{
- text-align:center;
- font-size:11px;
- color:#777;
- margin-top:30px;
- padding-bottom:80px;
-}
+.buybar{position:fixed;bottom:0;left:0;right:0;background:#000;border-top:1px solid var(--border);padding:10px;display:flex;gap:8px;z-index:999;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.product{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px;text-align:center;}
+.product img{width:100%;border-radius:8px;}
+.product-title{font-size:12px;margin-top:4px;}
+.product button{width:100%;margin-top:6px;font-size:12px;}
+.footer{text-align:center;font-size:11px;color:#777;margin-top:30px;padding-bottom:100px;}
 </style>
 </head>
 <body>
@@ -127,11 +48,32 @@ button{
 </header>
 
 <main>
-<label>Search watches</label>
-<input type="text" id="searchBox" placeholder="Designer watch, Fashion watch, Brand watch...">
-<button class="search-btn" onclick="runSearch()">Search</button>
+
+<div class="card">
+<label>Search watches:</label>
+<input id="searchBox" placeholder="Fashion watch, Designer watch...">
+<button onclick="runSearch()">Search</button>
+</div>
 
 <div id="results" class="grid"></div>
+
+<div class="card">
+<h3>Your Wall</h3>
+<div id="wall" class="grid"></div>
+</div>
+
+<div class="card">
+<label>Full name</label>
+<input id="name">
+<label>UK delivery address</label>
+<textarea id="address" rows="3"></textarea>
+</div>
+
+<div class="card">
+<b>Delivery & Order Info</b><br>
+All orders include 30% concierge fee + UK delivery. Shipping 7–14 days.
+</div>
+
 </main>
 
 <div class="buybar">
@@ -140,74 +82,100 @@ button{
 </div>
 
 <div class="footer">
-Tagshop sources from DHgate store 21945990.<br>
-We handle checkout, ordering and UK delivery.
+Tagshop sources from DHgate store 21945990. We handle checkout, ordering & UK delivery.
 </div>
 
 <script>
-const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs"; // your Google API key
-const CSE_ID = "f7e219616fe1d4629"; // your Custom Search Engine ID
-let wall = []; // local wall to track selected watches
+const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CSE_ID = "f7e219616fe1d4629";
+const WISE = "https://wise.com/pay/me/davids14542";
+const WHATSAPP = "https://wa.me/?text=";
 
-// Perform search
+// ===== Wall Storage =====
+function renderWall(){
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  const el = document.getElementById("wall");
+  el.innerHTML="";
+  wall.forEach((item,idx)=>{
+    const div=document.createElement("div");
+    div.className="product";
+    div.innerHTML=`
+      <img src="${item.img}">
+      <div class="product-title">${item.title}</div>
+      <button onclick="window.open('${item.link}','_blank')">View on DHgate</button>
+      <button onclick="buyTagshop(${idx})">Buy via Tagshop</button>
+    `;
+    el.appendChild(div);
+  });
+}
+function addToWall(title,img,link){
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  wall.push({title,img,link});
+  localStorage.setItem("tagshopWall",JSON.stringify(wall));
+  renderWall();
+}
+
+// ===== Search =====
 function runSearch(){
- const query = document.getElementById("searchBox").value.trim();
- if(!query) return alert("Enter search terms.");
- document.getElementById("results").innerHTML="Loading...";
+  const q = document.getElementById("searchBox").value.trim();
+  if(!q) return alert("Enter search terms");
 
- // Force search to your store
- const fullQuery = `site:dhgate.com/store/21945990 ${query}`;
+  document.getElementById("results").innerHTML="Loading…";
 
- fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(fullQuery)}`)
- .then(r=>r.json())
- .then(data=>{
-   const results = document.getElementById("results");
-   results.innerHTML="";
-   if(!data.items || data.items.length===0){
-     results.innerHTML="<p style='grid-column:1/-1;text-align:center;'>No results found.</p>";
-     return;
-   }
-   data.items.slice(0,50).forEach(item=>{
-     const thumb = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
-     const price = item.pagemap?.offer?.[0]?.price || "Check DHgate";
-     const div = document.createElement("div");
-     div.className="product";
-     div.innerHTML=`
-       <img src="${thumb}" alt="${item.title}">
-       <div class="product-title">${item.title}</div>
-       <div class="product-price">${price}</div>
-       <button class="view" onclick="window.open('${item.link}','_blank')">View at DHgate</button>
-       <button class="buy" onclick="addToWall('${item.title.replace(/'/g,"")}','${thumb}','${item.link}','${price}')">Buy via Tagshop</button>
-     `;
-     results.appendChild(div);
-   });
- });
+  fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=site:dhgate.com/store/21945990+${encodeURIComponent(q)}`)
+  .then(r=>r.json())
+  .then(data=>{
+    const results = document.getElementById("results");
+    results.innerHTML="";
+    data.items?.forEach(item=>{
+      const img = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
+      const div = document.createElement("div");
+      div.className="product";
+      div.innerHTML=`
+        <img src="${img}">
+        <div class="product-title">${item.title}</div>
+        <button onclick="window.open('${item.link}','_blank')">View on DHgate</button>
+        <button onclick="addToWall('${item.title.replace(/'/g,"")}','${img}','${item.link}')">Buy via Tagshop</button>
+      `;
+      results.appendChild(div);
+    });
+  }).catch(err=>{console.error(err); alert("Search failed");});
 }
 
-// Add to wall
-function addToWall(title,img,link,price){
- wall.push({title,img,link,price});
- localStorage.setItem("tagshopWall",JSON.stringify(wall));
- alert("Added to your wall. You can proceed to Buy via Tagshop!");
+// ===== Checkout =====
+function buyTagshop(idx){
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  const item = wall[idx];
+  if(!item) return;
+  const name = document.getElementById("name").value;
+  const addr = document.getElementById("address").value;
+
+  const msg = encodeURIComponent(
+`Tagshop Watch Order
+
+Product: ${item.title}
+Link: ${item.link}
+Name: ${name}
+UK Address: ${addr}
+Price includes 30% concierge fee + UK delivery`
+  );
+  window.open(WISE+"?message="+msg,"_blank");
 }
 
-// Checkout via Wise
-const WISE="https://wise.com/pay/me/davids14542";
 function checkout(){
- if(wall.length===0) return alert("Add products to wall first.");
- let msg = "Tagshop Watch Order\n\n";
- wall.forEach((p,i)=>{
-   msg += `${i+1}) ${p.title}\nLink: ${p.link}\nPrice: ${p.price}\n\n`;
- });
- window.open(WISE+"?message="+encodeURIComponent(msg),"_blank");
+  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+  if(wall.length===0) return alert("Add items to wall first");
+  buyTagshop(0);
 }
 
-// WhatsApp button
-const WHATSAPP="https://wa.me/?text=";
 function whatsapp(){
- const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my wall link:");
- window.open(WHATSAPP+msg,"_blank");
+  const msg = encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
+  window.open(WHATSAPP+msg,"_blank");
 }
+
+// Initial render
+renderWall();
 </script>
+
 </body>
 </html>
