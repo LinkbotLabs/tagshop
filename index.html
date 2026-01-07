@@ -3,7 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tagshop – Men’s Watches UK</title>
+<title>Tagshop Watches – UK Concierge Store</title>
+
+<!-- TikTok Pixel (replace XXXXX) -->
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;
+  var ttq=w[t]=w[t]||[];
+  ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
+  ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+  for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+  ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
+  ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+  ttq.load('XXXXX');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
 
 <style>
 :root{
@@ -14,78 +29,59 @@
  --accent:#00ffff;
  --gold:#ffe169;
 }
-
 body{
  margin:0;
  font-family:system-ui;
  background:var(--bg);
  color:var(--text);
 }
-
 header{
- position:sticky;
- top:0;
  background:#000;
+ padding:14px;
  border-bottom:1px solid var(--border);
- padding:12px;
- z-index:10;
-}
-
-h1{
- margin:0;
  text-align:center;
- color:var(--gold);
- font-size:20px;
 }
-
-.notice{
- text-align:center;
- font-size:12px;
- color:#aaa;
- margin-top:4px;
+header h1{margin:0;font-size:22px;color:var(--gold);}
+header .sub{font-size:12px;color:#aaa;margin-top:4px;}
+.trust{display:flex;justify-content:center;gap:12px;font-size:11px;color:#aaa;margin-top:8px;flex-wrap:wrap;}
+main{padding:10px;}
+.gcse-search{display:none;}
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:14px;
+ margin-top:12px;
+ font-size:13px;
+ line-height:1.6;
 }
-
-main{
- padding:10px;
-}
-
 .buybar{
  position:fixed;
- bottom:0;
- left:0;
- right:0;
+ bottom:0; left:0; right:0;
  background:#000;
  border-top:1px solid var(--border);
  padding:10px;
  display:flex;
- gap:10px;
- z-index:20;
+ gap:8px;
+ z-index:999;
 }
-
 .buybar button{
  flex:1;
- background:var(--accent);
- color:#000;
- font-weight:800;
  border:none;
- border-radius:12px;
+ border-radius:10px;
  padding:14px;
- font-size:16px;
+ font-weight:900;
+ font-size:15px;
  cursor:pointer;
 }
-
-.how{
- padding:12px;
- border-top:1px solid var(--border);
- font-size:13px;
- line-height:1.6;
- color:#ccc;
-}
-
-iframe{
- width:100%;
- border:none;
- min-height:70vh;
+.buy{background:var(--accent);color:#000;}
+.whatsapp{background:#25D366;color:#000;}
+.footer{
+ text-align:center;
+ font-size:11px;
+ color:#777;
+ margin-top:30px;
+ padding-bottom:80px;
 }
 </style>
 </head>
@@ -93,46 +89,77 @@ iframe{
 <body>
 
 <header>
-  <h1>🕰️ Tagshop – Men’s Watches</h1>
-  <div class="notice">
-    Premium DHgate watches • UK delivery • 30% concierge included
-  </div>
+<h1>⌚ Tagshop Watches</h1>
+<div class="sub">UK concierge store • Verified DHgate supplier</div>
+<div class="trust">
+<div>✔ UK delivery included</div>
+<div>✔ Secure Wise checkout</div>
+<div>✔ 30% concierge fee</div>
+<div>✔ Seller 21945990</div>
+</div>
 </header>
 
 <main>
 
-<!-- Google Programmable Search (DHgate Only) -->
 <script async src="https://cse.google.com/cse.js?cx=f7e219616fe1d4629"></script>
-<div class="gcse-searchresults-only"></div>
+<div class="gcse-searchresults-only" data-query="mens watches high quality with box"></div>
 
-<div class="how">
-<b>How it works</b><br>
-1. Browse DHgate men’s watches above<br>
-2. Open a product you like<br>
-3. Copy the product link<br>
-4. Tap <b>Buy via Tagshop</b><br>
-5. Pay via Wise — we order & ship to you 🇬🇧
+<div class="card">
+<b>How ordering works</b><br>
+1) Browse watches below<br>
+2) Tap a product → copy the DHgate link<br>
+3) Press <b>Buy via Tagshop</b><br>
+4) Paste link + UK address<br>
+5) Pay securely<br>
+6) We order & ship to you<br><br>
+<b>All prices include 30% service fee + UK delivery</b>
+</div>
+
+<div class="card">
+<b>Delivery estimate</b><br>
+DHgate → UK: 7–14 days<br>
+Tracking provided after dispatch
+</div>
+
+<div class="card">
+<b>Order Protection</b><br>
+If your item is not delivered or wrong, we will reorder or refund.
 </div>
 
 </main>
 
-<!-- Checkout Bar -->
 <div class="buybar">
-  <button onclick="checkout()">Buy via Tagshop</button>
+<button class="buy" onclick="checkout()">Buy via Tagshop</button>
+<button class="whatsapp" onclick="whatsapp()">WhatsApp</button>
+</div>
+
+<div class="footer">
+Tagshop sources from DHgate store 21945990.<br>
+We handle checkout, ordering and UK delivery.
 </div>
 
 <script>
-const WISE = "https://wise.com/pay/me/davids14542";
+const WISE="https://wise.com/pay/me/davids14542";
+const WHATSAPP="https://wa.me/?text=";
 
 function checkout(){
- const msg = encodeURIComponent(
-  "Tagshop Watch Order\n\n" +
-  "Please paste the DHgate product link below:\n\n" +
-  "UK delivery included.\n" +
-  "Price includes 30% concierge service.\n\n" +
-  "Product link:"
- );
- window.open(WISE + "?message=" + msg, "_blank");
+ttq.track('InitiateCheckout');
+const msg=encodeURIComponent(
+`Tagshop Watch Order
+
+Paste DHgate product link:
+(Price includes 30% service fee + UK delivery)
+
+Product:
+Shipping name:
+UK address:`
+);
+window.open(WISE+"?message="+msg,"_blank");
+}
+
+function whatsapp(){
+const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is the DHgate link:");
+window.open(WHATSAPP+msg,"_blank");
 }
 </script>
 
