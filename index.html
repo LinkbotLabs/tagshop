@@ -3,178 +3,137 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Tagshop – DHgate Product Wall</title>
+<title>Tagshop – Men’s Watches UK</title>
 
 <style>
 :root{
-  --bg:#000;
-  --card:#111;
-  --border:#222;
-  --text:#fff;
-  --accent:#ffe169;
+ --bg:#000;
+ --card:#111;
+ --border:#222;
+ --text:#fff;
+ --accent:#00ffff;
+ --gold:#ffe169;
 }
+
 body{
-  margin:0;
-  font-family:system-ui;
-  background:var(--bg);
-  color:var(--text);
-  padding:16px;
+ margin:0;
+ font-family:system-ui;
+ background:var(--bg);
+ color:var(--text);
 }
+
+header{
+ position:sticky;
+ top:0;
+ background:#000;
+ border-bottom:1px solid var(--border);
+ padding:12px;
+ z-index:10;
+}
+
 h1{
-  text-align:center;
-  margin-bottom:10px;
+ margin:0;
+ text-align:center;
+ color:var(--gold);
+ font-size:20px;
 }
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:16px;
+
+.notice{
+ text-align:center;
+ font-size:12px;
+ color:#aaa;
+ margin-top:4px;
 }
-input{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#000;
-  color:#fff;
-  font-size:16px;
+
+main{
+ padding:10px;
 }
-button{
-  background:var(--accent);
-  color:#000;
-  border:none;
-  border-radius:8px;
-  padding:10px 14px;
-  font-weight:800;
-  margin-top:8px;
-  cursor:pointer;
+
+.buybar{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:#000;
+ border-top:1px solid var(--border);
+ padding:10px;
+ display:flex;
+ gap:10px;
+ z-index:20;
 }
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:12px;
+
+.buybar button{
+ flex:1;
+ background:var(--accent);
+ color:#000;
+ font-weight:800;
+ border:none;
+ border-radius:12px;
+ padding:14px;
+ font-size:16px;
+ cursor:pointer;
 }
-.product{
-  background:#000;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:6px;
-  text-align:center;
+
+.how{
+ padding:12px;
+ border-top:1px solid var(--border);
+ font-size:13px;
+ line-height:1.6;
+ color:#ccc;
 }
-.product img{
-  width:100%;
-  border-radius:8px;
-}
-.product-title{
-  font-size:12px;
-  margin-top:4px;
-}
-.product button{
-  width:100%;
-  margin-top:6px;
-  font-size:12px;
-}
-.footer{
-  text-align:center;
-  font-size:12px;
-  opacity:.7;
-  margin-top:30px;
+
+iframe{
+ width:100%;
+ border:none;
+ min-height:70vh;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🛒 Tagshop</h1>
-<p style="text-align:center;font-size:14px;">
-Find products. Add to your wall. Sell via <b>DHgate</b>.
-</p>
+<header>
+  <h1>🕰️ Tagshop – Men’s Watches</h1>
+  <div class="notice">
+    Premium DHgate watches • UK delivery • 30% concierge included
+  </div>
+</header>
 
-<div class="card">
-  <input id="searchBox" placeholder="Search products…" />
-  <button onclick="runSearch()">Search</button>
+<main>
+
+<!-- Google Programmable Search (DHgate Only) -->
+<script async src="https://cse.google.com/cse.js?cx=f7e219616fe1d4629"></script>
+<div class="gcse-searchresults-only"></div>
+
+<div class="how">
+<b>How it works</b><br>
+1. Browse DHgate men’s watches above<br>
+2. Open a product you like<br>
+3. Copy the product link<br>
+4. Tap <b>Buy via Tagshop</b><br>
+5. Pay via Wise — we order & ship to you 🇬🇧
 </div>
 
-<div class="card">
-  <h3>Search Results</h3>
-  <div id="results" class="grid"></div>
-</div>
+</main>
 
-<div class="card">
-  <h3>Your Wall</h3>
-  <div id="wall" class="grid"></div>
-</div>
-
-<div class="card">
-  <h3>How it works</h3>
-  <p style="font-size:13px;line-height:1.6">
-  • Search any product<br>
-  • Add items to your wall<br>
-  • Share your page<br>
-  • Customers buy through DHgate<br>
-  • You earn affiliate commission
-  </p>
-</div>
-
-<div class="footer">
-Tagshop is a product discovery tool.<br>
-All checkout & fulfillment is handled by DHgate.
+<!-- Checkout Bar -->
+<div class="buybar">
+  <button onclick="checkout()">Buy via Tagshop</button>
 </div>
 
 <script>
-const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CSE_ID = "f7e219616fe1d4629";
+const WISE = "https://wise.com/pay/me/davids14542";
 
-function runSearch(){
-  const q = document.getElementById("searchBox").value.trim();
-  if(!q) return;
-  document.getElementById("results").innerHTML="Loading…";
-
-  fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(q)}`)
-  .then(r=>r.json())
-  .then(data=>{
-    const results = document.getElementById("results");
-    results.innerHTML="";
-    data.items?.forEach(item=>{
-      const img = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
-      const div = document.createElement("div");
-      div.className="product";
-      div.innerHTML=`
-        <img src="${img}">
-        <div class="product-title">${item.title}</div>
-        <button onclick="addToWall('${item.title.replace(/'/g,"")}','${img}','${item.link}')">Add to Wall</button>
-      `;
-      results.appendChild(div);
-    });
-  });
+function checkout(){
+ const msg = encodeURIComponent(
+  "Tagshop Watch Order\n\n" +
+  "Please paste the DHgate product link below:\n\n" +
+  "UK delivery included.\n" +
+  "Price includes 30% concierge service.\n\n" +
+  "Product link:"
+ );
+ window.open(WISE + "?message=" + msg, "_blank");
 }
-
-function addToWall(title,img,link){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  wall.push({title,img,link});
-  localStorage.setItem("tagshopWall",JSON.stringify(wall));
-  renderWall();
-}
-
-function renderWall(){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  const el = document.getElementById("wall");
-  el.innerHTML="";
-  wall.forEach(item=>{
-    const div = document.createElement("div");
-    div.className="product";
-    div.innerHTML=`
-      <img src="${item.img}">
-      <div class="product-title">${item.title}</div>
-      <button onclick="window.open('${item.link}','_blank')">Buy on DHgate</button>
-    `;
-    el.appendChild(div);
-  });
-}
-
-renderWall();
 </script>
 
 </body>
