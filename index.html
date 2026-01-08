@@ -4,29 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TagShop DHgate Watch Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f5f5f5; color:#333; }
+body { font-family: 'Montserrat', sans-serif; margin:0; padding:0; background:#0a0a0a; color:#fff; }
 header { background:#0073e6; color:#fff; padding:20px 10px; text-align:center; }
 header h1 { margin:0; font-size:2rem; }
 header p { margin:5px 0 0 0; font-size:1rem; }
 .container { max-width:1200px; margin:20px auto; padding:0 10px; }
-section { margin-bottom:40px; }
-#searchContainer { text-align:center; }
+
+/* --- Luxury Service Box --- */
+.service-box {
+    background: rgba(30,30,30,0.85);
+    border-left: 5px solid #ffd700;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+.service-box h1 { font-family: 'Playfair Display', serif; color:#ffd700; margin-bottom:20px; font-size:2rem; }
+.service-box p { line-height:1.6; margin-bottom:15px; }
+.service-box .badge { display:inline-block; background:#ffd700; color:#0a0a0a; padding:5px 12px; font-weight:600; border-radius:4px; font-size:0.9rem; }
+
+/* --- Reminder Banner --- */
+.reminder { text-align:center; margin:20px 0; padding:15px; background: rgba(20,20,20,0.85); border-radius:6px; border-left:5px solid #ffd700; font-size:1.1rem; }
+
+/* --- Search Section --- */
+#searchContainer { text-align:center; margin-bottom:20px; }
 input[type="text"] { width:300px; padding:8px; border-radius:5px; border:1px solid #ccc; }
-button { padding:8px 12px; border-radius:5px; border:none; background:#0073e6; color:#fff; cursor:pointer; transition:0.3s; }
-button:hover { background:#005bb5; }
+button { padding:8px 12px; border-radius:5px; border:none; cursor:pointer; transition:0.3s; font-weight:600; }
+button:hover { opacity:0.85; }
+
+/* Quick hints */
 .quick-hints { margin-top:10px; }
-.quick-hints button { background:#28a745; margin:3px; }
+.quick-hints button { background:#28a745; margin:3px; color:#fff; }
+.quick-hints button:hover { opacity:0.85; }
+
+/* --- Product Grid --- */
 .products-grid { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; }
-.product { background:#fff; padding:10px; border-radius:10px; width:220px; box-shadow:0 2px 10px rgba(0,0,0,0.1); transition:0.3s; text-align:center; }
-.product:hover { transform:translateY(-5px); box-shadow:0 4px 15px rgba(0,0,0,0.15); }
+.product { background: rgba(20,20,20,0.85); padding:10px; border-radius:10px; width:220px; box-shadow:0 2px 10px rgba(0,0,0,0.2); transition:0.3s; text-align:center; }
+.product:hover { transform:translateY(-5px); box-shadow:0 4px 15px rgba(255,215,0,0.4); }
 .product img { width:200px; height:auto; border-radius:5px; }
 .product p { margin:5px 0; font-size:0.9rem; }
-.product .btn { width:100%; margin-top:5px; padding:6px; border-radius:5px; border:none; cursor:pointer; font-size:0.9rem; }
-.btn-dhgate { background:#0073e6; color:#fff; }
-.btn-tagshop { background:#28a745; color:#fff; margin-top:3px; }
+
+/* Buttons */
+.btn-dhgate { background:#0073e6; color:#fff; width:100%; margin-top:5px; padding:6px; border-radius:5px; }
+.btn-tagshop { background:#28a745; color:#fff; width:100%; margin-top:5px; padding:6px; border-radius:5px; }
+
+/* Pagination */
 .pagination { text-align:center; margin-top:20px; }
-.note { text-align:center; max-width:600px; margin:10px auto 20px auto; font-size:0.95rem; color:#555; }
+.note { text-align:center; max-width:600px; margin:10px auto 20px auto; font-size:0.95rem; color:#ccc; }
+
+/* Delivery Form */
+.delivery-form { background: rgba(30,30,30,0.9); padding:30px; border-radius:8px; margin-bottom:50px; box-shadow:0 8px 20px rgba(0,0,0,0.5); display:none; }
+.delivery-form h2 { font-family: 'Playfair Display', serif; color:#ffd700; margin-bottom:20px; }
+.delivery-form label { display:block; margin-bottom:5px; font-weight:600; }
+.delivery-form input, .delivery-form textarea { width:100%; padding:10px; margin-bottom:15px; border-radius:4px; border:none; font-size:1rem; }
+.delivery-form button { background:#ffd700; color:#0a0a0a; border:none; padding:12px 25px; font-weight:600; border-radius:4px; cursor:pointer; font-size:1rem; }
+.delivery-form button:hover { background:#e6c200; }
+
+/* Confirmation message */
+.confirmation { display:none; background:#1a1a1a; padding:25px; border-left:5px solid #ffd700; border-radius:5px; text-align:center; margin-top:20px; font-size:1.1rem; color:#ffd700; }
+
 @media(max-width:600px){ .product img{width:150px;} input[type="text"]{width:80%;} }
 </style>
 </head>
@@ -38,6 +76,21 @@ button:hover { background:#005bb5; }
 </header>
 
 <div class="container">
+
+<!-- Luxury Service Box -->
+<div class="service-box">
+<h1>The Tagshop Promise – Luxury Watches, Delivered with Confidence</h1>
+<p>All timepieces are hand-selected by our experts for <strong>quality, authenticity, and style</strong>. Every watch carries original markings and comes with <strong>fast, insured delivery</strong> straight to your door.</p>
+<p>Save time—simply <strong>click, buy, and enjoy</strong>. Prices are displayed in GBP and include <strong>UK delivery</strong>, conveniently payable via Wise.</p>
+<p>Enter your delivery address and contact details on checkout. Once your order is placed, a <strong>confirmation email</strong> will be sent thanking you and confirming your order.</p>
+<p>You can choose to <strong>buy directly</strong> from the source or <strong>buy with confidence via Tagshop</strong>—either way, luxury is guaranteed.</p>
+<span class="badge">Buy with Confidence</span>
+</div>
+
+<!-- Reminder Banner -->
+<div class="reminder">
+Buy direct or buy with confidence with Tagshop—luxury watches, hand-selected and delivered safely.
+</div>
 
 <!-- Quick Search Hints -->
 <section id="searchSection">
@@ -67,11 +120,30 @@ All watches are high-quality timepieces, arrive with original markings and style
 </div>
 </section>
 
-<!-- Showcase -->
+<!-- Showcase / Featured Watches -->
 <section>
 <h2>Showcase / Featured Watches</h2>
 <div id="showcase" class="products-grid"></div>
 </section>
+
+<!-- Delivery / Contact Form -->
+<div class="delivery-form" id="deliveryForm">
+<h2>Enter Delivery Details & Confirm Purchase</h2>
+<form id="tagshopForm">
+<label for="name">Full Name</label>
+<input type="text" id="name" required>
+<label for="email">Email Address</label>
+<input type="email" id="email" required>
+<label for="phone">Phone Number</label>
+<input type="text" id="phone" required>
+<label for="address">Delivery Address</label>
+<textarea id="address" rows="3" required></textarea>
+<button type="submit">Proceed to Payment via Wise</button>
+</form>
+<div class="confirmation" id="confirmationMessage">
+Thank you for your order! A confirmation email has been sent. You can complete your payment via Wise now.
+</div>
+</div>
 
 </div>
 
@@ -80,6 +152,7 @@ All watches are high-quality timepieces, arrive with original markings and style
 const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CSE_ID = "f7e219616fe1d4629";
 const DHGATE_AFFILIATE_ID = "2545671";
+const WISE_LINK = "https://wise.com/pay/me/davids14542";
 
 // --- State ---
 let currentQuery = '';
@@ -128,7 +201,7 @@ async function fetchResults(){
         ${item.image?`<img src="${item.image}" alt="${item.title}"/>`:''}
         <p style="font-weight:bold;">${item.title}</p>
         <p>${item.snippet}</p>
-        <button class="btn btn-tagshop" onclick="addToShowcase(${index})">Add to Showcase</button>
+        <button class="btn btn-tagshop" onclick="scrollToForm(${index})">Add to Showcase / Buy via TagShop</button>
         <button class="btn btn-dhgate" onclick="window.open('${item.link}','_blank')">Buy on DHgate</button>
       `;
       resultsDiv.appendChild(div);
@@ -152,7 +225,7 @@ function addToShowcase(index){
 function renderShowcase(){
   const showcaseDiv=document.getElementById('showcase');
   showcaseDiv.innerHTML='';
-  showcase.forEach(item=>{
+  showcase.forEach((item,index)=>{
     const div=document.createElement('div');
     div.className='product';
     div.innerHTML=`
@@ -160,15 +233,29 @@ function renderShowcase(){
       <p style="font-weight:bold;">${item.title}</p>
       <p>${item.snippet}</p>
       <button class="btn btn-dhgate" onclick="window.open('${item.link}','_blank')">Buy on DHgate</button>
-      <button class="btn btn-tagshop" onclick="window.open('https://wise.com/pay/xxxx','_blank')">Buy via TagShop</button>
+      <button class="btn btn-tagshop" onclick="scrollToForm(${index})">Buy via TagShop</button>
     `;
     showcaseDiv.appendChild(div);
   });
 }
 
+// --- Scroll to Delivery Form ---
+function scrollToForm(index){
+  addToShowcase(index);
+  document.getElementById('deliveryForm').style.display='block';
+  document.getElementById('deliveryForm').scrollIntoView({ behavior: 'smooth' });
+}
+
 // --- Pagination ---
 function nextPage(){ startIndex+=10; fetchResults(); }
 function prevPage(){ startIndex=Math.max(1,startIndex-10); fetchResults(); }
+
+// --- Handle Delivery Form Submission ---
+document.getElementById('tagshopForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  document.getElementById('confirmationMessage').style.display='block';
+  window.open(WISE_LINK,'_blank');
+});
 </script>
 
 </body>
