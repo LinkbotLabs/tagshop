@@ -1,162 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DHgate Watch Affiliate Store</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-    h1, h2 { text-align: center; color: #0073e6; }
-    #searchContainer { text-align: center; margin-bottom: 20px; }
-    input[type="text"] { width: 300px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
-    button { padding: 8px 12px; margin-left: 5px; border-radius: 5px; border: none; background: #0073e6; color: #fff; cursor: pointer; }
-    button:hover { background: #005bb5; }
-    #results, #featuredWatches { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
-    .product { background: #fff; padding: 10px; border-radius: 5px; width: 220px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; }
-    .product img { max-width: 200px; height: auto; border-radius: 5px; }
-    .product a { display: block; margin-top: 5px; font-weight: bold; color: #0073e6; text-decoration: none; }
-    .product a:hover { text-decoration: underline; }
-    .product button { margin-top: 5px; width: 100%; cursor: pointer; }
-    .pagination { text-align: center; margin-top: 20px; }
-    .pagination button { margin: 0 5px; }
-    p { margin: 5px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHgate Watch Affiliate Store</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+h1, h2 { text-align: center; color: #0073e6; }
+#hero { text-align:center; margin-bottom:20px; }
+#searchContainer { text-align:center; margin-bottom:20px; }
+input[type="text"] { width: 300px; padding: 8px; border-radius:5px; border:1px solid #ccc; }
+button { padding:8px 12px; margin-left:5px; border-radius:5px; border:none; background:#0073e6; color:#fff; cursor:pointer; }
+button:hover { background:#005bb5; }
+.quick-hints button { background:#28a745; margin:3px; }
+#results, #showcase { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; }
+.product { background:#fff; padding:10px; border-radius:5px; width:220px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.product img { max-width:200px; height:auto; border-radius:5px; }
+.product a { display:block; margin-top:5px; font-weight:bold; color:#0073e6; text-decoration:none; }
+.product a:hover { text-decoration:underline; }
+.product button { margin-top:5px; width:100%; cursor:pointer; }
+.pagination { text-align:center; margin-top:20px; }
+.pagination button { margin:0 5px; }
+.note { text-align:center; max-width:600px; margin:10px auto 20px auto; }
+</style>
 </head>
 <body>
 
-  <h1>DHgate Watch Affiliate Store</h1>
+<div id="hero">
+<h1>DHgate Watch Affiliate Store</h1>
+<p>Buy via TagShop for guaranteed quality, or directly on DHgate with our affiliate link.</p>
+</div>
 
-  <!-- Featured Watches Section -->
-  <h2>Top 10 Recommended Watches</h2>
-  <p style="text-align:center; max-width:600px; margin: 0 auto 20px auto;">
-    All watches are high-quality timepieces, arrive with original markings and style. 
-    You can choose to buy via TagShop (we handle the purchase and quality for a small commission) 
-    or buy directly from DHgate (you are responsible for your choice).
-  </p>
-  <div id="featuredWatches"></div>
+<div id="searchContainer">
+<input type="text" id="searchQuery" placeholder="Search DHgate products..." />
+<button onclick="searchProducts()">Search</button>
+<div class="quick-hints" style="margin-top:10px;">
+<button onclick="searchProducts('Men\'s watches')">Men’s watches</button>
+<button onclick="searchProducts('Watches with box')">Watches with box</button>
+<button onclick="searchProducts('Replica watches')">Replica watches</button>
+<button onclick="searchProducts('Designer watches')">Designer watches</button>
+<button onclick="searchProducts('Branded watches')">Branded watches</button>
+</div>
+</div>
 
-  <!-- Search Section -->
-  <div id="searchContainer">
-    <input type="text" id="searchQuery" placeholder="Search for DHgate products..." />
-    <button onclick="searchProducts()">Search</button>
-  </div>
-  <div id="results"></div>
-  <div class="pagination">
-    <button onclick="prevPage()" id="prevBtn" disabled>Previous</button>
-    <button onclick="nextPage()" id="nextBtn" disabled>Next</button>
-  </div>
+<div class="note">
+All watches are high-quality timepieces, arrive with original markings and style. Buy via TagShop (we handle quality) or directly on DHgate (affiliate link included).
+</div>
 
-  <script>
-    // --- Your Affiliate & API Settings ---
-    const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-    const CSE_ID = "f7e219616fe1d4629";
-    const DHGATE_AFFILIATE_ID = "2545671";
+<h2>Search Results</h2>
+<div id="results"></div>
+<div class="pagination">
+<button onclick="prevPage()" id="prevBtn" disabled>Previous</button>
+<button onclick="nextPage()" id="nextBtn" disabled>Next</button>
+</div>
 
-    // --- Featured Watches ---
-    const featuredWatches = [
-      {
-        name: "Luxury Chronograph Watch",
-        image: "https://example.com/watch1.jpg",
-        dhgateLink: "https://www.dhgate.com/product/xxxx?aff=2545671",
-        tagshopLink: "https://wise.com/pay/xxxx"
-      },
-      {
-        name: "Classic Leather Strap Watch",
-        image: "https://example.com/watch2.jpg",
-        dhgateLink: "https://www.dhgate.com/product/yyyy?aff=2545671",
-        tagshopLink: "https://wise.com/pay/yyyy"
-      },
-      // Add 8 more watches here...
-    ];
+<h2>Showcase / Featured Watches</h2>
+<div id="showcase"></div>
 
-    const featuredContainer = document.getElementById('featuredWatches');
-    featuredWatches.forEach(watch => {
+<script>
+// --- Settings ---
+const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CSE_ID = "f7e219616fe1d4629";
+const DHGATE_AFFILIATE_ID = "2545671";
+
+// --- Search State ---
+let currentQuery = '';
+let startIndex = 1;
+let lastResults = [];
+
+// --- Showcase Storage ---
+const showcase = [];
+
+// --- Functions ---
+async function searchProducts(query) {
+  if(query) document.getElementById('searchQuery').value = query;
+  currentQuery = document.getElementById('searchQuery').value.trim();
+  if(!currentQuery) return alert("Enter a search term.");
+  startIndex = 1;
+  await fetchResults();
+}
+
+async function fetchResults() {
+  const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CSE_ID}&key=${API_KEY}&start=${startIndex}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+    lastResults = [];
+
+    if(!data.items || data.items.length===0) {
+      resultsDiv.innerHTML = '<p>No DHgate products found.</p>';
+      document.getElementById('prevBtn').disabled = true;
+      document.getElementById('nextBtn').disabled = true;
+      return;
+    }
+
+    const dhgateResults = data.items
+      .filter(item => item.link.includes("dhgate.com"))
+      .map(item => ({
+        title: item.title,
+        snippet: item.snippet,
+        link: item.link.includes("?") ? `${item.link}&aff=${DHGATE_AFFILIATE_ID}` : `${item.link}?aff=${DHGATE_AFFILIATE_ID}`,
+        image: item.pagemap?.cse_image ? item.pagemap.cse_image[0].src : ''
+      }));
+
+    lastResults = dhgateResults;
+
+    dhgateResults.forEach((item,index) => {
       const div = document.createElement('div');
       div.className = 'product';
       div.innerHTML = `
-        <img src="${watch.image}" alt="${watch.name}" />
-        <p style="font-weight:bold;">${watch.name}</p>
-        <button onclick="window.open('${watch.tagshopLink}','_blank')" style="background:#28a745; color:#fff; border:none; border-radius:5px;">Buy via TagShop</button>
-        <button onclick="window.open('${watch.dhgateLink}','_blank')" style="background:#0073e6; color:#fff; border:none; border-radius:5px;">Buy Direct from DHgate</button>
+        ${item.image ? `<img src="${item.image}" alt="${item.title}"/>` : ''}
+        <p style="font-weight:bold;">${item.title}</p>
+        <p>${item.snippet}</p>
+        <button onclick="addToShowcase(${index})" style="background:#28a745;color:#fff;border:none;border-radius:5px;">Add to Showcase</button>
+        <button onclick="window.open('${item.link}','_blank')" style="background:#0073e6;color:#fff;border:none;border-radius:5px;">Buy on DHgate</button>
       `;
-      featuredContainer.appendChild(div);
+      resultsDiv.appendChild(div);
     });
 
-    // --- Search Functionality ---
-    let currentQuery = '';
-    let startIndex = 1;
+    document.getElementById('prevBtn').disabled = startIndex<=1;
+    document.getElementById('nextBtn').disabled = !data.queries?.nextPage;
 
-    async function searchProducts() {
-      const queryInput = document.getElementById('searchQuery').value.trim();
-      if (!queryInput) return alert("Please enter a search term.");
-      currentQuery = queryInput;
-      startIndex = 1;
-      await fetchResults();
-    }
+  } catch(err) {
+    console.error(err);
+    alert("Error fetching results. Check console.");
+  }
+}
 
-    async function fetchResults() {
-      const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CSE_ID}&key=${API_KEY}&start=${startIndex}`;
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
+function addToShowcase(index){
+  const item = lastResults[index];
+  if(!item) return;
+  if(showcase.find(p => p.link===item.link)) return alert("Already in showcase.");
+  showcase.push(item);
+  renderShowcase();
+}
 
-        if (!data.items || data.items.length === 0) {
-          resultsDiv.innerHTML = '<p>No DHgate products found.</p>';
-          document.getElementById('prevBtn').disabled = true;
-          document.getElementById('nextBtn').disabled = true;
-          return;
-        }
+function renderShowcase(){
+  const showcaseDiv = document.getElementById('showcase');
+  showcaseDiv.innerHTML = '';
+  showcase.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      ${item.image ? `<img src="${item.image}" alt="${item.title}"/>` : ''}
+      <p style="font-weight:bold;">${item.title}</p>
+      <p>${item.snippet}</p>
+      <button onclick="window.open('${item.link}','_blank')" style="background:#0073e6;color:#fff;border:none;border-radius:5px;">Buy on DHgate</button>
+      <button onclick="window.open('https://wise.com/pay/xxxx','_blank')" style="background:#28a745;color:#fff;border:none;border-radius:5px;margin-top:3px;">Buy via TagShop</button>
+    `;
+    showcaseDiv.appendChild(div);
+  });
+}
 
-        // Filter DHgate links & append affiliate ID
-        const dhgateResults = data.items
-          .filter(item => item.link.includes("dhgate.com"))
-          .map(item => {
-            let link = item.link.includes("?") ? `${item.link}&aff=${DHGATE_AFFILIATE_ID}` : `${item.link}?aff=${DHGATE_AFFILIATE_ID}`;
-            return {
-              title: item.title,
-              snippet: item.snippet,
-              link,
-              image: item.pagemap?.cse_image ? item.pagemap.cse_image[0].src : ''
-            };
-          });
+// --- Pagination ---
+function nextPage(){ startIndex+=10; fetchResults(); }
+function prevPage(){ startIndex=Math.max(1,startIndex-10); fetchResults(); }
 
-        if (dhgateResults.length === 0) {
-          resultsDiv.innerHTML = '<p>No DHgate links found in these results.</p>';
-        } else {
-          dhgateResults.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'product';
-            div.innerHTML = `
-              ${item.image ? `<img src="${item.image}" alt="${item.title}" />` : ''}
-              <a href="${item.link}" target="_blank">${item.title}</a>
-              <p>${item.snippet}</p>
-            `;
-            resultsDiv.appendChild(div);
-          });
-        }
-
-        // Pagination
-        document.getElementById('prevBtn').disabled = startIndex <= 1;
-        document.getElementById('nextBtn').disabled = !data.queries?.nextPage;
-
-      } catch (error) {
-        console.error(error);
-        alert("Error fetching results. Check console for details.");
-      }
-    }
-
-    function nextPage() {
-      startIndex += 10;
-      fetchResults();
-    }
-
-    function prevPage() {
-      startIndex = Math.max(1, startIndex - 10);
-      fetchResults();
-    }
-  </script>
-
-</body>
-</html>
+</script>
