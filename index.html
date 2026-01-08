@@ -3,37 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tagshop Watches – UK Concierge Store</title>
+<title>Tagshop Watches – Live Wall</title>
+
 <style>
 :root{
- --bg:#000;
- --card:#111;
- --border:#222;
- --text:#fff;
- --accent:#00ffff;
- --gold:#ffe169;
+  --bg:#000;
+  --card:#111;
+  --border:#222;
+  --text:#fff;
+  --accent:#00ffff;
+  --gold:#ffe169;
 }
-body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text);}
-header{background:#000;padding:14px;border-bottom:1px solid var(--border);text-align:center;}
+body{
+  margin:0;
+  font-family:system-ui;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:#000;
+  padding:14px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
 header h1{margin:0;font-size:22px;color:var(--gold);}
 header .sub{font-size:12px;color:#aaa;margin-top:4px;}
-.trust{display:flex;justify-content:center;gap:12px;font-size:11px;color:#aaa;margin-top:8px;flex-wrap:wrap;}
+.trust{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  font-size:11px;
+  color:#aaa;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
 main{padding:10px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:12px;font-size:13px;line-height:1.6;}
-input,textarea{width:100%;background:#000;border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-size:14px;}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-top:12px;
+  font-size:13px;
+  line-height:1.6;
+}
+input,textarea{
+  width:100%;
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  color:#fff;
+  font-size:14px;
+}
 label{font-size:12px;color:#aaa;}
-button{border:none;border-radius:10px;padding:10px;font-weight:900;cursor:pointer;}
+button{
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-weight:900;
+  cursor:pointer;
+}
 .buy{background:var(--accent);color:#000;}
 .whatsapp{background:#25D366;color:#000;}
-.buybar{position:fixed;bottom:0;left:0;right:0;background:#000;border-top:1px solid var(--border);padding:10px;display:flex;gap:8px;z-index:999;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
-.product{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px;text-align:center;}
-.product img{width:100%;border-radius:8px;}
-.product-title{font-size:12px;margin-top:4px;}
-.product button{width:100%;margin-top:6px;font-size:12px;}
-.footer{text-align:center;font-size:11px;color:#777;margin-top:30px;padding-bottom:100px;}
+.buybar{
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:#000;
+  border-top:1px solid var(--border);
+  padding:10px;
+  display:flex;
+  gap:8px;
+  z-index:999;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:12px;
+}
+.product{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:6px;
+  text-align:center;
+}
+.product img{
+  width:100%;
+  border-radius:6px;
+}
+.product-title{
+  font-size:12px;
+  margin-top:4px;
+}
+.product-price{
+  font-size:12px;
+  color:var(--gold);
+  margin-top:2px;
+}
+.product button{
+  margin-top:4px;
+  font-size:12px;
+  width:100%;
+  cursor:pointer;
+}
+.footer{
+ text-align:center;
+ font-size:11px;
+ color:#777;
+ margin-top:30px;
+ padding-bottom:100px;
+}
+
+/* Overlay */
+#overlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10000;
+}
+#overlayBox{
+  background:var(--card);
+  border:2px solid var(--accent);
+  border-radius:12px;
+  padding:20px;
+  max-width:360px;
+  color:#fff;
+}
+#overlayBox img{
+  width:100%;
+  border-radius:6px;
+  margin-bottom:10px;
+}
+#overlayBox button{
+  margin-top:10px;
+  width:100%;
+}
+.hint-btn{
+  background:#333;
+  color:#fff;
+  padding:6px 8px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  margin-right:6px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -50,28 +169,33 @@ button{border:none;border-radius:10px;padding:10px;font-weight:900;cursor:pointe
 <main>
 
 <div class="card">
-<label>Search watches:</label>
-<input id="searchBox" placeholder="Fashion watch, Designer watch...">
-<button onclick="runSearch()">Search</button>
+<input id="searchBox" placeholder="Search watches…">
+<div style="margin-top:6px;">
+  <span class="hint-btn" onclick="setHint('fashion watch')">Fashion watch</span>
+  <span class="hint-btn" onclick="setHint('designer watch')">Designer watch</span>
+  <span class="hint-btn" onclick="setHint('brand watch')">Brand watch</span>
+</div>
+<button onclick="runSearch()" style="margin-top:8px;" class="buy">Search</button>
 </div>
 
+<div class="card">
+<h3>Search Results</h3>
 <div id="results" class="grid"></div>
+</div>
 
 <div class="card">
-<h3>Your Wall</h3>
+<h3>Live Wall</h3>
 <div id="wall" class="grid"></div>
 </div>
 
 <div class="card">
-<label>Full name</label>
-<input id="name">
-<label>UK delivery address</label>
-<textarea id="address" rows="3"></textarea>
-</div>
-
-<div class="card">
-<b>Delivery & Order Info</b><br>
-All orders include 30% concierge fee + UK delivery. Shipping 7–14 days.
+<b>How it works</b><br>
+• Browse watches<br>
+• Click "Add to Wall" for favorites<br>
+• View on DHgate or Buy via Tagshop<br>
+• Pay via Wise with 30% service fee + UK delivery<br>
+• Order arrives in 7–14 days<br>
+• Email confirmation provided
 </div>
 
 </main>
@@ -82,7 +206,23 @@ All orders include 30% concierge fee + UK delivery. Shipping 7–14 days.
 </div>
 
 <div class="footer">
-Tagshop sources from DHgate store 21945990. We handle checkout, ordering & UK delivery.
+Tagshop sources from DHgate store 21945990.<br>
+We handle checkout, ordering and UK delivery.
+</div>
+
+<!-- Overlay for Checkout -->
+<div id="overlay">
+  <div id="overlayBox">
+    <img id="overlayImg">
+    <div id="overlayTitle"></div>
+    <div id="overlayPrice"></div>
+    <label>Full Name</label>
+    <input id="overlayName">
+    <label>UK Address</label>
+    <textarea id="overlayAddress" rows="3"></textarea>
+    <button class="buy" onclick="confirmCheckout()">Confirm & Pay</button>
+    <button onclick="closeOverlay()">Cancel</button>
+  </div>
 </div>
 
 <script>
@@ -91,85 +231,118 @@ const CSE_ID = "f7e219616fe1d4629";
 const WISE = "https://wise.com/pay/me/davids14542";
 const WHATSAPP = "https://wa.me/?text=";
 
-// ===== Wall Storage =====
-function renderWall(){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  const el = document.getElementById("wall");
-  el.innerHTML="";
-  wall.forEach((item,idx)=>{
-    const div=document.createElement("div");
-    div.className="product";
-    div.innerHTML=`
-      <img src="${item.img}">
-      <div class="product-title">${item.title}</div>
-      <button onclick="window.open('${item.link}','_blank')">View on DHgate</button>
-      <button onclick="buyTagshop(${idx})">Buy via Tagshop</button>
-    `;
-    el.appendChild(div);
-  });
-}
-function addToWall(title,img,link){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  wall.push({title,img,link});
-  localStorage.setItem("tagshopWall",JSON.stringify(wall));
-  renderWall();
+let wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
+
+function setHint(term){
+  document.getElementById("searchBox").value=term;
 }
 
-// ===== Search =====
 function runSearch(){
   const q = document.getElementById("searchBox").value.trim();
-  if(!q) return alert("Enter search terms");
+  if(!q) return alert("Enter a search term");
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML="Loading…";
 
-  document.getElementById("results").innerHTML="Loading…";
-
-  fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=site:dhgate.com/store/21945990+${encodeURIComponent(q)}`)
+  fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(q)}&num=50`)
   .then(r=>r.json())
   .then(data=>{
-    const results = document.getElementById("results");
-    results.innerHTML="";
-    data.items?.forEach(item=>{
+    resultsDiv.innerHTML="";
+    if(!data.items || !data.items.length){
+      resultsDiv.innerHTML="<p style='grid-column:1/-1;text-align:center;'>No results found</p>";
+      return;
+    }
+    data.items.forEach(item=>{
       const img = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
       const div = document.createElement("div");
       div.className="product";
       div.innerHTML=`
         <img src="${img}">
         <div class="product-title">${item.title}</div>
-        <button onclick="window.open('${item.link}','_blank')">View on DHgate</button>
-        <button onclick="addToWall('${item.title.replace(/'/g,"")}','${img}','${item.link}')">Buy via Tagshop</button>
+        <div class="product-price">See DHgate for price</div>
+        <button onclick="addToWall('${item.title.replace(/'/g,'')}','${img}','${item.link}')">Add to Wall</button>
+        <button onclick="viewDHgate('${item.link}')">View on DHgate</button>
       `;
-      results.appendChild(div);
+      resultsDiv.appendChild(div);
     });
-  }).catch(err=>{console.error(err); alert("Search failed");});
+  }).catch(err=>{
+    resultsDiv.innerHTML="<p style='grid-column:1/-1;text-align:center;'>Search error</p>";
+    console.error(err);
+  });
 }
 
-// ===== Checkout =====
-function buyTagshop(idx){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  const item = wall[idx];
-  if(!item) return;
-  const name = document.getElementById("name").value;
-  const addr = document.getElementById("address").value;
+function addToWall(title,img,link){
+  if(wall.length>=50) return alert("Max 50 items on wall");
+  wall.push({title,img,link});
+  localStorage.setItem("tagshopWall",JSON.stringify(wall));
+  renderWall();
+}
 
-  const msg = encodeURIComponent(
+function removeFromWall(idx){
+  wall.splice(idx,1);
+  localStorage.setItem("tagshopWall",JSON.stringify(wall));
+  renderWall();
+}
+
+function renderWall(){
+  const wallDiv = document.getElementById("wall");
+  wallDiv.innerHTML="";
+  wall.forEach((item,idx)=>{
+    const div = document.createElement("div");
+    div.className="product";
+    div.innerHTML=`
+      <img src="${item.img}">
+      <div class="product-title">${item.title}</div>
+      <div class="product-price">See DHgate for price</div>
+      <button onclick="viewDHgate('${item.link}')">View on DHgate</button>
+      <button onclick="openOverlay(${idx})" class="buy">Buy via Tagshop</button>
+      <button onclick="removeFromWall(${idx})">Remove</button>
+    `;
+    wallDiv.appendChild(div);
+  });
+}
+
+function viewDHgate(url){
+  window.open(url,"_blank");
+}
+
+function openOverlay(idx){
+  const item = wall[idx];
+  document.getElementById("overlayImg").src = item.img;
+  document.getElementById("overlayTitle").innerText = item.title;
+  document.getElementById("overlayPrice").innerText = "Price includes 30% service fee + UK delivery";
+  document.getElementById("overlay").style.display="flex";
+  document.getElementById("overlayName").value="";
+  document.getElementById("overlayAddress").value="";
+  overlayIdx = idx;
+}
+
+let overlayIdx = null;
+
+function closeOverlay(){
+  document.getElementById("overlay").style.display="none";
+}
+
+function confirmCheckout(){
+  const item = wall[overlayIdx];
+  const name = document.getElementById("overlayName").value.trim();
+  const address = document.getElementById("overlayAddress").value.trim();
+  if(!name || !address) return alert("Enter name and address");
+
+  const msg=encodeURIComponent(
 `Tagshop Watch Order
 
 Product: ${item.title}
-Link: ${item.link}
+DHgate link: ${item.link}
 Name: ${name}
-UK Address: ${addr}
-Price includes 30% concierge fee + UK delivery`
+UK Address: ${address}
+Price: includes 30% service fee + UK delivery`
   );
   window.open(WISE+"?message="+msg,"_blank");
-}
-
-function checkout(){
-  const wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-  if(wall.length===0) return alert("Add items to wall first");
-  buyTagshop(0);
+  closeOverlay();
 }
 
 function whatsapp(){
-  const msg = encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
+  const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
   window.open(WHATSAPP+msg,"_blank");
 }
 
