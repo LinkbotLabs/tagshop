@@ -13,6 +13,8 @@
   --glass:rgba(25,25,25,.65);
 }
 
+*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Montserrat;
@@ -20,20 +22,28 @@ body{
   color:#fff;
 }
 
-/* HERO */
+/* HERO ROTATING BACKGROUND */
 .hero{
-  background:url("https://images.unsplash.com/photo-1518544887872-2ed0d3a2fdb5?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   position:relative;
+  animation:bg 30s infinite;
+  background-size:cover;
+  background-position:center;
+}
+@keyframes bg{
+  0%{background-image:url("https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&q=80")}
+  33%{background-image:url("https://images.unsplash.com/photo-1518544887872-2ed0d3a2fdb5?auto=format&fit=crop&w=1600&q=80")}
+  66%{background-image:url("https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=1600&q=80")}
+  100%{background-image:url("https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&q=80")}
 }
 .hero::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.8));
+  background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.85));
 }
 .hero-box{
   position:relative;
@@ -46,11 +56,11 @@ body{
   max-width:900px;
 }
 .hero h1{
-  font-family:"Playfair Display";
+  font-family:Playfair Display;
   color:var(--gold);
   font-size:3rem;
 }
-.hero p{opacity:.9;}
+.hero p{opacity:.9}
 .hero .cta{
   display:inline-block;
   margin-top:25px;
@@ -62,7 +72,7 @@ body{
   text-decoration:none;
 }
 
-/* Glass */
+/* Sections */
 .section{
   max-width:1200px;
   margin:auto;
@@ -97,7 +107,7 @@ button{
   cursor:pointer;
   box-shadow:0 5px 15px rgba(0,0,0,.6);
 }
-button:hover{transform:translateY(-1px)}
+button:hover{transform:translateY(-2px)}
 
 .quick button{
   background:#222;
@@ -105,13 +115,14 @@ button:hover{transform:translateY(-1px)}
   margin:5px;
 }
 
-/* Products */
+/* Product grid */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
   gap:25px;
 }
 
+/* Cards */
 .card{
   background:rgba(255,255,255,.05);
   border-radius:18px;
@@ -120,7 +131,9 @@ button:hover{transform:translateY(-1px)}
   backdrop-filter:blur(12px);
   box-shadow:0 15px 40px rgba(0,0,0,.7);
   position:relative;
+  transition:.4s;
 }
+.card:hover{transform:translateY(-6px)}
 
 .card img{
   width:100%;
@@ -130,14 +143,13 @@ button:hover{transform:translateY(-1px)}
   padding:10px;
   border-radius:12px;
 }
-
 .card h4{
   color:var(--gold);
   font-size:1rem;
   min-height:50px;
 }
 
-/* Price bubble */
+/* Badges */
 .price{
   position:absolute;
   top:10px;
@@ -148,15 +160,13 @@ button:hover{transform:translateY(-1px)}
   border-radius:20px;
   font-weight:700;
 }
-
-/* Delivery */
 .delivery{
   font-size:.8rem;
   color:#7CFF7C;
   margin-bottom:8px;
 }
 
-/* Card buttons */
+/* Buttons */
 .buy-dh{
   background:#111;
   color:#fff;
@@ -171,7 +181,7 @@ button:hover{transform:translateY(-1px)}
 }
 
 /* Checkout */
-#checkout{display:none;}
+#checkout{display:none}
 </style>
 </head>
 
@@ -180,7 +190,7 @@ button:hover{transform:translateY(-1px)}
 <div class="hero">
   <div class="hero-box">
     <h1>TagShop Luxury Watches</h1>
-    <p>Our experts select the best Rolex-style timepieces with UK pricing and insured delivery.</p>
+    <p>Expert-selected Rolex, Omega, Tag Heuer, Patek & more with UK pricing and insured delivery.</p>
     <p><strong>Buy direct or Buy with Confidence via TagShop.</strong></p>
     <a href="#search" class="cta">Browse Collection</a>
   </div>
@@ -188,13 +198,18 @@ button:hover{transform:translateY(-1px)}
 
 <div class="section glass" id="search">
 <h2>Search Watches</h2>
-<input id="q" placeholder="Search luxury watches...">
+<input id="q" placeholder="Search Rolex, Omega, Patek, Tag Heuer…">
 <button onclick="search()">Search</button>
+
 <div class="quick">
-<button onclick="quick('rolex explorer')">Explorer</button>
-<button onclick="quick('mens watches')">Men</button>
+<button onclick="quick('replica rolex')">Replica Rolex</button>
+<button onclick="quick('tag heuer replica')">Tag Heuer</button>
+<button onclick="quick('breitling replica')">Breitling</button>
+<button onclick="quick('patek philippe replica')">Patek Philippe</button>
+<button onclick="quick('omega seamaster replica')">Omega</button>
+<button onclick="quick('audemars piguet replica')">Audemars</button>
 <button onclick="quick('watch with box')">With Box</button>
-<button onclick="quick('chronograph')">Chronograph</button>
+<button onclick="quick('luxury mens watch')">Luxury</button>
 </div>
 </div>
 
@@ -237,7 +252,7 @@ async function search(){
    img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF
  }));
- render(last,"results",true);
+ render(last,"results");
 }
 
 function render(arr,id){
