@@ -19,148 +19,46 @@ body{
   font-family:Montserrat;
   background:#050505;
   color:#fff;
-  overflow-x:hidden;
 }
 
-/* BACKGROUND */
-.hero-bg{
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  overflow:hidden;
-}
-.hero-bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.85));
-  z-index:3;
-}
-.hero-slides{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-.hero-slides img{
-  position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  animation:fade 30s infinite;
-}
+/* Background slideshow */
+.hero-bg{position:fixed;inset:0;z-index:-2;overflow:hidden;}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.85));z-index:2;}
+.hero-slides img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;animation:fade 30s infinite;}
 .hero-slides img:nth-child(1){animation-delay:0s;}
 .hero-slides img:nth-child(2){animation-delay:6s;}
 .hero-slides img:nth-child(3){animation-delay:12s;}
 .hero-slides img:nth-child(4){animation-delay:18s;}
 .hero-slides img:nth-child(5){animation-delay:24s;}
+@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
 
-@keyframes fade{
-  0%{opacity:0}
-  5%{opacity:1}
-  20%{opacity:1}
-  25%{opacity:0}
-  100%{opacity:0}
-}
+.section{max-width:1200px;margin:auto;padding:30px 20px;}
+.glass{background:var(--glass);backdrop-filter:blur(16px);border-radius:20px;padding:25px;border:1px solid rgba(255,215,0,.3);}
 
-/* PARALLAX */
-.parallax{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 30% 20%,rgba(255,215,0,.08),transparent 60%);
-  animation:float 20s infinite alternate;
-}
-@keyframes float{
-  from{transform:translateY(0px)}
-  to{transform:translateY(-40px)}
-}
-
-/* SECTIONS */
-.section{
-  max-width:1200px;
-  margin:auto;
-  padding:40px 20px;
-}
-.glass{
-  background:var(--glass);
-  backdrop-filter:blur(16px);
-  border-radius:20px;
-  padding:30px;
-  border:1px solid rgba(255,215,0,.3);
-  box-shadow:0 10px 40px rgba(0,0,0,.7);
-}
-
-/* PRODUCT WALL */
-#results{
-  display:flex;
-  gap:20px;
-  overflow-x:auto;
-  padding-bottom:20px;
-  scroll-behavior:smooth;
-}
+#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:20px;}
 #results::-webkit-scrollbar{height:8px}
 #results::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:25px;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;}
 
-/* CARD */
-.card{
-  min-width:220px;
-  background:rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:15px;
-  border:1px solid rgba(255,215,0,.25);
-  backdrop-filter:blur(12px);
-  box-shadow:0 15px 40px rgba(0,0,0,.7);
-  position:relative;
-}
-.card img{
-  width:100%;
-  height:200px;
-  object-fit:contain;
-  background:#fff;
-  padding:10px;
-  border-radius:12px;
-}
+.card{min-width:220px;background:rgba(255,255,255,.08);border-radius:18px;padding:15px;border:1px solid rgba(255,215,0,.25);}
+.card img{width:100%;height:200px;object-fit:contain;background:#fff;padding:10px;border-radius:12px;}
 .card h4{color:var(--gold);font-size:1rem}
 
-/* BUTTONS */
-button{
-  width:100%;
-  background:var(--diamond);
-  border:none;
-  padding:12px;
-  border-radius:30px;
-  font-weight:700;
-  cursor:pointer;
-  margin-top:6px;
-  box-shadow:0 0 15px rgba(255,215,0,.6);
-}
-.buy-dh{background:#111;color:#fff;box-shadow:none}
+button{width:100%;background:var(--diamond);border:none;padding:12px;border-radius:30px;font-weight:700;cursor:pointer;margin-top:6px;}
+.buy-dh{background:#111;color:#fff}
 
-/* HERO CONTENT */
-.hero{
-  text-align:center;
-  margin-top:40px;
-}
-.hero h1{
-  font-family:Playfair Display;
-  color:var(--gold);
-  font-size:3rem;
-}
-
-/* INPUTS */
-input,textarea{
-  width:100%;
-  max-width:500px;
-  padding:12px;
+#cartBar{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:var(--glass);
+  backdrop-filter:blur(15px);
+  padding:15px 25px;
   border-radius:30px;
-  border:none;
-  margin-bottom:10px;
+  border:1px solid rgba(255,215,0,.4);
+  display:none;
+  z-index:10;
 }
 </style>
 </head>
@@ -175,36 +73,28 @@ input,textarea{
     <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
     <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
   </div>
-  <div class="parallax"></div>
 </div>
 
-<!-- PRODUCT WALL -->
 <div class="section">
-  <h2>Luxury Watch Collection</h2>
+  <h2>Luxury Collection</h2>
   <div id="results"></div>
 </div>
 
-<!-- SEARCH -->
 <div class="section glass">
-<input id="q" placeholder="Search Rolex, Omega, AP, Patek...">
+<input id="q" placeholder="Search Rolex, Omega, AP, Patek…">
 <button onclick="search()">Search</button>
 </div>
 
-<!-- HERO COPY -->
-<div class="section hero glass">
-<h1>Buy With Confidence</h1>
-<p>Some sellers don’t communicate or misrepresent products.  
-<strong>TagShop sources, verifies and ships the correct timepiece with original markings, correct weight and free insured delivery.</strong></p>
-<p>Exclusive luxury watches at affordable prices.</p>
+<div class="section glass">
+<h2>Why Buy With TagShop?</h2>
+<p>Some sellers don’t communicate or misrepresent products. TagShop sources the best version with original markings, correct weight and insured UK delivery.</p>
 </div>
 
-<!-- SHOWCASE -->
 <div class="section">
-<h2>Your TagShop Picks</h2>
+<h2>Your Reserved Watches</h2>
 <div id="showcase" class="grid"></div>
 </div>
 
-<!-- CHECKOUT -->
 <div class="section glass" id="checkout" style="display:none">
 <input placeholder="Full Name">
 <input placeholder="Email">
@@ -213,11 +103,17 @@ input,textarea{
 <p id="thanks" style="display:none;color:var(--gold)">Order confirmed – email sent.</p>
 </div>
 
+<div id="cartBar">
+<span id="cartCount">0</span> Watches Reserved • <span id="cartTotal">£0</span>
+</div>
+
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
+const PRICE=249;
+
 let last=[],showcase=[];
 
 async function search(){
@@ -241,17 +137,30 @@ function render(arr,id){
   d.innerHTML=`
     <img src="${p.img}">
     <h4>${p.title}</h4>
-    <button class="buy-dh" onclick="window.open('${p.link}')">Buy Direct</button>
-    <button onclick="add(${i})">Buy with TagShop</button>
+    <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+    <button class="buy-ts" data-index="${i}">Buy with TagShop</button>
   `;
   box.appendChild(d);
+ });
+ document.querySelectorAll(".buy-ts").forEach(btn=>{
+  btn.onclick=()=>add(btn.getAttribute("data-index"));
  });
 }
 
 function add(i){
- showcase.push(last[i]);
+ const item=last[i];
+ if(!item) return;
+ if(showcase.find(p=>p.link===item.link)) return alert("Already reserved.");
+ showcase.push(item);
  render(showcase,"showcase");
+ updateCart();
  document.getElementById("checkout").style.display="block";
+}
+
+function updateCart(){
+ document.getElementById("cartBar").style.display="block";
+ document.getElementById("cartCount").innerText=showcase.length;
+ document.getElementById("cartTotal").innerText="£"+(showcase.length*PRICE);
 }
 
 function pay(){
