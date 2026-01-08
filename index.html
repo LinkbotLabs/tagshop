@@ -3,315 +3,137 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tagshop Watches – Live Wall</title>
+<title>Tagshop – Men’s Watches UK</title>
+
 <style>
 :root{
-  --bg:#000;
-  --card:#111;
-  --border:#222;
-  --text:#fff;
-  --accent:#00ffff;
-  --gold:#ffe169;
+ --bg:#000;
+ --card:#111;
+ --border:#222;
+ --text:#fff;
+ --accent:#00ffff;
+ --gold:#ffe169;
 }
+
 body{
-  margin:0;
-  font-family:system-ui;
-  background:var(--bg);
-  color:var(--text);
+ margin:0;
+ font-family:system-ui;
+ background:var(--bg);
+ color:var(--text);
 }
+
 header{
-  background:#000;
-  padding:14px;
-  border-bottom:1px solid var(--border);
-  text-align:center;
-}
-header h1{margin:0;font-size:22px;color:var(--gold);}
-header .sub{font-size:12px;color:#aaa;margin-top:4px;}
-.trust{
- display:flex;
- justify-content:center;
- gap:12px;
- font-size:11px;
- color:#aaa;
- margin-top:8px;
- flex-wrap:wrap;
-}
-main{padding:10px;}
-.card{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:14px;
- padding:14px;
- margin-top:12px;
- font-size:13px;
- line-height:1.6;
-}
-input,textarea{
- width:100%;
+ position:sticky;
+ top:0;
  background:#000;
- border:1px solid var(--border);
- border-radius:10px;
+ border-bottom:1px solid var(--border);
  padding:12px;
- color:#fff;
- font-size:14px;
+ z-index:10;
 }
-label{font-size:12px;color:#aaa;}
-button{
- border:none;
- border-radius:10px;
- padding:12px;
- font-weight:900;
- cursor:pointer;
+
+h1{
+ margin:0;
+ text-align:center;
+ color:var(--gold);
+ font-size:20px;
 }
-.buy{background:var(--accent);color:#000;}
-.whatsapp{background:#25D366;color:#000;}
+
+.notice{
+ text-align:center;
+ font-size:12px;
+ color:#aaa;
+ margin-top:4px;
+}
+
+main{
+ padding:10px;
+}
+
 .buybar{
  position:fixed;
- bottom:0; left:0; right:0;
+ bottom:0;
+ left:0;
+ right:0;
  background:#000;
  border-top:1px solid var(--border);
  padding:10px;
  display:flex;
- gap:8px;
- z-index:999;
-}
-.grid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
- gap:12px;
-}
-.product{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:10px;
- padding:6px;
- text-align:center;
-}
-.product img{
- width:100%;
- border-radius:6px;
-}
-.product-title{
- font-size:12px;
- margin-top:4px;
-}
-.product-price{
- font-size:12px;
- color:var(--gold);
- margin-top:2px;
-}
-.product button{
- margin-top:4px;
- font-size:12px;
- width:100%;
- cursor:pointer;
-}
-.footer{
- text-align:center;
- font-size:11px;
- color:#777;
- margin-top:30px;
- padding-bottom:100px;
-}
-.hint-btn{
- background:#333;
- color:#fff;
- padding:6px 8px;
- border-radius:6px;
- cursor:pointer;
- font-size:12px;
- margin-right:6px;
+ gap:10px;
+ z-index:20;
 }
 
-/* Overlay */
-#overlay{
- position:fixed; inset:0;
- background:rgba(0,0,0,0.95);
- display:none;
- justify-content:center;
- align-items:center;
- z-index:10000;
-}
-#overlayBox{
- background:var(--card);
- border:2px solid var(--accent);
+.buybar button{
+ flex:1;
+ background:var(--accent);
+ color:#000;
+ font-weight:800;
+ border:none;
  border-radius:12px;
- padding:20px;
- max-width:360px;
- color:#fff;
+ padding:14px;
+ font-size:16px;
+ cursor:pointer;
 }
-#overlayBox img{
- width:100%;
- border-radius:6px;
- margin-bottom:10px;
+
+.how{
+ padding:12px;
+ border-top:1px solid var(--border);
+ font-size:13px;
+ line-height:1.6;
+ color:#ccc;
 }
-#overlayBox button{
- margin-top:10px;
+
+iframe{
  width:100%;
+ border:none;
+ min-height:70vh;
 }
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>⌚ Tagshop Watches</h1>
-<div class="sub">UK concierge store • Verified DHgate supplier</div>
-<div class="trust">
-<div>✔ UK delivery included</div>
-<div>✔ Secure Wise checkout</div>
-<div>✔ 30% concierge fee</div>
-<div>✔ Seller 21945990</div>
-</div>
+  <h1>🕰️ Tagshop – Men’s Watches</h1>
+  <div class="notice">
+    Premium DHgate watches • UK delivery • 30% concierge included
+  </div>
 </header>
 
 <main>
 
-<div class="card">
-<input id="searchBox" placeholder="Search watches…">
-<div style="margin-top:6px;">
-  <span class="hint-btn" onclick="setHint('fashion watch')">Fashion watch</span>
-  <span class="hint-btn" onclick="setHint('designer watch')">Designer watch</span>
-  <span class="hint-btn" onclick="setHint('brand watch')">Brand watch</span>
-</div>
-<button onclick="searchDHgate()" style="margin-top:8px;" class="buy">Search on DHgate</button>
-</div>
+<!-- Google Programmable Search (DHgate Only) -->
+<script async src="https://cse.google.com/cse.js?cx=f7e219616fe1d4629"></script>
+<div class="gcse-searchresults-only"></div>
 
-<div class="card">
-<h3>Live Wall</h3>
-<div id="wall" class="grid"></div>
-</div>
-
-<div class="card">
+<div class="how">
 <b>How it works</b><br>
-• Browse watches<br>
-• Open product on DHgate<br>
-• Copy DHgate link → add to wall<br>
-• Pay via Wise with 30% service fee + UK delivery<br>
-• Order arrives in 7–14 days<br>
-• Email confirmation provided
+1. Browse DHgate men’s watches above<br>
+2. Open a product you like<br>
+3. Copy the product link<br>
+4. Tap <b>Buy via Tagshop</b><br>
+5. Pay via Wise — we order & ship to you 🇬🇧
 </div>
 
 </main>
 
+<!-- Checkout Bar -->
 <div class="buybar">
-<button class="buy" onclick="checkout()">Buy via Tagshop</button>
-<button class="whatsapp" onclick="whatsapp()">WhatsApp</button>
-</div>
-
-<div class="footer">
-Tagshop sources from DHgate store 21945990.<br>
-We handle checkout, ordering and UK delivery.
-</div>
-
-<!-- Overlay for Checkout -->
-<div id="overlay">
-  <div id="overlayBox">
-    <img id="overlayImg">
-    <div id="overlayTitle"></div>
-    <div id="overlayPrice"></div>
-    <label>Full Name</label>
-    <input id="overlayName">
-    <label>UK Address</label>
-    <textarea id="overlayAddress" rows="3"></textarea>
-    <button class="buy" onclick="confirmCheckout()">Confirm & Pay</button>
-    <button onclick="closeOverlay()">Cancel</button>
-  </div>
+  <button onclick="checkout()">Buy via Tagshop</button>
 </div>
 
 <script>
 const WISE = "https://wise.com/pay/me/davids14542";
-const WHATSAPP = "https://wa.me/?text=";
-let wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
-let overlayIdx = null;
 
-function setHint(term){
-  document.getElementById("searchBox").value=term;
+function checkout(){
+ const msg = encodeURIComponent(
+  "Tagshop Watch Order\n\n" +
+  "Please paste the DHgate product link below:\n\n" +
+  "UK delivery included.\n" +
+  "Price includes 30% concierge service.\n\n" +
+  "Product link:"
+ );
+ window.open(WISE + "?message=" + msg, "_blank");
 }
-
-function searchDHgate(){
-  const q = document.getElementById("searchBox").value.trim();
-  if(!q) return alert("Enter search term");
-  const url = `https://www.dhgate.com/search.do?key=${encodeURIComponent(q)}`;
-  window.open(url, "_blank");
-}
-
-function addToWall(title,img,link){
-  if(wall.length>=50) return alert("Max 50 items on wall");
-  wall.push({title,img,link});
-  localStorage.setItem("tagshopWall", JSON.stringify(wall));
-  renderWall();
-}
-
-function removeFromWall(idx){
-  wall.splice(idx,1);
-  localStorage.setItem("tagshopWall", JSON.stringify(wall));
-  renderWall();
-}
-
-function renderWall(){
-  const wallDiv = document.getElementById("wall");
-  wallDiv.innerHTML="";
-  wall.forEach((item,idx)=>{
-    const div = document.createElement("div");
-    div.className="product";
-    div.innerHTML=`
-      <img src="${item.img}">
-      <div class="product-title">${item.title}</div>
-      <div class="product-price">Price on DHgate</div>
-      <button onclick="viewDHgate('${item.link}')">View on DHgate</button>
-      <button onclick="openOverlay(${idx})" class="buy">Buy via Tagshop</button>
-      <button onclick="removeFromWall(${idx})">Remove</button>
-    `;
-    wallDiv.appendChild(div);
-  });
-}
-
-function viewDHgate(url){
-  window.open(url,"_blank");
-}
-
-function openOverlay(idx){
-  const item = wall[idx];
-  document.getElementById("overlayImg").src = item.img;
-  document.getElementById("overlayTitle").innerText = item.title;
-  document.getElementById("overlayPrice").innerText = "Price includes 30% service fee + UK delivery";
-  document.getElementById("overlay").style.display="flex";
-  document.getElementById("overlayName").value="";
-  document.getElementById("overlayAddress").value="";
-  overlayIdx = idx;
-}
-
-function closeOverlay(){
-  document.getElementById("overlay").style.display="none";
-}
-
-function confirmCheckout(){
-  if(overlayIdx === null) return;
-  const item = wall[overlayIdx];
-  const name = document.getElementById("overlayName").value.trim();
-  const address = document.getElementById("overlayAddress").value.trim();
-  if(!name || !address) return alert("Enter name and address");
-
-  const msg = encodeURIComponent(
-`Tagshop Watch Order
-
-Product: ${item.title}
-DHgate link: ${item.link}
-Name: ${name}
-UK Address: ${address}
-Price: includes 30% service fee + UK delivery`
-  );
-  window.open(WISE+"?message="+msg,"_blank");
-  closeOverlay();
-}
-
-function whatsapp(){
-  const msg = encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
-  window.open(WHATSAPP+msg,"_blank");
-}
-
-// Initial render
-renderWall();
 </script>
 
 </body>
