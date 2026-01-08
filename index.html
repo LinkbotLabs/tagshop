@@ -2,130 +2,158 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop – Luxury Watch Concierge</title>
+<title>TagShop – Luxury Watch Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --gold:#f5d77c;
-  --glass:rgba(40,40,40,.75);
+  --glass:rgba(35,35,35,.55);
+  --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
 }
 
 body{
   margin:0;
   font-family:Montserrat;
-  background:radial-gradient(circle at top,#1c1c1c,#050505);
+  background:#050505;
   color:#fff;
+  overflow-x:hidden;
 }
 
-/* HERO BG */
+/* BACKGROUND */
 .hero-bg{
   position:fixed;
   inset:0;
-  background:url("https://images.unsplash.com/photo-1518544887872-2ed0d3a2fdb5?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
   z-index:-1;
+  overflow:hidden;
 }
 .hero-bg::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.85));
+  background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.85));
+  z-index:3;
+}
+.hero-slides{
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+.hero-slides img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  animation:fade 30s infinite;
+}
+.hero-slides img:nth-child(1){animation-delay:0s;}
+.hero-slides img:nth-child(2){animation-delay:6s;}
+.hero-slides img:nth-child(3){animation-delay:12s;}
+.hero-slides img:nth-child(4){animation-delay:18s;}
+.hero-slides img:nth-child(5){animation-delay:24s;}
+
+@keyframes fade{
+  0%{opacity:0}
+  5%{opacity:1}
+  20%{opacity:1}
+  25%{opacity:0}
+  100%{opacity:0}
 }
 
-/* Glass panels */
+/* PARALLAX */
+.parallax{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 30% 20%,rgba(255,215,0,.08),transparent 60%);
+  animation:float 20s infinite alternate;
+}
+@keyframes float{
+  from{transform:translateY(0px)}
+  to{transform:translateY(-40px)}
+}
+
+/* SECTIONS */
 .section{
-  max-width:1300px;
+  max-width:1200px;
   margin:auto;
   padding:40px 20px;
 }
 .glass{
   background:var(--glass);
   backdrop-filter:blur(16px);
-  border-radius:18px;
+  border-radius:20px;
   padding:30px;
-  border:1px solid rgba(255,215,0,.25);
+  border:1px solid rgba(255,215,0,.3);
+  box-shadow:0 10px 40px rgba(0,0,0,.7);
 }
 
-/* Buttons – Diamond */
-button{
-  background:linear-gradient(135deg,#fff9d6,#f5d77c,#b28d29);
-  color:#000;
-  border:1px solid rgba(255,255,255,.6);
-  padding:14px 32px;
-  border-radius:40px;
-  font-weight:800;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(255,215,100,.6),0 15px 40px rgba(0,0,0,.7);
+/* PRODUCT WALL */
+#results{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:20px;
+  scroll-behavior:smooth;
 }
-button:hover{transform:translateY(-2px) scale(1.02)}
+#results::-webkit-scrollbar{height:8px}
+#results::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
 
-.quick button{
-  background:#222;
-  color:#fff;
-}
-
-/* Product wall */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:25px;
-  max-height:70vh;
-  overflow-y:auto;
-  padding-right:10px;
-}
-.grid::-webkit-scrollbar{
-  width:6px;
-}
-.grid::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,#f5d77c,#b28d29);
-  border-radius:10px;
 }
 
-/* Cards */
+/* CARD */
 .card{
-  background:rgba(255,255,255,.05);
+  min-width:220px;
+  background:rgba(255,255,255,.08);
   border-radius:18px;
   padding:15px;
   border:1px solid rgba(255,215,0,.25);
   backdrop-filter:blur(12px);
-  box-shadow:0 20px 50px rgba(0,0,0,.7);
+  box-shadow:0 15px 40px rgba(0,0,0,.7);
   position:relative;
 }
 .card img{
   width:100%;
-  height:220px;
+  height:200px;
   object-fit:contain;
   background:#fff;
   padding:10px;
   border-radius:12px;
 }
-.card h4{color:var(--gold);font-size:1rem;min-height:50px}
+.card h4{color:var(--gold);font-size:1rem}
 
-/* Badges */
-.badge{
-  position:absolute;
-  left:10px;
-  top:10px;
-  background:rgba(0,0,0,.7);
-  color:#7CFF7C;
-  padding:4px 10px;
-  border-radius:12px;
-  font-size:.75rem;
+/* BUTTONS */
+button{
+  width:100%;
+  background:var(--diamond);
+  border:none;
+  padding:12px;
+  border-radius:30px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:6px;
+  box-shadow:0 0 15px rgba(255,215,0,.6);
 }
-.price{
-  position:absolute;
-  right:10px;
-  top:10px;
-  background:linear-gradient(135deg,#f5d77c,#b28d29);
-  color:#000;
-  padding:6px 14px;
-  border-radius:20px;
-  font-weight:800;
+.buy-dh{background:#111;color:#fff;box-shadow:none}
+
+/* HERO CONTENT */
+.hero{
+  text-align:center;
+  margin-top:40px;
+}
+.hero h1{
+  font-family:Playfair Display;
+  color:var(--gold);
+  font-size:3rem;
 }
 
-/* Checkout */
+/* INPUTS */
 input,textarea{
   width:100%;
   max-width:500px;
@@ -134,69 +162,55 @@ input,textarea{
   border:none;
   margin-bottom:10px;
 }
-
-/* Hide */
-#checkout{display:none;}
 </style>
 </head>
 
 <body>
 
-<div class="hero-bg"></div>
+<div class="hero-bg">
+  <div class="hero-slides">
+    <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+    <img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+    <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+    <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+  </div>
+  <div class="parallax"></div>
+</div>
 
 <!-- PRODUCT WALL -->
 <div class="section">
-<h2>Curated Watch Collection</h2>
-<div id="results" class="grid"></div>
+  <h2>Luxury Watch Collection</h2>
+  <div id="results"></div>
 </div>
 
 <!-- SEARCH -->
 <div class="section glass">
-<h2>Search Luxury Watches</h2>
-<input id="q" placeholder="Rolex, Tag Heuer, Patek Philippe, Omega, Breitling…">
+<input id="q" placeholder="Search Rolex, Omega, AP, Patek...">
 <button onclick="search()">Search</button>
-<div class="quick">
-<button onclick="quick('rolex explorer')">Rolex Explorer</button>
-<button onclick="quick('tag heuer')">Tag Heuer</button>
-<button onclick="quick('patek philippe')">Patek</button>
-<button onclick="quick('omega seamaster')">Omega</button>
-<button onclick="quick('breitling')">Breitling</button>
-<button onclick="quick('replica luxury watch')">Replica Luxury</button>
-</div>
 </div>
 
-<!-- TRUST -->
-<div class="section glass">
-<h2>Buy With Confidence via TagShop</h2>
-<p>
-Many marketplace sellers do not communicate or ship incorrectly.
-TagShop acts as your <strong>Luxury Watch Concierge</strong>.
-</p>
-<p>
-We source the <strong>best available timepiece</strong> with correct weight,
-original markings and verified factory quality — then deliver it
-<strong>free and insured</strong> to your door.
-</p>
-<p style="color:var(--gold)">
-Buy direct — or Buy With Confidence via TagShop.
-</p>
+<!-- HERO COPY -->
+<div class="section hero glass">
+<h1>Buy With Confidence</h1>
+<p>Some sellers don’t communicate or misrepresent products.  
+<strong>TagShop sources, verifies and ships the correct timepiece with original markings, correct weight and free insured delivery.</strong></p>
+<p>Exclusive luxury watches at affordable prices.</p>
 </div>
 
 <!-- SHOWCASE -->
 <div class="section">
-<h2>Your Selected Watches</h2>
+<h2>Your TagShop Picks</h2>
 <div id="showcase" class="grid"></div>
 </div>
 
 <!-- CHECKOUT -->
-<div class="section glass" id="checkout">
-<h2>Secure Checkout</h2>
+<div class="section glass" id="checkout" style="display:none">
 <input placeholder="Full Name">
 <input placeholder="Email">
-<input placeholder="Phone">
 <textarea placeholder="Delivery Address"></textarea>
-<button onclick="pay()">Proceed to Secure Wise Payment</button>
-<p id="thanks" style="display:none;color:var(--gold)">Thank you – your order has been confirmed.</p>
+<button onclick="pay()">Secure Wise Checkout</button>
+<p id="thanks" style="display:none;color:var(--gold)">Order confirmed – email sent.</p>
 </div>
 
 <script>
@@ -204,38 +218,33 @@ const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
-
 let last=[],showcase=[];
-
-function quick(q){document.getElementById("q").value=q;search();}
 
 async function search(){
  const q=document.getElementById("q").value;
  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}`);
  const d=await r.json();
  last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-   title:i.title,
-   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-   link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF
  }));
  render(last,"results");
 }
 
 function render(arr,id){
- let box=document.getElementById(id); box.innerHTML="";
+ const box=document.getElementById(id);
+ box.innerHTML="";
  arr.forEach((p,i)=>{
-   let stock=Math.floor(Math.random()*5)+1;
-   let d=document.createElement("div"); d.className="card";
-   d.innerHTML=`
-   <div class="badge">Verified by TagShop</div>
-   <div class="price">£249</div>
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <p style="font-size:.8rem;color:#7CFF7C">Only ${stock} left in stock</p>
-   <p style="font-size:.8rem;opacity:.8">UK Retail: <s>£4,500</s></p>
-   <button onclick="window.open('${p.link}')">Buy Direct</button>
-   <button onclick="add(${i})">Buy with TagShop</button>`;
-   box.appendChild(d);
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+    <img src="${p.img}">
+    <h4>${p.title}</h4>
+    <button class="buy-dh" onclick="window.open('${p.link}')">Buy Direct</button>
+    <button onclick="add(${i})">Buy with TagShop</button>
+  `;
+  box.appendChild(d);
  });
 }
 
