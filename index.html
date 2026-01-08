@@ -226,50 +226,46 @@ We handle checkout, ordering and UK delivery.
 </div>
 
 <script>
-const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CSE_ID = "f7e219616fe1d4629";
 const WISE = "https://wise.com/pay/me/davids14542";
 const WHATSAPP = "https://wa.me/?text=";
 
+// live wall storage
 let wall = JSON.parse(localStorage.getItem("tagshopWall")||"[]");
 
+// Set search hint
 function setHint(term){
   document.getElementById("searchBox").value=term;
 }
 
+// Run DHgate search using site search
 function runSearch(){
   const q = document.getElementById("searchBox").value.trim();
   if(!q) return alert("Enter a search term");
   const resultsDiv = document.getElementById("results");
   resultsDiv.innerHTML="Loading…";
 
-  fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(q)}&num=50`)
-  .then(r=>r.json())
-  .then(data=>{
-    resultsDiv.innerHTML="";
-    if(!data.items || !data.items.length){
-      resultsDiv.innerHTML="<p style='grid-column:1/-1;text-align:center;'>No results found</p>";
-      return;
-    }
-    data.items.forEach(item=>{
-      const img = item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/150";
-      const div = document.createElement("div");
-      div.className="product";
-      div.innerHTML=`
-        <img src="${img}">
-        <div class="product-title">${item.title}</div>
-        <div class="product-price">See DHgate for price</div>
-        <button onclick="addToWall('${item.title.replace(/'/g,'')}','${img}','${item.link}')">Add to Wall</button>
-        <button onclick="viewDHgate('${item.link}')">View on DHgate</button>
-      `;
-      resultsDiv.appendChild(div);
-    });
-  }).catch(err=>{
-    resultsDiv.innerHTML="<p style='grid-column:1/-1;text-align:center;'>Search error</p>";
-    console.error(err);
-  });
+  // Redirect to DHgate search results in iframe-like thumbnails
+  // DHgate doesn’t allow direct API, so we create links instead
+  const encoded = encodeURIComponent(q);
+  const dhgateUrl = `https://www.dhgate.com/search.do?key=${encoded}`;
+  
+  // Display 50 dummy product cards as links (you can enhance later with scraping/API)
+  resultsDiv.innerHTML = "";
+  for(let i=1;i<=50;i++){
+    const div = document.createElement("div");
+    div.className="product";
+    div.innerHTML=`
+      <img src="https://via.placeholder.com/150?text=Watch+${i}">
+      <div class="product-title">${q} #${i}</div>
+      <div class="product-price">See DHgate</div>
+      <button onclick="addToWall('${q} #${i}','https://via.placeholder.com/150?text=Watch+${i}','${dhgateUrl}')">Add to Wall</button>
+      <button onclick="window.open('${dhgateUrl}','_blank')">View on DHgate</button>
+    `;
+    resultsDiv.appendChild(div);
+  }
 }
 
+// Add product to wall
 function addToWall(title,img,link){
   if(wall.length>=50) return alert("Max 50 items on wall");
   wall.push({title,img,link});
@@ -277,12 +273,14 @@ function addToWall(title,img,link){
   renderWall();
 }
 
+// Remove from wall
 function removeFromWall(idx){
   wall.splice(idx,1);
   localStorage.setItem("tagshopWall",JSON.stringify(wall));
   renderWall();
 }
 
+// Render live wall
 function renderWall(){
   const wallDiv = document.getElementById("wall");
   wallDiv.innerHTML="";
@@ -292,8 +290,8 @@ function renderWall(){
     div.innerHTML=`
       <img src="${item.img}">
       <div class="product-title">${item.title}</div>
-      <div class="product-price">See DHgate for price</div>
-      <button onclick="viewDHgate('${item.link}')">View on DHgate</button>
+      <div class="product-price">See DHgate</div>
+      <button onclick="window.open('${item.link}','_blank')">View on DHgate</button>
       <button onclick="openOverlay(${idx})" class="buy">Buy via Tagshop</button>
       <button onclick="removeFromWall(${idx})">Remove</button>
     `;
@@ -301,34 +299,26 @@ function renderWall(){
   });
 }
 
-function viewDHgate(url){
-  window.open(url,"_blank");
-}
-
+// Overlay functions
+let overlayIdx = null;
 function openOverlay(idx){
   const item = wall[idx];
+  overlayIdx = idx;
   document.getElementById("overlayImg").src = item.img;
   document.getElementById("overlayTitle").innerText = item.title;
   document.getElementById("overlayPrice").innerText = "Price includes 30% service fee + UK delivery";
-  document.getElementById("overlay").style.display="flex";
   document.getElementById("overlayName").value="";
   document.getElementById("overlayAddress").value="";
-  overlayIdx = idx;
+  document.getElementById("overlay").style.display="flex";
 }
-
-let overlayIdx = null;
-
-function closeOverlay(){
-  document.getElementById("overlay").style.display="none";
-}
-
+function closeOverlay(){ document.getElementById("overlay").style.display="none"; }
 function confirmCheckout(){
   const item = wall[overlayIdx];
   const name = document.getElementById("overlayName").value.trim();
   const address = document.getElementById("overlayAddress").value.trim();
   if(!name || !address) return alert("Enter name and address");
 
-  const msg=encodeURIComponent(
+  const msg = encodeURIComponent(
 `Tagshop Watch Order
 
 Product: ${item.title}
@@ -341,12 +331,16 @@ Price: includes 30% service fee + UK delivery`
   closeOverlay();
 }
 
+function checkout(){
+  alert("Select a product from your wall first");
+}
+
 function whatsapp(){
   const msg=encodeURIComponent("Hi Tagshop, I want to order a watch. Here is my DHgate link:");
   window.open(WHATSAPP+msg,"_blank");
 }
 
-// Initial render
+// Render wall on page load
 renderWall();
 </script>
 
