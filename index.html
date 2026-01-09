@@ -43,38 +43,6 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 #cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(12px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none;z-index:99}
 .nav{text-align:center;margin-bottom:15px}
 .nav button{width:auto;padding:10px 25px;margin:0 10px}
-
-/* Sticky AAA Picks */
-.sticky {
-  position: sticky;
-  top:0;
-  background:#050505;
-  padding-top:15px;
-  padding-bottom:15px;
-  z-index:50;
-}
-
-/* Horizontal AAA Picks */
-.aaa-grid {
-  display:flex;
-  gap:15px;
-  overflow-x:auto;
-  padding-bottom:10px;
-}
-.aaa-grid::-webkit-scrollbar { height:8px; }
-.aaa-grid::-webkit-scrollbar-thumb { background: var(--gold); }
-.aaa-grid .card {
-  flex:0 0 calc(20% - 12px);
-  min-width:180px;
-  max-width:220px;
-  text-align:center;
-  cursor:pointer;
-}
-.aaa-grid .card img{height:150px;object-fit:contain;padding:5px;background:#fff;border-radius:12px;}
-.aaa-grid .card p{
-  max-height:50px;overflow:hidden;transition:max-height 0.3s ease;
-}
-.aaa-grid .card p.expanded{max-height:200px;}
 </style>
 </head>
 
@@ -84,8 +52,8 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
 <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
 <img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
 </div>
 
 <div class="section glass">
@@ -95,10 +63,10 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
-<!-- Sticky AAA Picks Section -->
-<div class="section sticky" id="aaaContainer">
+<!-- AAA Picks Section -->
+<div class="section">
 <h2>AAA Picks – Shop With Confidence</h2>
-<div id="aaaShowcase" class="aaa-grid"></div>
+<div id="aaaShowcase" class="grid"></div>
 </div>
 
 <div class="section">
@@ -124,17 +92,6 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 <p id="thanks" style="display:none;color:var(--gold)">Thank you — order confirmed.</p>
 </div>
 
-<!-- Overlay for Buy with TagShop -->
-<div id="aaaOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999;justify-content:center;align-items:center">
-  <div style="background:#111;padding:25px;border-radius:20px;color:#fff;max-width:500px;width:90%;position:relative;">
-    <span style="position:absolute;top:10px;right:15px;cursor:pointer;font-size:20px;" onclick="closeOverlay()">×</span>
-    <h3 id="overlayTitle"></h3>
-    <p id="overlayDesc"></p>
-    <p style="color:#f5d77c;font-weight:700;">Price £175 – AAA grade luxury watch</p>
-    <button onclick="purchaseAAA()">Click to Purchase</button>
-  </div>
-</div>
-
 <div id="cartBar">
 <span id="cartCount">0</span> Watches • <span id="cartTotal">£0</span>
 </div>
@@ -147,67 +104,121 @@ const WISE="https://wise.com/pay/me/davids14542";
 const PRICE=175;
 const AAA_PRICE=175;
 
-let startIndex=1, last=[], showcase=[], aaaShowcase=JSON.parse(localStorage.getItem('aaaShowcase')||"[]"), currentQuery="";
+let startIndex=1, last=[], showcase=[], aaaShowcase=[], currentQuery="";
 
-// Restore AAA Picks on load
-window.addEventListener('DOMContentLoaded',()=>{if(aaaShowcase.length) renderAAA(); updateCart();});
+function score(t){
+ let s=0;t=t.toLowerCase();
+ if(t.includes("aaa"))s+=3;
+ if(t.includes("box"))s+=2;
+ if(t.includes("papers"))s+=2;
+ if(t.includes("sapphire"))s+=2;
+ if(t.includes("904l"))s+=3;
+ if(t.includes("automatic"))s+=2;
+ return s;
+}
 
-// Score function for search
-function score(t){let s=0;t=t.toLowerCase();if(t.includes("aaa"))s+=3;if(t.includes("box"))s+=2;if(t.includes("papers"))s+=2;if(t.includes("sapphire"))s+=2;if(t.includes("904l"))s+=3;if(t.includes("automatic"))s+=2;return s;}
-
-// Search and fetch
-async function search(){currentQuery=q.value;startIndex=1;fetchResults();}
+async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
 async function fetchResults(){
  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({title:i.title,img:i.pagemap?.cse_image?.[0]?.src||"https://i.imgur.com/JbGQH6g.png",link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,score:score(i.title)})).sort((a,b)=>b.score-a.score);
+ last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  score:score(i.title)
+ })).sort((a,b)=>b.score-a.score);
  renderResults();
  pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
-function renderResults(){results.innerHTML="";last.forEach((p,i)=>{
- const d=document.createElement("div");
- d.className="card";
- d.innerHTML=`<img src="${p.img}"><h4>${p.title}</h4><div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
- <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
- <button onclick="add(${i})">Add to TagShop</button>
- <button onclick="addToAAA(${i})">Add to AAA Picks</button>`;
- results.appendChild(d);
-});}
-function nextPage(){startIndex+=10;fetchResults();}
-function prevPage(){if(startIndex>1){startIndex-=10;fetchResults();}}
-
-// Regular Showcase
-function add(i){const p=last[i];if(showcase.find(x=>x.link===p.link)) return;showcase.push(p);renderShowcase();updateCart();checkout.style.display="block";}
-function removeItem(i){showcase.splice(i,1);renderShowcase();updateCart();if(showcase.length===0 && aaaShowcase.length===0){checkout.style.display="none";cartBar.style.display="none";}}
-function renderShowcase(){const container=document.getElementById("showcase");container.innerHTML="";showcase.forEach((p,i)=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<img src="${p.img}"><h4>${p.title}</h4><button onclick="removeItem(${i})">Remove</button>`;container.appendChild(d);});}
-
-// AAA Picks
-function addToAAA(i){const p=last[i];if(aaaShowcase.find(x=>x.link===p.link)) return;aaaShowcase.push(p);localStorage.setItem('aaaShowcase',JSON.stringify(aaaShowcase));renderAAA();updateCart();}
-function removeAAA(i){aaaShowcase.splice(i,1);localStorage.setItem('aaaShowcase',JSON.stringify(aaaShowcase));renderAAA();updateCart();if(showcase.length===0 && aaaShowcase.length===0){checkout.style.display="none";cartBar.style.display="none";}}
-
-// Render AAA Picks horizontal, expandable
-function renderAAA(){
- const container=document.getElementById('aaaShowcase');container.innerHTML="";
- aaaShowcase.forEach((p,i)=>{
-   const d=document.createElement('div');d.className="card";
-   d.innerHTML=`<img src="${p.img}"><h4>${p.title}</h4><p>${p.description||"AAA grade – original box, authenticity card, serial number, fast UK delivery"}</p>
-   <button onclick="openOverlay(${i})">Buy with TagShop</button>
-   <button onclick="removeAAA(${i})">Remove</button>`;
-   d.addEventListener('click',e=>{if(!e.target.tagName.includes('BUTTON')) toggleDescription(d);});
-   container.appendChild(d);
+function renderResults(){
+ results.innerHTML="";
+ last.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
+   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+   <button onclick="add(${i})">Add to TagShop</button>
+   <button onclick="addToAAA(${i})">Add to AAA Picks</button>`;
+  results.appendChild(d);
  });
 }
-function toggleDescription(el){const desc=el.querySelector('p');desc.classList.toggle('expanded');}
 
-// Overlay functions
-function openOverlay(i){const p=aaaShowcase[i];document.getElementById('overlayTitle').innerText=p.title;document.getElementById('overlayDesc').innerText=p.description||"AAA grade luxury watch with all documents in a presentation box. Free fast shipping to UK. Guaranteed delivery.";document.getElementById('aaaOverlay').style.display="flex";}
-function closeOverlay(){document.getElementById('aaaOverlay').style.display="none";}
-function purchaseAAA(){window.open(WISE);closeOverlay();}
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+// Regular Showcase
+function add(i){
+ const p=last[i];
+ if(showcase.find(x=>x.link===p.link)) return;
+ showcase.push(p);
+ renderShowcase();
+ updateCart();
+ checkout.style.display="block";
+}
+function removeItem(i){
+ showcase.splice(i,1);
+ renderShowcase();
+ updateCart();
+ if(showcase.length===0 && aaaShowcase.length===0){checkout.style.display="none";cartBar.style.display="none";}
+}
+function renderShowcase(){
+ const container=document.getElementById("showcase");
+ container.innerHTML="";
+ showcase.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <button onclick="removeItem(${i})">Remove</button>`;
+  container.appendChild(d);
+ });
+}
+
+// AAA Picks
+function addToAAA(i){
+ const p=last[i];
+ if(aaaShowcase.find(x=>x.link===p.link)) return;
+ aaaShowcase.push(p);
+ renderAAA();
+ checkout.style.display="block";
+}
+function renderAAA(){
+ const container=document.getElementById("aaaShowcase");
+ container.innerHTML="";
+ aaaShowcase.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+    <img src="${p.img}">
+    <h4>${p.title}</h4>
+    <p>AAA grade – original box, authenticity card, serial number, fast UK delivery</p>
+    <button onclick="aaaCheckout(${i})">Buy £${AAA_PRICE}</button>`;
+  container.appendChild(d);
+ });
+}
+function aaaCheckout(i){
+ const p=aaaShowcase[i];
+ checkout.style.display="block";
+ thanks.innerText = `You selected "${p.title}" – AAA grade watch. Price £${AAA_PRICE}`;
+ thanks.style.display="block";
+ window.open(WISE);
+}
 
 // Cart & Checkout
-function updateCart(){const totalItems=showcase.length+aaaShowcase.length;cartBar.style.display=totalItems?"block":"none";cartCount.innerText=totalItems;const totalPrice=(showcase.length*PRICE)+(aaaShowcase.length*AAA_PRICE);cartTotal.innerText="£"+totalPrice;}
-function pay(){thanks.style.display="block";window.open(WISE);}
+function updateCart(){
+ cartBar.style.display="block";
+ const totalItems = showcase.length + aaaShowcase.length;
+ cartCount.innerText = totalItems;
+ const totalPrice = (showcase.length*PRICE) + (aaaShowcase.length*AAA_PRICE);
+ cartTotal.innerText = "£"+totalPrice;
+}
+function pay(){thanks.style.display="block";window.open(WISE)}
 </script>
+
 </body>
 </html>
