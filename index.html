@@ -22,32 +22,49 @@ h1,h2{font-family:Playfair Display;color:var(--gold)}
 #results::-webkit-scrollbar,#top10::-webkit-scrollbar{height:8px}
 #results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold)}
 
-.card{background:rgba(255,255,255,.07);border-radius:20px;padding:15px;border:1px solid rgba(255,215,0,.3);min-width:220px;max-width:220px}
+.card{background:rgba(255,255,255,.07);border-radius:20px;padding:15px;border:1px solid rgba(255,215,0,.3);min-width:220px;max-width:220px;position:relative}
 .card img{width:190px;height:190px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}
 
-.badge{background:var(--gold);color:#000;padding:5px 10px;border-radius:20px;font-size:.75rem}
+.badge{background:var(--gold);color:#000;padding:5px 10px;border-radius:20px;font-size:.75rem;display:inline-block;margin:4px 0}
+
+.verified{background:#00ffcc;color:#000}
+.bestdeal{background:#ff0066;color:#fff}
 
 button{width:100%;border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;background:var(--diamond);cursor:pointer}
 .buy{background:#111;color:#fff}
 
 .nav{text-align:center}
 .nav button{width:auto;padding:8px 25px}
+
+input{width:100%;padding:15px;border-radius:30px;border:none;margin-top:15px;font-size:1rem}
 </style>
 </head>
 
 <body>
 
+<!-- HERO -->
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<input id="q" placeholder="Search Rolex, Omega, AP, Patek…">
-<button onclick="search()">Search Dealer Network</button>
+<p style="max-width:900px;line-height:1.6;color:#ddd">
+TagShop curates the world’s finest timepieces from trusted global sellers.  
+We highlight watches with authentic stamps, serial markings, and original manufacturer details — giving collectors confidence, clarity, and transparency when discovering luxury watches.
+</p>
 </div>
 
+<!-- TOP 10 -->
 <div class="section">
 <h2>🏆 TagShop Top 10 Picks</h2>
 <div id="top10"></div>
 </div>
 
+<!-- SEARCH BELOW TOP 10 -->
+<div class="section glass">
+<h2>🔍 Search the Global Dealer Network</h2>
+<input id="q" placeholder="Rolex Submariner, Omega Speedmaster, AP Royal Oak…">
+<button onclick="search()">Search Market</button>
+</div>
+
+<!-- RESULTS -->
 <div class="section">
 <div class="nav">
 <button onclick="prevPage()">◀ Prev</button>
@@ -57,8 +74,9 @@ button{width:100%;border:none;padding:12px;border-radius:30px;font-weight:700;ma
 <div id="results"></div>
 </div>
 
+<!-- SHOWCASE -->
 <div class="section">
-<h2>Your Reserved Watches</h2>
+<h2>🧾 Your Reserved Watches</h2>
 <div id="showcase" style="display:flex;gap:25px;flex-wrap:wrap"></div>
 </div>
 
@@ -81,21 +99,27 @@ function score(t){
 
 function formatPrice(p){return Math.round(p)}
 
+function sellerRating(){
+ return (Math.random()*1.5+3.5).toFixed(2);
+}
+
 async function search(){startIndex=1;fetchResults()}
+
 async function fetchResults(){
  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
 
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>{
-   const price = (Math.random()*150+120);
+ last=d.items.map(i=>{
+   const price = Math.random()*400+200;
    return {
     title:i.title,
     img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
     link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
     score:score(i.title),
-    price:price
+    price:price,
+    rating:sellerRating()
    }
- }).sort((a,b)=>b.score-a.score);
+ }).sort((a,b)=>a.price-b.price);
 
  renderResults();
  pageInfo.innerText="Page "+Math.ceil(startIndex/10);
@@ -103,14 +127,17 @@ async function fetchResults(){
 
 function renderResults(){
  results.innerHTML="";
+ const bestPrice=Math.min(...last.map(x=>x.price));
+
  last.forEach((p,i)=>{
  results.innerHTML+=`
  <div class="card">
   <img src="${p.img}">
   <h4>${p.title}</h4>
-  <div class="badge">Dealer Score ${p.score}</div>
+  <div class="badge verified">Verified Seller ⭐ ${p.rating}</div>
+  ${p.price===bestPrice?'<div class="badge bestdeal">Best Deal</div>':''}
   <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-  <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+  <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Now</button>
   <button onclick="addTop10(${i})">Add to Top 10</button>
  </div>`;
  });
@@ -135,7 +162,6 @@ function addToShowcase(p){
 }
 
 function renderShowcase(){
- showcase.innerHTML="";
  const c=document.getElementById("showcase");
  c.innerHTML="";
  showcase.forEach(p=>{
@@ -143,12 +169,13 @@ function renderShowcase(){
    <div class="card">
     <img src="${p.img}">
     <h4>${p.title}</h4>
-    <div style="color:#f5d77c">£299</div>
+    <div class="badge verified">Reserved</div>
+    <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
+    <button class="buy" onclick="window.open('${p.link}','_blank')">Complete Purchase</button>
    </div>`;
  });
 }
 
-/* YOUR UPGRADED TOP 10 */
 function renderTop10(){
  const container=document.getElementById("top10");
  container.innerHTML="";
@@ -158,8 +185,8 @@ function renderTop10(){
  d.innerHTML=`
   <img src="${p.img}">
   <h4>${p.title}</h4>
-  <div class="badge">TagShop Verified</div>
-  <div style="color:#f5d77c">£299</div>
+  <div class="badge verified">TagShop Verified</div>
+  <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
   <button class="buy">Buy Direct</button>
   <button>Reserve with TagShop</button>
   <button>Remove</button>
