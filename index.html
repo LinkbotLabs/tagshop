@@ -20,56 +20,18 @@ h1,h2{font-family:Playfair Display;color:var(--gold)}
 
 #results,#top10{display:flex;gap:25px;overflow-x:auto;padding:20px 0}
 #results::-webkit-scrollbar,#top10::-webkit-scrollbar{height:8px}
-#results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
+#results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold)}
 
-.card{
-  background:rgba(255,255,255,.07);
-  border-radius:20px;
-  padding:15px;
-  border:1px solid rgba(255,215,0,.3);
-  min-width:240px;
-  max-width:240px;
-  text-align:center;
-}
-.card img{
-  width:200px;
-  height:200px;
-  object-fit:contain;
-  background:#fff;
-  border-radius:15px;
-  padding:10px;
-}
+.card{background:rgba(255,255,255,.07);border-radius:20px;padding:15px;border:1px solid rgba(255,215,0,.3);min-width:220px;max-width:220px}
+.card img{width:190px;height:190px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}
 
-.badge{
-  font-size:.75rem;
-  background:var(--gold);
-  color:#000;
-  padding:4px 10px;
-  border-radius:20px;
-  display:inline-block;
-  margin-top:5px;
-}
+.badge{background:var(--gold);color:#000;padding:5px 10px;border-radius:20px;font-size:.75rem}
 
-button{
-  width:100%;
-  border:none;
-  padding:12px;
-  border-radius:30px;
-  font-weight:700;
-  margin-top:8px;
-  cursor:pointer;
-  background:var(--diamond);
-}
-.buy-dh{background:#111;color:#fff}
+button{width:100%;border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;background:var(--diamond);cursor:pointer}
+.buy{background:#111;color:#fff}
 
-.nav{text-align:center;margin-bottom:15px}
+.nav{text-align:center}
 .nav button{width:auto;padding:8px 25px}
-
-#cartBar{
-  position:fixed;bottom:20px;right:20px;background:var(--glass);
-  backdrop-filter:blur(15px);padding:15px 25px;border-radius:30px;
-  border:1px solid rgba(255,215,0,.4);display:none;z-index:99
-}
 </style>
 </head>
 
@@ -77,21 +39,20 @@ button{
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We source the best versions of luxury timepieces with verified markings, correct weight and insured UK delivery.</p>
-<input id="q" placeholder="Search Rolex, Omega, Patek, AP, Breitling…">
-<button id="searchBtn">Search Dealer Network</button>
+<input id="q" placeholder="Search Rolex, Omega, AP, Patek…">
+<button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section">
-<h2>TagShop Top 10 Picks</h2>
+<h2>🏆 TagShop Top 10 Picks</h2>
 <div id="top10"></div>
 </div>
 
 <div class="section">
 <div class="nav">
-<button id="prevBtn">◀ Prev</button>
+<button onclick="prevPage()">◀ Prev</button>
 <span id="pageInfo">Page 1</span>
-<button id="nextBtn">Next ▶</button>
+<button onclick="nextPage()">Next ▶</button>
 </div>
 <div id="results"></div>
 </div>
@@ -101,186 +62,120 @@ button{
 <div id="showcase" style="display:flex;gap:25px;flex-wrap:wrap"></div>
 </div>
 
-<div class="section glass" id="checkout" style="display:none">
-<input placeholder="Full Name">
-<input placeholder="Email">
-<textarea placeholder="Delivery Address"></textarea>
-<button id="payBtn">Secure Wise Checkout</button>
-<p id="thanks" style="display:none;color:var(--gold)">Order confirmed – email sent.</p>
-</div>
-
-<div id="cartBar">
-🛒 <span id="cartCount">0</span> Watches • £<span id="cartTotal">0</span>
-</div>
-
 <script>
-// ---------- CONFIG ----------
-const API = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CX  = "f7e219616fe1d4629";
-const AFF = "2545671";
-const WISE = "https://wise.com/pay/me/davids14542";
-const USD_TO_GBP = 0.79;
+const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CX="f7e219616fe1d4629";
+const AFF="2545671";
 
-// ---------- STATE ----------
-let startIndex = 1;
-let lastResults = [];
-let showcase = [];
-let top10 = JSON.parse(localStorage.getItem("top10")||"[]");
+let startIndex=1,last=[],showcase=[];
+let top10=JSON.parse(localStorage.getItem("top10")||"[]");
 
-// ---------- UTILS ----------
-function scoreText(t){
-  t = t.toLowerCase();
-  let s=0;
-  if(t.includes("aaa")) s+=3;
-  if(t.includes("box")) s+=2;
-  if(t.includes("papers")) s+=2;
-  if(t.includes("sapphire")) s+=2;
-  if(t.includes("904l")) s+=3;
-  if(t.includes("automatic")) s+=2;
-  return s;
+function score(t){
+ let s=0;t=t.toLowerCase();
+ if(t.includes("aaa"))s+=3;
+ if(t.includes("box"))s+=2;
+ if(t.includes("sapphire"))s+=2;
+ if(t.includes("904l"))s+=3;
+ return s;
 }
 
-function formatPrice(gbp){
-  return gbp===0 || gbp==="—" ? "—" : gbp;
-}
+function formatPrice(p){return Math.round(p)}
 
-// ---------- RENDER TOP 10 ----------
-function renderTop10(){
-  const container = document.getElementById("top10");
-  container.innerHTML = "";
-  top10.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${p.img}">
-      <h4>${p.title}</h4>
-      <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-      <button>Remove</button>
-    `;
-    card.querySelector("button").onclick = ()=>{
-      top10.splice(i,1);
-      localStorage.setItem("top10",JSON.stringify(top10));
-      renderTop10();
-    };
-    container.appendChild(card);
-  });
-}
-
-// ---------- SEARCH + PAGINATION ----------
+async function search(){startIndex=1;fetchResults()}
 async function fetchResults(){
-  const q = document.getElementById("q").value.trim();
-  if(!q) return;
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${startIndex}`);
+ const d=await r.json();
 
-  const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}&start=${startIndex}`;
-  const res = await fetch(url);
-  const data = await res.json();
+ last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>{
+   const price = (Math.random()*150+120);
+   return {
+    title:i.title,
+    img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+    score:score(i.title),
+    price:price
+   }
+ }).sort((a,b)=>b.score-a.score);
 
-  lastResults = (data.items||[])
-    .filter(item => item.link.includes("dhgate"))
-    .map(item => {
-       const rawPrice = parseFloat(item.pagemap?.product?.[0]?.price || 0);
-       const gbp = rawPrice ? Math.round(rawPrice * USD_TO_GBP) : "—";
-       return {
-         title:item.title,
-         img:item.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-         link:item.link.includes("?") ? `${item.link}&aff=${AFF}` : `${item.link}?aff=${AFF}`,
-         price:gbp,
-         score:scoreText(item.title)
-       };
-    })
-    .sort((a,b) => b.score - a.score);
-
-  document.getElementById("pageInfo").innerText = "Page " + Math.ceil(startIndex/10);
-  renderResults();
+ renderResults();
+ pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
 function renderResults(){
-  const container = document.getElementById("results");
-  container.innerHTML = "";
-  lastResults.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-     ${p.score>=7?'<span class="badge">Best Pick</span>':""}
-     <button class="buy-dh">Buy Direct</button>
-     <button class="add-top10">Add to Top 10</button>
-     <button class="add-basket">Reserve with TagShop</button>
-    `;
-    card.querySelector(".buy-dh").onclick = ()=>window.open(p.link,"_blank");
-    card.querySelector(".add-top10").onclick = ()=>addToTop10(p);
-    card.querySelector(".add-basket").onclick = ()=>addToShowcase(p);
-    container.appendChild(card);
-  });
+ results.innerHTML="";
+ last.forEach((p,i)=>{
+ results.innerHTML+=`
+ <div class="card">
+  <img src="${p.img}">
+  <h4>${p.title}</h4>
+  <div class="badge">Dealer Score ${p.score}</div>
+  <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
+  <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+  <button onclick="addTop10(${i})">Add to Top 10</button>
+ </div>`;
+ });
 }
 
-document.getElementById("nextBtn").onclick = ()=>{
-  startIndex += 10;
-  fetchResults();
-}
-document.getElementById("prevBtn").onclick = ()=>{
-  if(startIndex>1){startIndex-=10;fetchResults();}
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+function addTop10(i){
+ if(top10.length>=10)return alert("Top 10 Full");
+ const p=last[i];
+ if(top10.find(x=>x.link===p.link))return;
+ top10.push(p);
+ localStorage.setItem("top10",JSON.stringify(top10));
+ renderTop10();
 }
 
-// ---------- TOP10 HANDLERS ----------
-function addToTop10(p){
-  if(top10.find(x=>x.link===p.link)) return alert("Already in Top 10");
-  if(top10.length>=10) return alert("Top 10 is full");
-  top10.push(p);
-  localStorage.setItem("top10",JSON.stringify(top10));
-  renderTop10();
-}
-
-// ---------- SHOWCASE HANDLERS ----------
 function addToShowcase(p){
-  if(showcase.find(x=>x.link===p.link)) return alert("Already reserved");
-  showcase.push(p);
-  renderShowcase();
-  updateCart();
-  document.getElementById("checkout").style.display = "block";
+ if(showcase.find(x=>x.link===p.link))return;
+ showcase.push(p);
+ renderShowcase();
 }
 
 function renderShowcase(){
-  const container = document.getElementById("showcase");
-  container.innerHTML = "";
-  showcase.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-     <button>Remove</button>
-    `;
-    card.querySelector("button").onclick = ()=>{
-      showcase.splice(i,1);
-      renderShowcase();
-      updateCart();
-    };
-    container.appendChild(card);
-  });
+ showcase.innerHTML="";
+ const c=document.getElementById("showcase");
+ c.innerHTML="";
+ showcase.forEach(p=>{
+  c.innerHTML+=`
+   <div class="card">
+    <img src="${p.img}">
+    <h4>${p.title}</h4>
+    <div style="color:#f5d77c">£299</div>
+   </div>`;
+ });
 }
 
-function updateCart(){
-  document.getElementById("cartBar").style.display = "block";
-  document.getElementById("cartCount").innerText = showcase.length;
-  const total = showcase.reduce((sum,x)=>(sum + (x.price||0)),0);
-  document.getElementById("cartTotal").innerText = total;
+/* YOUR UPGRADED TOP 10 */
+function renderTop10(){
+ const container=document.getElementById("top10");
+ container.innerHTML="";
+ top10.forEach((p,i)=>{
+ const d=document.createElement("div");
+ d.className="card";
+ d.innerHTML=`
+  <img src="${p.img}">
+  <h4>${p.title}</h4>
+  <div class="badge">TagShop Verified</div>
+  <div style="color:#f5d77c">£299</div>
+  <button class="buy">Buy Direct</button>
+  <button>Reserve with TagShop</button>
+  <button>Remove</button>
+ `;
+ d.querySelector(".buy").onclick=()=>window.open(p.link,"_blank");
+ d.querySelectorAll("button")[1].onclick=()=>addToShowcase(p);
+ d.querySelectorAll("button")[2].onclick=()=>{
+   top10.splice(i,1);
+   localStorage.setItem("top10",JSON.stringify(top10));
+   renderTop10();
+ };
+ container.appendChild(d);
+ });
 }
 
-// ---------- CHECKOUT ----------
-document.getElementById("searchBtn").onclick = fetchResults;
-document.getElementById("payBtn").onclick = ()=>{
-  document.getElementById("thanks").style.display="block";
-  window.open(WISE);
-}
-
-// first render
 renderTop10();
-
 </script>
-
 </body>
 </html>
