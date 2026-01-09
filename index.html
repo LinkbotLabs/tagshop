@@ -97,60 +97,101 @@ const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 const PRICE=249;
 
-let startIndex=1, last=[], showcase=[], currentQuery="";
+// DOM elements
+const qInput = document.getElementById("q");
+const resultsDiv = document.getElementById("results");
+const pageInfo = document.getElementById("pageInfo");
+const cartBar = document.getElementById("cartBar");
+const showcaseDiv = document.getElementById("showcase");
+const checkout = document.getElementById("checkout");
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+const thanks = document.getElementById("thanks");
 
-function score(t){
- let s=0;t=t.toLowerCase();
- if(t.includes("aaa"))s+=3;
- if(t.includes("box"))s+=2;
- if(t.includes("papers"))s+=2;
- if(t.includes("sapphire"))s+=2;
- if(t.includes("904l"))s+=3;
- if(t.includes("automatic"))s+=2;
+// State
+let startIndex = 1;
+let lastResults = [];
+let showcase = [];
+let currentQuery = "";
+
+// Score function
+function score(title){
+ let s=0;
+ const t = title.toLowerCase();
+ if(t.includes("aaa")) s+=3;
+ if(t.includes("box")) s+=2;
+ if(t.includes("papers")) s+=2;
+ if(t.includes("sapphire")) s+=2;
+ if(t.includes("904l")) s+=3;
+ if(t.includes("automatic")) s+=2;
  return s;
 }
 
-async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
-async function fetchResults(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
- const d=await r.json();
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
-  score:score(i.title)
- })).sort((a,b)=>b.score-a.score);
- renderResults();
- pageInfo.innerText="Page "+Math.ceil(startIndex/10);
+// Search
+async function search(){
+ currentQuery = qInput.value.trim();
+ if(!currentQuery) return alert("Please enter a search term.");
+ startIndex = 1;
+ await fetchResults();
 }
 
+// Fetch results
+async function fetchResults(){
+ try{
+   const r = await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+   const d = await r.json();
+   if(!d.items){
+     resultsDiv.innerHTML = "<p>No results found.</p>";
+     pageInfo.innerText = "Page 0";
+     return;
+   }
+   lastResults = d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+     title:i.title,
+     img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+     link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+     score:score(i.title)
+   })).sort((a,b)=>b.score-a.score);
+
+   renderResults();
+   pageInfo.innerText = "Page " + Math.ceil(startIndex/10);
+ }catch(e){
+   console.error(e);
+   resultsDiv.innerHTML = "<p>Error fetching results.</p>";
+ }
+}
+
+// Render search results
 function renderResults(){
- results.innerHTML="";
- last.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
-   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-   <button onclick="add(${i})">Add to TagShop</button>`;
-  results.appendChild(d);
+ resultsDiv.innerHTML="";
+ lastResults.forEach((p,i)=>{
+   const d = document.createElement("div");
+   d.className="card";
+   d.innerHTML=`
+     <img src="${p.img}">
+     <h4>${p.title}</h4>
+     <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
+     <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+     <button onclick="addToShowcase(${i})">Add to TagShop</button>
+   `;
+   resultsDiv.appendChild(d);
  });
 }
 
+// Pagination
 function nextPage(){startIndex+=10;fetchResults()}
 function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
 
-function add(i){
- const p=last[i];
- if(showcase.find(x=>x.link===p.link))return;
+// Add to showcase
+function addToShowcase(i){
+ const p = lastResults[i];
+ if(showcase.find(x=>x.link===p.link)) return;
  showcase.push(p);
  renderShowcase();
  updateCart();
  checkout.style.display="block";
 }
 
+// Remove from showcase
 function removeItem(i){
  showcase.splice(i,1);
  renderShowcase();
@@ -158,28 +199,33 @@ function removeItem(i){
  if(showcase.length===0){checkout.style.display="none";cartBar.style.display="none";}
 }
 
+// Render showcase
 function renderShowcase(){
- showcaseDiv=showcase;
- showcase.innerHTML="";
- document.getElementById("showcase").innerHTML="";
- showcaseDiv.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <button onclick="removeItem(${i})">Remove</button>`;
-  document.getElementById("showcase").appendChild(d);
+ showcaseDiv.innerHTML="";
+ showcase.forEach((p,i)=>{
+   const d = document.createElement("div");
+   d.className="card";
+   d.innerHTML=`
+     <img src="${p.img}">
+     <h4>${p.title}</h4>
+     <button onclick="removeItem(${i})">Remove</button>
+   `;
+   showcaseDiv.appendChild(d);
  });
 }
 
+// Update cart
 function updateCart(){
  cartBar.style.display="block";
- cartCount.innerText=showcase.length;
- cartTotal.innerText="£"+(showcase.length*PRICE);
+ cartCount.innerText = showcase.length;
+ cartTotal.innerText = "£"+(showcase.length*PRICE);
 }
 
-function pay(){thanks.style.display="block";window.open(WISE)}
+// Checkout
+function pay(){
+ thanks.style.display="block";
+ window.open(WISE);
+}
 </script>
 
 </body>
