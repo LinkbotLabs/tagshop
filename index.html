@@ -10,13 +10,14 @@
 <style>
 :root{
   --gold:#f5d77c;
-  --glass:rgba(30,30,30,.65);
+  --glass:rgba(30,30,30,.55);
   --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
 }
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
 h1,h2{font-family:Playfair Display;color:var(--gold);}
+
 .hero-bg{position:fixed;inset:0;z-index:-2}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.6))}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
 .hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
@@ -57,8 +58,8 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We source the best versions of luxury timepieces with correct weight, original markings, original presentation box, and certificate of authenticity. Fast UK delivery included.</p>
-<input id="q" placeholder="Search Men Watch, Brand, AP, Rolex, Breitling…">
+<p>We source the best versions of luxury timepieces with correct weight, original markings and fast UK delivery. Shop direct or let TagShop handle everything.</p>
+<input id="q" placeholder="Search Rolex, Patek, AP, Omega, Breitling…">
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
@@ -90,105 +91,60 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 </div>
 
 <script>
-// 50 demo watches with prices and stock images
-const demoWatches = [
-  {title:"Rolex Submariner AAA",img:"https://images.unsplash.com/photo-1588776814546-97ec5f6aa53e?auto=format&fit=crop&w=500&q=80",price:250},
-  {title:"AP Royal Oak Boxed",img:"https://images.unsplash.com/photo-1554624305-3f74388c2b3c?auto=format&w=500&q=80",price:250},
-  {title:"Patek Philippe Automatic",img:"https://images.unsplash.com/photo-1588491789711-0f6d5a7c7c7d?auto=format&w=500&q=80",price:250},
-  {title:"Omega Seamaster Papers",img:"https://images.unsplash.com/photo-1593131531604-6c8c1c7ffbcb?auto=format&w=500&q=80",price:250},
-  {title:"Breitling Chronomat",img:"https://images.unsplash.com/photo-1601941349540-35381c44f1f8?auto=format&w=500&q=80",price:150},
-  {title:"Tissot PRX",img:"https://images.unsplash.com/photo-1607411988442-20c30c5287cf?auto=format&w=500&q=80",price:150},
-  {title:"Tag Heuer Carrera",img:"https://images.unsplash.com/photo-1608050008390-01cce6fa0d8d?auto=format&w=500&q=80",price:150},
-  {title:"Seiko Presage",img:"https://images.unsplash.com/photo-1608156727246-7f317d231d06?auto=format&w=500&q=80",price:150},
-  {title:"Cartier Santos AAA",img:"https://images.unsplash.com/photo-1618319348375-7caa5d5b123d?auto=format&w=500&q=80",price:250},
-  {title:"IWC Pilot Boxed",img:"https://images.unsplash.com/photo-1601983568294-1a3e72f12345?auto=format&w=500&q=80",price:250},
-  {title:"Panerai Luminor",img:"https://images.unsplash.com/photo-1609009930248-46a12e2c3f3e?auto=format&w=500&q=80",price:150},
-  {title:"Hublot Big Bang",img:"https://images.unsplash.com/photo-1617149945377-0e1f62f5b123?auto=format&w=500&q=80",price:250},
-  {title:"Rolex Daytona",img:"https://images.unsplash.com/photo-1588776814567-77ec5f6aa99f?auto=format&w=500&q=80",price:250},
-  {title:"Omega Speedmaster",img:"https://images.unsplash.com/photo-1593131531605-6c8c1c7ffbbb?auto=format&w=500&q=80",price:250},
-  {title:"Breitling Navitimer",img:"https://images.unsplash.com/photo-1601941349551-35381c44f1f8?auto=format&w=500&q=80",price:150},
-  {title:"Tissot Couturier",img:"https://images.unsplash.com/photo-1607411988443-20c30c5287cf?auto=format&w=500&q=80",price:150},
-  {title:"Tag Heuer Monaco",img:"https://images.unsplash.com/photo-1608050008391-01cce6fa0d8d?auto=format&w=500&q=80",price:150},
-  {title:"Seiko Prospex",img:"https://images.unsplash.com/photo-1608156727247-7f317d231d06?auto=format&w=500&q=80",price:150},
-  {title:"Cartier Ballon Bleu AAA",img:"https://images.unsplash.com/photo-1618319348376-7caa5d5b123d?auto=format&w=500&q=80",price:250},
-  {title:"IWC Portugieser Boxed",img:"https://images.unsplash.com/photo-1601983568295-1a3e72f12345?auto=format&w=500&q=80",price:250},
-  {title:"Panerai Radiomir",img:"https://images.unsplash.com/photo-1609009930249-46a12e2c3f3e?auto=format&w=500&q=80",price:150},
-  {title:"Hublot Classic Fusion",img:"https://images.unsplash.com/photo-1617149945378-0e1f62f5b123?auto=format&w=500&q=80",price:250},
-  {title:"Rolex Explorer",img:"https://images.unsplash.com/photo-1588776814547-97ec5f6aa53e?auto=format&w=500&q=80",price:250},
-  {title:"Omega Constellation",img:"https://images.unsplash.com/photo-1593131531606-6c8c1c7ffbcb?auto=format&w=500&q=80",price:250},
-  {title:"Breitling Superocean",img:"https://images.unsplash.com/photo-1601941349541-35381c44f1f8?auto=format&w=500&q=80",price:150},
-  {title:"Tissot T-Classic",img:"https://images.unsplash.com/photo-1607411988444-20c30c5287cf?auto=format&w=500&q=80",price:150},
-  {title:"Tag Heuer Aquaracer",img:"https://images.unsplash.com/photo-1608050008392-01cce6fa0d8d?auto=format&w=500&q=80",price:150},
-  {title:"Seiko 5 Sports",img:"https://images.unsplash.com/photo-1608156727248-7f317d231d06?auto=format&w=500&q=80",price:150},
-  {title:"Cartier Santos Boxed",img:"https://images.unsplash.com/photo-1618319348377-7caa5d5b123d?auto=format&w=500&q=80",price:250},
-  {title:"IWC Aquatimer",img:"https://images.unsplash.com/photo-1601983568296-1a3e72f12345?auto=format&w=500&q=80",price:250},
-  {title:"Panerai Submersible",img:"https://images.unsplash.com/photo-1609009930250-46a12e2c3f3e?auto=format&w=500&q=80",price:150},
-  {title:"Hublot Spirit of Big Bang",img:"https://images.unsplash.com/photo-1617149945379-0e1f62f5b123?auto=format&w=500&q=80",price:250},
-  {title:"Rolex GMT-Master II",img:"https://images.unsplash.com/photo-1588776814548-97ec5f6aa53e?auto=format&w=500&q=80",price:250},
-  {title:"Omega Planet Ocean",img:"https://images.unsplash.com/photo-1593131531607-6c8c1c7ffbcb?auto=format&w=500&q=80",price:250},
-  {title:"Breitling Avenger",img:"https://images.unsplash.com/photo-1601941349542-35381c44f1f8?auto=format&w=500&q=80",price:150},
-  {title:"Tissot PRC 200",img:"https://images.unsplash.com/photo-1607411988445-20c30c5287cf?auto=format&w=500&q=80",price:150},
-  {title:"Tag Heuer Formula 1",img:"https://images.unsplash.com/photo-1608050008393-01cce6fa0d8d?auto=format&w=500&q=80",price:150},
-  {title:"Seiko Astron",img:"https://images.unsplash.com/photo-1608156727249-7f317d231d06?auto=format&w=500&q=80",price:150},
-  {title:"Cartier Tank AAA",img:"https://images.unsplash.com/photo-1618319348378-7caa5d5b123d?auto=format&w=500&q=80",price:250},
-  {title:"IWC Da Vinci Boxed",img:"https://images.unsplash.com/photo-1601983568297-1a3e72f12345?auto=format&w=500&q=80",price:250},
-  {title:"Panerai Mare Nostrum",img:"https://images.unsplash.com/photo-1609009930251-46a12e2c3f3e?auto=format&w=500&q=80",price:150},
-  {title:"Hublot Big Bang Unico",img:"https://images.unsplash.com/photo-1617149945380-0e1f62f5b123?auto=format&w=500&q=80",price:250},
-  {title:"Rolex Yacht-Master",img:"https://images.unsplash.com/photo-1588776814549-97ec5f6aa53e?auto=format&w=500&q=80",price:250},
-  {title:"Omega De Ville",img:"https://images.unsplash.com/photo-1593131531608-6c8c1c7ffbcb?auto=format&w=500&q=80",price:250},
-  {title:"Breitling Colt",img:"https://images.unsplash.com/photo-1601941349543-35381c44f1f8?auto=format&w=500&q=80",price:150},
-  {title:"Tissot Gentleman",img:"https://images.unsplash.com/photo-1607411988446-20c30c5287cf?auto=format&w=500&q=80",price:150},
-  {title:"Tag Heuer Carrera Calibre 16",img:"https://images.unsplash.com/photo-1608050008394-01cce6fa0d8d?auto=format&w=500&q=80",price:150},
-  {title:"Seiko Presage Cocktail",img:"https://images.unsplash.com/photo-1608156727250-7f317d231d06?auto=format&w=500&q=80",price:150},
-  {title:"Cartier Panthère AAA",img:"https://images.unsplash.com/photo-1618319348379-7caa5d5b123d?auto=format&w=500&q=80",price:250},
-  {title:"IWC Schaffhausen Boxed",img:"https://images.unsplash.com/photo-1601983568298-1a3e72f12345?auto=format&w=500&q=80",price:250}
-];
+const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CX="f7e219616fe1d4629";
+const AFF="2545671";
+const WISE="https://wise.com/pay/me/davids14542";
+const PRICE=149;
 
-// DOM Elements
-const q = document.getElementById("q");
-const results = document.getElementById("results");
-const pageInfo = document.getElementById("pageInfo");
-const cartBar = document.getElementById("cartBar");
-const showcaseDiv = document.getElementById("showcase");
-const checkout = document.getElementById("checkout");
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
-const thanks = document.getElementById("thanks");
+let startIndex=1, last=[], showcase=[], currentQuery="";
 
-// State
-let lastResults = [], showcase = [], currentQuery="";
-
-// Search
-function search(){
- currentQuery = q.value.trim().toLowerCase();
- if(!currentQuery) return alert("Enter a search term");
- lastResults = demoWatches.filter(w => w.title.toLowerCase().includes(currentQuery));
- if(lastResults.length===0) results.innerHTML="<p>No results found.</p>";
- renderResults();
- pageInfo.innerText="Page 1";
+function score(t){
+ let s=0;t=t.toLowerCase();
+ if(t.includes("aaa"))s+=3;
+ if(t.includes("box"))s+=2;
+ if(t.includes("papers"))s+=2;
+ if(t.includes("sapphire"))s+=2;
+ if(t.includes("904l"))s+=3;
+ if(t.includes("automatic"))s+=2;
+ return s;
 }
 
-// Render results
+async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
+async function fetchResults(){
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+ const d=await r.json();
+ last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  score:score(i.title)
+ })).sort((a,b)=>b.score-a.score);
+ renderResults();
+ pageInfo.innerText="Page "+Math.ceil(startIndex/10);
+}
+
 function renderResults(){
  results.innerHTML="";
- lastResults.forEach((p,i)=>{
-   const d = document.createElement("div");
-   d.className="card";
-   d.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div style="color:#f5d77c">${p.price>=250?"⭐ Best Pick":""}</div>
-     <button class="buy-dh" onclick="alert('Demo: Buy direct')">Buy Direct</button>
-     <button onclick="addToShowcase(${i})">Add to TagShop</button>
-   `;
-   results.appendChild(d);
+ last.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
+   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+   <button onclick="add(${i})">Add to TagShop</button>`;
+  results.appendChild(d);
  });
 }
 
-// Showcase functions
-function addToShowcase(i){
- const p=lastResults[i];
- if(showcase.find(x=>x.title===p.title)) return;
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+function add(i){
+ const p=last[i];
+ if(showcase.find(x=>x.link===p.link))return;
  showcase.push(p);
  renderShowcase();
  updateCart();
@@ -198,46 +154,32 @@ function addToShowcase(i){
 function removeItem(i){
  showcase.splice(i,1);
  renderShowcase();
-   renderShowcase();
  updateCart();
  if(showcase.length===0){checkout.style.display="none";cartBar.style.display="none";}
 }
 
-// Render showcase
 function renderShowcase(){
- showcaseDiv.innerHTML="";
- showcase.forEach((p,i)=>{
-   const d = document.createElement("div");
-   d.className="card";
-   d.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div>£${p.price}</div>
-     <button onclick="removeItem(${i})">Remove</button>
-   `;
-   showcaseDiv.appendChild(d);
+ showcaseDiv=showcase;
+ showcase.innerHTML="";
+ document.getElementById("showcase").innerHTML="";
+ showcaseDiv.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <button onclick="removeItem(${i})">Remove</button>`;
+  document.getElementById("showcase").appendChild(d);
  });
 }
 
-// Update cart
 function updateCart(){
  cartBar.style.display="block";
- cartCount.innerText = showcase.length;
- const total = showcase.reduce((sum,p)=>sum+p.price,0);
- cartTotal.innerText = "£"+total;
+ cartCount.innerText=showcase.length;
+ cartTotal.innerText="£"+(showcase.length*PRICE);
 }
 
-// Checkout
-function pay(){
- if(showcase.length===0) return alert("Add items to your cart first.");
- thanks.style.display="block";
- window.open("https://wise.com/pay/me/davids14542");
-}
-
-// Pagination (for demo we just show all results)
-function nextPage(){}
-function prevPage(){}
-
+function pay(){thanks.style.display="block";window.open(WISE)}
 </script>
 
 </body>
