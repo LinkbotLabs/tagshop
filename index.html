@@ -15,6 +15,7 @@
 }
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
 h1,h2{font-family:Playfair Display;color:var(--gold);}
+input,textarea{width:100%;padding:12px;border-radius:10px;border:none;margin:6px 0}
 
 .hero-bg{position:fixed;inset:0;z-index:-2}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
@@ -29,20 +30,18 @@ h1,h2{font-family:Playfair Display;color:var(--gold);}
 .section{max-width:1200px;margin:auto;padding:30px 20px}
 .glass{background:var(--glass);backdrop-filter:blur(16px);border-radius:20px;padding:25px;border:1px solid rgba(255,215,0,.3)}
 
-#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px}
-#results::-webkit-scrollbar{height:8px}
-#results::-webkit-scrollbar-thumb{background:var(--gold)}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;border:1px solid rgba(255,215,0,.25);min-width:220px}
+.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;border:1px solid rgba(255,215,0,.25)}
 .card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px}
 
 button{width:100%;background:var(--diamond);border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;cursor:pointer}
 .buy-dh{background:#111;color:#fff}
 
-#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(12px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none;z-index:99}
-.nav{text-align:center;margin-bottom:15px}
-.nav button{width:auto;padding:10px 25px;margin:0 10px}
+#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px}
+
+#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(12px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none}
+.nav{text-align:center}
+.nav button{width:auto;padding:10px 25px}
 </style>
 </head>
 
@@ -58,16 +57,21 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We source the best versions of luxury timepieces with correct weight, original markings and fast UK delivery. Shop direct or let TagShop handle everything.</p>
-<input id="q" placeholder="Search Rolex, Patek, AP, Omega, Breitling…">
+<p>Hand-selected AAA luxury timepieces — shipped fast to the UK.</p>
+<input id="q" placeholder="Search Rolex, AP, Patek, Omega, Breitling">
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section">
+<h2>Top 10 TagShop Picks</h2>
+<div id="top10" class="grid"></div>
+</div>
+
+<div class="section">
 <div class="nav">
-<button onclick="prevPage()">◀ Previous</button>
+<button onclick="prevPage()">◀</button>
 <span id="pageInfo">Page 1</span>
-<button onclick="nextPage()">Next ▶</button>
+<button onclick="nextPage()">▶</button>
 </div>
 <div id="results"></div>
 </div>
@@ -82,25 +86,27 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 <input placeholder="Full Name">
 <input placeholder="Email">
 <textarea placeholder="Delivery Address"></textarea>
-<button onclick="pay()">Pay securely with Wise</button>
-<p id="thanks" style="display:none;color:var(--gold)">Thank you — order confirmed.</p>
+<button onclick="pay()">Pay with Wise</button>
+<p id="thanks" style="display:none;color:var(--gold)">Order confirmed.</p>
 </div>
 
-<div id="cartBar">
-<span id="cartCount">0</span> Watches • <span id="cartTotal">£0</span>
-</div>
+<div id="cartBar">🛒 <span id="cartCount">0</span> • £<span id="cartTotal">0</span></div>
 
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
-const WISE="https://wise.com/pay/me/davids14542";
 const PRICE=249;
+const WISE="https://wise.com/pay/me/davids14542";
 
-let startIndex=1, last=[], showcase=[], currentQuery="";
+let startIndex=1,last=[],showcase=[];
+let top10=JSON.parse(localStorage.getItem("top10")||"[]");
+
+function saveTop10(){localStorage.setItem("top10",JSON.stringify(top10));renderTop10()}
 
 function score(t){
- let s=0;t=t.toLowerCase();
+ t=t.toLowerCase();
+ let s=0;
  if(t.includes("aaa"))s+=3;
  if(t.includes("box"))s+=2;
  if(t.includes("papers"))s+=2;
@@ -110,76 +116,71 @@ function score(t){
  return s;
 }
 
-async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
-async function fetchResults(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+async function search(){
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
  last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
-  score:score(i.title)
+  title:i.title,img:i.pagemap?.cse_image?.[0]?.src||"",link:i.link,score:score(i.title)
  })).sort((a,b)=>b.score-a.score);
  renderResults();
- pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
+  results.innerHTML+=`
+  <div class="card">
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
-   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-   <button onclick="add(${i})">Add to TagShop</button>`;
-  results.appendChild(d);
+   <p>£${PRICE}</p>
+   <button class="buy-dh" onclick="window.open('${p.link}')">Buy Direct</button>
+   <button onclick="addTop(${i})">Add to Top 10</button>
+  </div>`;
  });
 }
 
-function nextPage(){startIndex+=10;fetchResults()}
-function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+function addTop(i){
+ if(top10.find(x=>x.link===last[i].link))return;
+ if(top10.length>=10)top10.shift();
+ top10.push(last[i]);
+ saveTop10();
+}
 
-function add(i){
- const p=last[i];
+function renderTop10(){
+ top10Box=document.getElementById("top10");
+ top10Box.innerHTML="";
+ top10.forEach((p,i)=>{
+  top10Box.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <p>£${PRICE}</p>
+   <button onclick="addShowcase(${i})">Add to Checkout</button>
+  </div>`;
+ });
+}
+
+function addShowcase(i){
+ const p=top10[i];
  if(showcase.find(x=>x.link===p.link))return;
  showcase.push(p);
  renderShowcase();
- updateCart();
- checkout.style.display="block";
-}
-
-function removeItem(i){
- showcase.splice(i,1);
- renderShowcase();
- updateCart();
- if(showcase.length===0){checkout.style.display="none";cartBar.style.display="none";}
 }
 
 function renderShowcase(){
- showcaseDiv=showcase;
- showcase.innerHTML="";
- document.getElementById("showcase").innerHTML="";
- showcaseDiv.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <button onclick="removeItem(${i})">Remove</button>`;
-  document.getElementById("showcase").appendChild(d);
+ s=document.getElementById("showcase");
+ s.innerHTML="";
+ showcase.forEach(p=>{
+  s.innerHTML+=`<div class="card"><img src="${p.img}"><h4>${p.title}</h4><p>£${PRICE}</p></div>`;
  });
-}
-
-function updateCart(){
  cartBar.style.display="block";
  cartCount.innerText=showcase.length;
- cartTotal.innerText="£"+(showcase.length*PRICE);
+ cartTotal.innerText=showcase.length*PRICE;
+ checkout.style.display="block";
 }
 
 function pay(){thanks.style.display="block";window.open(WISE)}
+renderTop10();
 </script>
 
 </body>
