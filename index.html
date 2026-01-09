@@ -10,15 +10,16 @@
 <style>
 :root{
   --gold:#f5d77c;
-  --glass:rgba(30,30,30,.55);
+  --glass:rgba(25,25,25,.55);
   --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
 }
-body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
-h1,h2{font-family:Playfair Display;color:var(--gold);}
-input,textarea{width:100%;padding:12px;border-radius:10px;border:none;margin:6px 0}
+body{margin:0;font-family:Montserrat;background:#050505;color:#fff}
+h1,h2{font-family:Playfair Display;color:var(--gold)}
+.section{max-width:1300px;margin:auto;padding:30px}
+.glass{background:var(--glass);backdrop-filter:blur(18px);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,.35)}
 
 .hero-bg{position:fixed;inset:0;z-index:-2}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.85))}
 .hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
@@ -27,21 +28,24 @@ input,textarea{width:100%;padding:12px;border-radius:10px;border:none;margin:6px
 .hero-bg img:nth-child(5){animation-delay:24s}
 @keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
 
-.section{max-width:1200px;margin:auto;padding:30px 20px}
-.glass{background:var(--glass);backdrop-filter:blur(16px);border-radius:20px;padding:25px;border:1px solid rgba(255,215,0,.3)}
+#results,#top10{display:flex;gap:25px;overflow-x:auto;padding:20px 0}
+#results::-webkit-scrollbar,#top10::-webkit-scrollbar{height:8px}
+#results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;border:1px solid rgba(255,215,0,.25)}
-.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px}
+.card{background:rgba(255,255,255,.07);border-radius:20px;padding:15px;border:1px solid rgba(255,215,0,.3);min-width:220px;max-width:220px;transition:.3s}
+.card:hover{transform:scale(1.05)}
 
-button{width:100%;background:var(--diamond);border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;cursor:pointer}
+.card img{width:190px;height:190px;object-fit:cover;border-radius:15px;background:#fff;padding:5px}
+
+.badge{font-size:.75rem;background:var(--gold);color:#000;padding:4px 10px;border-radius:20px;display:inline-block;margin-top:5px}
+
+button{width:100%;border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;cursor:pointer;background:var(--diamond)}
 .buy-dh{background:#111;color:#fff}
 
-#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px}
+.nav{text-align:center;margin-bottom:15px}
+.nav button{width:auto;padding:8px 25px}
 
-#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(12px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none}
-.nav{text-align:center}
-.nav button{width:auto;padding:10px 25px}
+#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(15px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none;z-index:99}
 </style>
 </head>
 
@@ -57,56 +61,53 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>Hand-selected AAA luxury timepieces — shipped fast to the UK.</p>
-<input id="q" placeholder="Search Rolex, AP, Patek, Omega, Breitling">
+<p>We source the best versions of luxury timepieces with original markings, correct weight and fast insured UK delivery.</p>
+<input id="q" placeholder="Search Rolex, Omega, Patek, AP, Breitling…">
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section">
-<h2>Top 10 TagShop Picks</h2>
-<div id="top10" class="grid"></div>
+<h2>TagShop Top 10 Picks</h2>
+<div id="top10"></div>
 </div>
 
 <div class="section">
 <div class="nav">
-<button onclick="prevPage()">◀</button>
+<button onclick="prevPage()">◀ Prev</button>
 <span id="pageInfo">Page 1</span>
-<button onclick="nextPage()">▶</button>
+<button onclick="nextPage()">Next ▶</button>
 </div>
 <div id="results"></div>
 </div>
 
 <div class="section">
-<h2>Your Curated Selection</h2>
-<div id="showcase" class="grid"></div>
+<h2>Your Reserved Watches</h2>
+<div id="showcase" style="display:flex;gap:25px;flex-wrap:wrap"></div>
 </div>
 
 <div class="section glass" id="checkout" style="display:none">
-<h2>Secure Checkout</h2>
 <input placeholder="Full Name">
 <input placeholder="Email">
 <textarea placeholder="Delivery Address"></textarea>
-<button onclick="pay()">Pay with Wise</button>
-<p id="thanks" style="display:none;color:var(--gold)">Order confirmed.</p>
+<button onclick="pay()">Secure Wise Checkout</button>
+<p id="thanks" style="display:none;color:var(--gold)">Order confirmed – email sent.</p>
 </div>
 
-<div id="cartBar">🛒 <span id="cartCount">0</span> • £<span id="cartTotal">0</span></div>
+<div id="cartBar">
+<span id="cartCount">0</span> Watches • <span id="cartTotal">£0</span>
+</div>
 
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
-const PRICE=249;
 const WISE="https://wise.com/pay/me/davids14542";
+const PRICE=249;
 
-let startIndex=1,last=[],showcase=[];
-let top10=JSON.parse(localStorage.getItem("top10")||"[]");
-
-function saveTop10(){localStorage.setItem("top10",JSON.stringify(top10));renderTop10()}
+let startIndex=1,last=[],showcase=[],top10=JSON.parse(localStorage.getItem("top10")||"[]"),currentQuery="";
 
 function score(t){
- t=t.toLowerCase();
- let s=0;
+ let s=0;t=t.toLowerCase();
  if(t.includes("aaa"))s+=3;
  if(t.includes("box"))s+=2;
  if(t.includes("papers"))s+=2;
@@ -116,70 +117,92 @@ function score(t){
  return s;
 }
 
-async function search(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${startIndex}`);
+async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
+async function fetchResults(){
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
  last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-  title:i.title,img:i.pagemap?.cse_image?.[0]?.src||"",link:i.link,score:score(i.title)
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  score:score(i.title)
  })).sort((a,b)=>b.score-a.score);
  renderResults();
+ pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
+  const b=p.score>=7?"<span class='badge'>Best Pick</span>":"";
   results.innerHTML+=`
   <div class="card">
    <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <p>£${PRICE}</p>
-   <button class="buy-dh" onclick="window.open('${p.link}')">Buy Direct</button>
-   <button onclick="addTop(${i})">Add to Top 10</button>
+   <h4>${p.title}</h4>${b}
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+   <button onclick="addTop10(${i})">Add to Top 10</button>
+   <button onclick="addBasket(${i})">Reserve with TagShop</button>
   </div>`;
  });
 }
 
-function addTop(i){
- if(top10.find(x=>x.link===last[i].link))return;
- if(top10.length>=10)top10.shift();
- top10.push(last[i]);
- saveTop10();
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+function addTop10(i){
+ if(top10.length>=10)return alert("Top 10 full");
+ const p=last[i];
+ if(top10.find(x=>x.link===p.link))return;
+ top10.push(p);
+ localStorage.setItem("top10",JSON.stringify(top10));
+ renderTop10();
 }
 
 function renderTop10(){
- top10Box=document.getElementById("top10");
- top10Box.innerHTML="";
+ top10Div.innerHTML="";
  top10.forEach((p,i)=>{
-  top10Box.innerHTML+=`
+  top10Div.innerHTML+=`
   <div class="card">
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <p>£${PRICE}</p>
-   <button onclick="addShowcase(${i})">Add to Checkout</button>
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button onclick="removeTop10(${i})">Remove</button>
   </div>`;
  });
 }
+function removeTop10(i){top10.splice(i,1);localStorage.setItem("top10",JSON.stringify(top10));renderTop10()}
 
-function addShowcase(i){
- const p=top10[i];
+function addBasket(i){
+ const p=last[i];
  if(showcase.find(x=>x.link===p.link))return;
  showcase.push(p);
- renderShowcase();
-}
-
-function renderShowcase(){
- s=document.getElementById("showcase");
- s.innerHTML="";
- showcase.forEach(p=>{
-  s.innerHTML+=`<div class="card"><img src="${p.img}"><h4>${p.title}</h4><p>£${PRICE}</p></div>`;
- });
- cartBar.style.display="block";
- cartCount.innerText=showcase.length;
- cartTotal.innerText=showcase.length*PRICE;
+ renderBasket();
+ updateCart();
  checkout.style.display="block";
 }
 
+function removeBasket(i){showcase.splice(i,1);renderBasket();updateCart()}
+function renderBasket(){
+ showcaseDiv.innerHTML="";
+ showcase.forEach((p,i)=>{
+  showcaseDiv.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button onclick="removeBasket(${i})">Remove</button>
+  </div>`;
+ });
+}
+function updateCart(){
+ cartBar.style.display="block";
+ cartCount.innerText=showcase.length;
+ cartTotal.innerText="£"+(showcase.length*PRICE);
+}
+
 function pay(){thanks.style.display="block";window.open(WISE)}
+
 renderTop10();
 </script>
 
