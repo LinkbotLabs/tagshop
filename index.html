@@ -2,119 +2,96 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop Showcase</title>
+<title>TagShop – Shop</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 { text-align: center; }
-  .showcase-section {
-    background: #fff;
-    border-radius: 8px;
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 900px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  }
-  .showcase-section h2 {
-    margin-top: 0;
-  }
-  .price {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .description {
-    font-size: 0.95em;
-    margin-bottom: 15px;
-  }
-  .items-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  .item-card {
-    background: #f0f0f0;
-    padding: 10px;
-    border-radius: 6px;
-    width: calc(33% - 10px);
-    box-sizing: border-box;
-    text-align: center;
-  }
-  .item-card img {
-    max-width: 100%;
-    border-radius: 4px;
-  }
-  .item-card p {
-    margin: 5px 0 0 0;
-    font-size: 0.9em;
-  }
+body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
+h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
+.section{max-width:1200px;margin:auto;padding:20px;}
+#showcase{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;scroll-snap-type:x mandatory;}
+#showcase::-webkit-scrollbar{height:10px}
+#showcase::-webkit-scrollbar-thumb{background:#f5d77c;}
+.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:220px;scroll-snap-align:start;}
+.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
+button{width:100%;cursor:pointer;margin-top:5px;padding:10px;border-radius:12px;border:none;}
+.hero-bg{position:fixed;inset:0;z-index:-2}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
+.hero-bg img:nth-child(1){animation-delay:0s}
+.hero-bg img:nth-child(2){animation-delay:6s}
+.hero-bg img:nth-child(3){animation-delay:12s}
+.hero-bg img:nth-child(4){animation-delay:18s}
+.hero-bg img:nth-child(5){animation-delay:24s}
+@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
+#checkoutFormContainer{display:none;background:rgba(30,30,30,.55);padding:20px;border-radius:20px;margin-top:20px;border:1px solid rgba(245,215,124,.4);max-width:400px;margin:auto}
+#checkoutFormContainer input,#checkoutFormContainer textarea{width:100%;padding:8px;margin-bottom:10px;border-radius:8px;border:none}
+#checkoutFormContainer button{margin-top:10px}
 </style>
 </head>
 <body>
 
-<h1>TagShop Showcase</h1>
-
-<!-- Section A -->
-<div class="showcase-section" id="section-A">
-  <h2>A - $-150.00</h2>
-  <div class="price">Good quality – no box</div>
-  <div class="description">
-    Affordable option for collectors who prioritize the timepiece itself. No original box or certification included.
-  </div>
-  <div class="items-container" id="items-A">
-    <!-- Items added dynamically here -->
-  </div>
+<div class="hero-bg">
+<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
 </div>
 
-<!-- Section AA -->
-<div class="showcase-section" id="section-AA">
-  <h2>AA - $249.99</h2>
-  <div class="price">Great quality – with box</div>
-  <div class="description">
-    High-quality watches that include their original presentation box. Ideal for gifting or display.
-  </div>
-  <div class="items-container" id="items-AA">
-    <!-- Items added dynamically here -->
-  </div>
+<div class="section">
+<h1>TagShop Luxury Watches</h1>
+<p style="text-align:center">AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+<div id="showcase"></div>
 </div>
 
-<!-- Section AAA -->
-<div class="showcase-section" id="section-AAA">
-  <h2>AAA - $499.00</h2>
-  <div class="price">Identical timepiece – certified, presentation box</div>
-  <div class="description">
-    Top-tier collectors’ pieces, fully certified with presentation box. Looks and feels identical to original.
-  </div>
-  <div class="items-container" id="items-AAA">
-    <!-- Items added dynamically here -->
-  </div>
-</div>
+<div id="checkoutFormContainer"></div>
 
 <script>
-// Example function to add items from search results
-function addItemToShowcase(section, name, imageUrl, price) {
-  const container = document.getElementById(`items-${section}`);
-  const card = document.createElement('div');
-  card.classList.add('item-card');
-  
-  card.innerHTML = `
-    <img src="${imageUrl}" alt="${name}">
-    <p>${name}</p>
-    <p>Price: $${price}</p>
-  `;
-  
-  container.appendChild(card);
+const WISE="https://wise.com/pay/me/davids14542";
+let showcase=[];
+
+function renderShowcase(){
+ const sc=document.getElementById("showcase");
+ sc.innerHTML="";
+ showcase.slice(0,25).forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+   <button onclick="buySupplier('${p.link}')">Shop with Supplier</button>
+   <button onclick="checkout(${i})">Purchase with TagShop</button>`;
+  sc.appendChild(d);
+ });
 }
 
-// Example usage:
-// addItemToShowcase('A', 'Rolex Submariner', 'https://via.placeholder.com/150', '-150.00');
-// addItemToShowcase('AA', 'Omega Seamaster', 'https://via.placeholder.com/150', '249.99');
-// addItemToShowcase('AAA', 'Patek Philippe Nautilus', 'https://via.placeholder.com/150', '499.00');
+function buySupplier(link){window.open(link,"_blank");}
+
+function checkout(i){
+ const p=showcase[i];
+ const c=document.getElementById("checkoutFormContainer");
+ c.style.display="block";
+ c.innerHTML=`
+ <h2>Purchase with TagShop</h2>
+ <p>${p.title}</p>
+ <form id="contactForm">
+  <input type="text" placeholder="Full Name" required>
+  <input type="email" placeholder="Email" required>
+  <textarea placeholder="Delivery Address"></textarea>
+  <button type="submit">Confirm & Proceed to Payment</button>
+ </form>`;
+ document.getElementById("contactForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  window.open(WISE);
+ });
+}
+
+window.onload=function(){
+ const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+ showcase=saved; renderShowcase();
+};
 </script>
 
 </body>
