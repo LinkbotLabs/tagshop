@@ -18,68 +18,52 @@ h1,h2{font-family:Playfair Display;color:var(--gold)}
 .section{max-width:1300px;margin:auto;padding:30px}
 .glass{background:var(--glass);backdrop-filter:blur(18px);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,.35)}
 
+.hero-bg{position:fixed;inset:0;z-index:-2}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.85))}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
+.hero-bg img:nth-child(1){animation-delay:0s}
+.hero-bg img:nth-child(2){animation-delay:6s}
+.hero-bg img:nth-child(3){animation-delay:12s}
+.hero-bg img:nth-child(4){animation-delay:18s}
+.hero-bg img:nth-child(5){animation-delay:24s}
+@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
+
 #results,#top10{display:flex;gap:25px;overflow-x:auto;padding:20px 0}
 #results::-webkit-scrollbar,#top10::-webkit-scrollbar{height:8px}
 #results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
 
-.card{
-  background:rgba(255,255,255,.07);
-  border-radius:20px;
-  padding:15px;
-  border:1px solid rgba(255,215,0,.3);
-  min-width:240px;
-  max-width:240px;
-  text-align:center;
-}
-.card img{
-  width:200px;
-  height:200px;
-  object-fit:contain;
-  background:#fff;
-  border-radius:15px;
-  padding:10px;
-}
+.card{background:rgba(255,255,255,.07);border-radius:20px;padding:15px;border:1px solid rgba(255,215,0,.3);min-width:220px;max-width:220px;transition:.3s}
+.card:hover{transform:scale(1.05)}
 
-.badge{
-  font-size:.75rem;
-  background:var(--gold);
-  color:#000;
-  padding:4px 10px;
-  border-radius:20px;
-  display:inline-block;
-  margin-top:5px;
-}
+.card img{width:190px;height:190px;object-fit:cover;border-radius:15px;background:#fff;padding:5px}
 
-button{
-  width:100%;
-  border:none;
-  padding:12px;
-  border-radius:30px;
-  font-weight:700;
-  margin-top:8px;
-  cursor:pointer;
-  background:var(--diamond);
-}
+.badge{font-size:.75rem;background:var(--gold);color:#000;padding:4px 10px;border-radius:20px;display:inline-block;margin-top:5px}
+
+button{width:100%;border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;cursor:pointer;background:var(--diamond)}
 .buy-dh{background:#111;color:#fff}
 
 .nav{text-align:center;margin-bottom:15px}
 .nav button{width:auto;padding:8px 25px}
 
-#cartBar{
-  position:fixed;bottom:20px;right:20px;background:var(--glass);
-  backdrop-filter:blur(15px);padding:15px 25px;border-radius:30px;
-  border:1px solid rgba(255,215,0,.4);display:none;z-index:99
-}
+#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(15px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none;z-index:99}
 </style>
 </head>
 
 <body>
 
+<div class="hero-bg">
+<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+</div>
+
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We source the best versions of luxury timepieces with verified markings, correct weight and insured UK delivery.</p>
+<p>We source the best versions of luxury timepieces with original markings, correct weight and fast insured UK delivery.</p>
 <input id="q" placeholder="Search Rolex, Omega, Patek, AP, Breitling…">
-<button id="searchBtn">Search Dealer Network</button>
+<button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section">
@@ -89,9 +73,9 @@ button{
 
 <div class="section">
 <div class="nav">
-<button id="prevBtn">◀ Prev</button>
+<button onclick="prevPage()">◀ Prev</button>
 <span id="pageInfo">Page 1</span>
-<button id="nextBtn">Next ▶</button>
+<button onclick="nextPage()">Next ▶</button>
 </div>
 <div id="results"></div>
 </div>
@@ -105,181 +89,121 @@ button{
 <input placeholder="Full Name">
 <input placeholder="Email">
 <textarea placeholder="Delivery Address"></textarea>
-<button id="payBtn">Secure Wise Checkout</button>
+<button onclick="pay()">Secure Wise Checkout</button>
 <p id="thanks" style="display:none;color:var(--gold)">Order confirmed – email sent.</p>
 </div>
 
 <div id="cartBar">
-🛒 <span id="cartCount">0</span> Watches • £<span id="cartTotal">0</span>
+<span id="cartCount">0</span> Watches • <span id="cartTotal">£0</span>
 </div>
 
 <script>
-// ---------- CONFIG ----------
-const API = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CX  = "f7e219616fe1d4629";
-const AFF = "2545671";
-const WISE = "https://wise.com/pay/me/davids14542";
-const USD_TO_GBP = 0.79;
+const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CX="f7e219616fe1d4629";
+const AFF="2545671";
+const WISE="https://wise.com/pay/me/davids14542";
+const PRICE=249;
 
-// ---------- STATE ----------
-let startIndex = 1;
-let lastResults = [];
-let showcase = [];
-let top10 = JSON.parse(localStorage.getItem("top10")||"[]");
+let startIndex=1,last=[],showcase=[],top10=JSON.parse(localStorage.getItem("top10")||"[]"),currentQuery="";
 
-// ---------- UTILS ----------
-function scoreText(t){
-  t = t.toLowerCase();
-  let s=0;
-  if(t.includes("aaa")) s+=3;
-  if(t.includes("box")) s+=2;
-  if(t.includes("papers")) s+=2;
-  if(t.includes("sapphire")) s+=2;
-  if(t.includes("904l")) s+=3;
-  if(t.includes("automatic")) s+=2;
-  return s;
+function score(t){
+ let s=0;t=t.toLowerCase();
+ if(t.includes("aaa"))s+=3;
+ if(t.includes("box"))s+=2;
+ if(t.includes("papers"))s+=2;
+ if(t.includes("sapphire"))s+=2;
+ if(t.includes("904l"))s+=3;
+ if(t.includes("automatic"))s+=2;
+ return s;
 }
 
-function formatPrice(gbp){
-  return gbp===0 || gbp==="—" ? "—" : gbp;
-}
-
-// ---------- RENDER TOP 10 ----------
-function renderTop10(){
-  const container = document.getElementById("top10");
-  container.innerHTML = "";
-  top10.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${p.img}">
-      <h4>${p.title}</h4>
-      <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-      <button>Remove</button>
-    `;
-    card.querySelector("button").onclick = ()=>{
-      top10.splice(i,1);
-      localStorage.setItem("top10",JSON.stringify(top10));
-      renderTop10();
-    };
-    container.appendChild(card);
-  });
-}
-
-// ---------- SEARCH + PAGINATION ----------
+async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
 async function fetchResults(){
-  const q = document.getElementById("q").value.trim();
-  if(!q) return;
-
-  const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}&start=${startIndex}`;
-  const res = await fetch(url);
-  const data = await res.json();
-
-  lastResults = (data.items||[])
-    .filter(item => item.link.includes("dhgate"))
-    .map(item => {
-       const rawPrice = parseFloat(item.pagemap?.product?.[0]?.price || 0);
-       const gbp = rawPrice ? Math.round(rawPrice * USD_TO_GBP) : "—";
-       return {
-         title:item.title,
-         img:item.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-         link:item.link.includes("?") ? `${item.link}&aff=${AFF}` : `${item.link}?aff=${AFF}`,
-         price:gbp,
-         score:scoreText(item.title)
-       };
-    })
-    .sort((a,b) => b.score - a.score);
-
-  document.getElementById("pageInfo").innerText = "Page " + Math.ceil(startIndex/10);
-  renderResults();
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+ const d=await r.json();
+ last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  score:score(i.title)
+ })).sort((a,b)=>b.score-a.score);
+ renderResults();
+ pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
 function renderResults(){
-  const container = document.getElementById("results");
-  container.innerHTML = "";
-  lastResults.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-     ${p.score>=7?'<span class="badge">Best Pick</span>':""}
-     <button class="buy-dh">Buy Direct</button>
-     <button class="add-top10">Add to Top 10</button>
-     <button class="add-basket">Reserve with TagShop</button>
-    `;
-    card.querySelector(".buy-dh").onclick = ()=>window.open(p.link,"_blank");
-    card.querySelector(".add-top10").onclick = ()=>addToTop10(p);
-    card.querySelector(".add-basket").onclick = ()=>addToShowcase(p);
-    container.appendChild(card);
-  });
+ results.innerHTML="";
+ last.forEach((p,i)=>{
+  const b=p.score>=7?"<span class='badge'>Best Pick</span>":"";
+  results.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <h4>${p.title}</h4>${b}
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+   <button onclick="addTop10(${i})">Add to Top 10</button>
+   <button onclick="addBasket(${i})">Reserve with TagShop</button>
+  </div>`;
+ });
 }
 
-document.getElementById("nextBtn").onclick = ()=>{
-  startIndex += 10;
-  fetchResults();
-}
-document.getElementById("prevBtn").onclick = ()=>{
-  if(startIndex>1){startIndex-=10;fetchResults();}
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+function addTop10(i){
+ if(top10.length>=10)return alert("Top 10 full");
+ const p=last[i];
+ if(top10.find(x=>x.link===p.link))return;
+ top10.push(p);
+ localStorage.setItem("top10",JSON.stringify(top10));
+ renderTop10();
 }
 
-// ---------- TOP10 HANDLERS ----------
-function addToTop10(p){
-  if(top10.find(x=>x.link===p.link)) return alert("Already in Top 10");
-  if(top10.length>=10) return alert("Top 10 is full");
-  top10.push(p);
-  localStorage.setItem("top10",JSON.stringify(top10));
-  renderTop10();
+function renderTop10(){
+ top10Div.innerHTML="";
+ top10.forEach((p,i)=>{
+  top10Div.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button onclick="removeTop10(${i})">Remove</button>
+  </div>`;
+ });
+}
+function removeTop10(i){top10.splice(i,1);localStorage.setItem("top10",JSON.stringify(top10));renderTop10()}
+
+function addBasket(i){
+ const p=last[i];
+ if(showcase.find(x=>x.link===p.link))return;
+ showcase.push(p);
+ renderBasket();
+ updateCart();
+ checkout.style.display="block";
 }
 
-// ---------- SHOWCASE HANDLERS ----------
-function addToShowcase(p){
-  if(showcase.find(x=>x.link===p.link)) return alert("Already reserved");
-  showcase.push(p);
-  renderShowcase();
-  updateCart();
-  document.getElementById("checkout").style.display = "block";
+function removeBasket(i){showcase.splice(i,1);renderBasket();updateCart()}
+function renderBasket(){
+ showcaseDiv.innerHTML="";
+ showcase.forEach((p,i)=>{
+  showcaseDiv.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">£${PRICE}</div>
+   <button onclick="removeBasket(${i})">Remove</button>
+  </div>`;
+ });
 }
-
-function renderShowcase(){
-  const container = document.getElementById("showcase");
-  container.innerHTML = "";
-  showcase.forEach((p,i)=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-     <img src="${p.img}">
-     <h4>${p.title}</h4>
-     <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
-     <button>Remove</button>
-    `;
-    card.querySelector("button").onclick = ()=>{
-      showcase.splice(i,1);
-      renderShowcase();
-      updateCart();
-    };
-    container.appendChild(card);
-  });
-}
-
 function updateCart(){
-  document.getElementById("cartBar").style.display = "block";
-  document.getElementById("cartCount").innerText = showcase.length;
-  const total = showcase.reduce((sum,x)=>(sum + (x.price||0)),0);
-  document.getElementById("cartTotal").innerText = total;
+ cartBar.style.display="block";
+ cartCount.innerText=showcase.length;
+ cartTotal.innerText="£"+(showcase.length*PRICE);
 }
 
-// ---------- CHECKOUT ----------
-document.getElementById("searchBtn").onclick = fetchResults;
-document.getElementById("payBtn").onclick = ()=>{
-  document.getElementById("thanks").style.display="block";
-  window.open(WISE);
-}
+function pay(){thanks.style.display="block";window.open(WISE)}
 
-// first render
 renderTop10();
-
 </script>
 
 </body>
