@@ -4,226 +4,177 @@
 <meta charset="UTF-8">
 <title>TagShop – Luxury Watch Concierge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-:root{
- --gold:#f5d77c;
- --glass:rgba(25,25,25,.6);
- --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
-}
-
-body{margin:0;font-family:Montserrat;background:#050505;color:#fff}
-h1,h2{font-family:Playfair Display;color:var(--gold)}
-
-.hero{
- position:fixed; inset:0; z-index:-2;
- background:url("https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3") center/cover no-repeat;
-}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),#000)}
-
-.section{max-width:1300px;margin:auto;padding:25px}
-
-.glass{
- background:var(--glass);
- backdrop-filter:blur(16px);
- border-radius:25px;
- padding:25px;
- border:1px solid rgba(255,215,0,.3)
-}
-
-input{width:100%;padding:14px;border-radius:30px;border:none;margin-bottom:10px}
-
-#results,#top10{
- display:flex;
- gap:18px;
- overflow-x:auto;
- scroll-snap-type:x mandatory;
- padding:15px 0;
-}
-
-.card{
- background:rgba(255,255,255,.07);
- border-radius:18px;
- padding:12px;
- min-width:165px;
- max-width:165px;
- scroll-snap-align:start;
- border:1px solid rgba(255,215,0,.25);
- transition:.35s;
-}
-
-.card:hover{
- transform:scale(1.08);
- box-shadow:0 0 25px rgba(245,215,124,.7);
-}
-
-.card img{
- width:100%;
- height:130px;
- object-fit:contain;
- background:#fff;
- border-radius:12px;
-}
-
-.badge{
- background:var(--gold);
- color:#000;
- font-size:.7rem;
- padding:4px 8px;
- border-radius:20px;
- display:inline-block;
- margin-top:5px;
-}
-
-.price{color:var(--gold);font-weight:700;margin-top:4px}
-
-button{
- width:100%;
- border:none;
- padding:10px;
- border-radius:30px;
- font-weight:700;
- margin-top:6px;
- background:var(--diamond);
- cursor:pointer
-}
-
-.buy{background:#111;color:#fff}
-
-.stars{color:gold;font-size:.8rem}
-
-#showcase{display:flex;gap:15px;flex-wrap:wrap}
+  body { font-family: 'Montserrat', sans-serif; margin: 20px; background: #f7f7f7; }
+  h1, h2 { font-family: 'Playfair Display', serif; }
+  #searchContainer { margin-bottom: 20px; }
+  #searchResults div, #productWall div { background: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+  button { margin-left: 10px; padding: 5px 10px; cursor: pointer; }
+  #checkoutFormContainer { background: #fff; padding: 20px; border-radius: 8px; display:none; max-width: 400px; margin-top: 20px; }
+  input, textarea { width: 100%; padding: 5px; margin-bottom: 10px; }
+  .pagination { margin-top: 10px; }
 </style>
 </head>
-
 <body>
 
-<div class="hero"></div>
+<h1>TagShop – Luxury Watch Concierge</h1>
 
-<div class="section glass">
-<h1>TagShop Luxury Watch Concierge</h1>
-<p>Curated UK-grade dealer network. Verified AAA pieces. Insured Wise checkout.</p>
-<input id="q" placeholder="Search Rolex, Omega, TAG Heuer, AP…">
-<button onclick="search()">Search Dealer Network</button>
+<!-- Admin login -->
+<button id="adminLoginBtn">Admin Login</button>
+
+<!-- Admin search -->
+<div id="searchContainer" style="display:none;">
+  <h2>Admin Search</h2>
+  <input type="text" id="searchInput" placeholder="Search watches">
+  <div id="searchResults"></div>
+  <div class="pagination">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
 </div>
 
-<div class="section">
-<h2>🏆 TagShop Top 10 Picks</h2>
-<div id="top10"></div>
-</div>
+<!-- Product wall visible to public -->
+<h2>Product Wall</h2>
+<div id="productWall"></div>
 
-<div class="section">
-<h2>Dealer Results</h2>
-<div id="results"></div>
-</div>
-
-<div class="section glass">
-<h2>Your Reserved Watches</h2>
-<div id="showcase"></div>
-<button onclick="checkout()">Pay with Wise</button>
-<p id="thanks" style="display:none;color:var(--gold)">Payment link opened — your order is reserved.</p>
-</div>
+<!-- Checkout/contact form -->
+<div id="checkoutFormContainer"></div>
 
 <script>
-const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CX="f7e219616fe1d4629";
-const AFF="2545671";
-const WISE="https://wise.com/pay/me/davids14542";
+// -------------------- Product Data --------------------
+const products = [
+  { id: 1, name: "Rolex Submariner", brand: "Rolex", features: ["Box", "Automatic"], price: 12000, supplierLink:"#"},
+  { id: 2, name: "Omega Seamaster", brand: "Omega", features: ["Box", "Chronometer"], price: 9000, supplierLink:"#"},
+  { id: 3, name: "Tag Heuer Carrera", brand: "Tag Heuer", features: ["Box"], price: 7500, supplierLink:"#"},
+  { id: 4, name: "Patek Philippe Nautilus", brand: "Patek Philippe", features: ["Box"], price: 30000, supplierLink:"#"}
+  // Add more products here
+];
 
-let start=1,last=[],showcase=[];
-let top10=JSON.parse(localStorage.getItem("top10")||"[]");
+// -------------------- Admin Login --------------------
+let isAdmin = false;
+const adminPassword = "YOUR_SECRET_PASSWORD"; // change to your password
 
-function score(t){
- t=t.toLowerCase(); let s=0;
- if(t.includes("aaa"))s+=3;
- if(t.includes("box"))s+=2;
- if(t.includes("904l"))s+=3;
- if(t.includes("sapphire"))s+=2;
- return s;
+document.getElementById("adminLoginBtn").addEventListener("click", () => {
+  const password = prompt("Enter admin password:");
+  if(password === adminPassword){
+    isAdmin = true;
+    document.getElementById("searchContainer").style.display = "block";
+    alert("Admin mode enabled");
+  } else {
+    alert("Wrong password");
+  }
+});
+
+// -------------------- Search --------------------
+const searchInput = document.getElementById("searchInput");
+const searchResultsContainer = document.getElementById("searchResults");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+let currentResults = [];
+let currentPage = 0;
+const resultsPerPage = 2; // adjust number of results per page
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+  currentResults = products.filter(p => 
+    p.name.toLowerCase().includes(query) ||
+    p.brand.toLowerCase().includes(query) ||
+    p.features.some(f => f.toLowerCase().includes(query))
+  );
+  currentPage = 0;
+  renderSearchResults();
+});
+
+function renderSearchResults(){
+  searchResultsContainer.innerHTML = "";
+  if(currentResults.length === 0){
+    searchResultsContainer.innerHTML = "<p>No results</p>";
+    return;
+  }
+  const start = currentPage * resultsPerPage;
+  const end = start + resultsPerPage;
+  const pageResults = currentResults.slice(start, end);
+
+  pageResults.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `${p.name} - ${p.brand} - $${p.price} 
+      <button class="addBtn">Add to Wall</button>`;
+    div.querySelector(".addBtn").addEventListener("click", () => addToWall(p));
+    searchResultsContainer.appendChild(div);
+  });
 }
 
-function search(){start=1;fetchResults()}
-async function fetchResults(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${start}`);
- const d=await r.json();
+prevBtn.addEventListener("click", () => {
+  if(currentPage > 0){ currentPage--; renderSearchResults(); }
+});
 
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src||"https://i.imgur.com/JbGQH6g.png",
-  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
-  score:score(i.title),
-  price:Math.round(Math.random()*120+150)
- })).sort((a,b)=>b.score-a.score);
+nextBtn.addEventListener("click", () => {
+  if((currentPage + 1) * resultsPerPage < currentResults.length){
+    currentPage++; renderSearchResults();
+  }
+});
 
- renderResults();
+// -------------------- Product Wall --------------------
+let productWall = [];
+
+function addToWall(product){
+  if(!productWall.find(p => p.id === product.id)){
+    productWall.push(product);
+    renderWall();
+  }
 }
 
-function renderResults(){
- results.innerHTML="";
- last.forEach((p,i)=>{
- results.innerHTML+=`
- <div class="card">
-  <img src="${p.img}">
-  <div class="stars">★★★★★</div>
-  <div class="badge">Dealer Score ${p.score}</div>
-  <div class="price">£${p.price}</div>
-  <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-  <button onclick="addTop10(${i})">Add to Top 10</button>
- </div>`;
- });
+function renderWall(){
+  const wall = document.getElementById("productWall");
+  wall.innerHTML = "";
+  productWall.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `${p.name} - $${p.price} 
+      <button class="supplierBtn">Buy with Supplier</button> 
+      <button class="tagshopBtn">Buy with TagShop</button>`;
+    
+    // Buy with Supplier
+    div.querySelector(".supplierBtn").addEventListener("click", () => {
+      window.open(p.supplierLink, "_blank");
+    });
+
+    // Buy with TagShop
+    div.querySelector(".tagshopBtn").addEventListener("click", () => openCheckout(p));
+
+    wall.appendChild(div);
+  });
 }
 
-function addTop10(i){
- if(top10.length>=10)return alert("Top 10 full");
- const p=last[i];
- if(top10.find(x=>x.link===p.link))return;
- top10.push(p);
- localStorage.setItem("top10",JSON.stringify(top10));
- renderTop10();
+// -------------------- Checkout / Contact Form --------------------
+const checkoutContainer = document.getElementById("checkoutFormContainer");
+
+function openCheckout(product){
+  checkoutContainer.style.display = "block";
+  checkoutContainer.innerHTML = `
+    <h3>Buying with TagShop</h3>
+    <p>Product: ${product.name}</p>
+    <p>Brand: ${product.brand}</p>
+    <p>Price: $${product.price}</p>
+    <form id="contactForm">
+      <label>Name:</label><br><input type="text" name="name" required><br>
+      <label>Email:</label><br><input type="email" name="email" required><br>
+      <label>Message / Notes:</label><br>
+      <textarea name="message" placeholder="Optional"></textarea><br>
+      <button type="submit">Confirm & Pay</button>
+    </form>
+  `;
+
+  document.getElementById("contactForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    // Here you can also send form data via EmailJS or Formspree if desired
+
+    // Redirect to Wise
+    window.location.href = "https://wise.com/pay/your-payment-link";
+  });
 }
 
-function addToShowcase(p){
- if(showcase.find(x=>x.link===p.link))return;
- showcase.push(p);
- renderShowcase();
-}
-
-function renderShowcase(){
- const c=document.getElementById("showcase");
- c.innerHTML="";
- showcase.forEach(p=>{
-  c.innerHTML+=`
-  <div class="card">
-   <img src="${p.img}">
-   <div class="price">£299</div>
-  </div>`;
- });
-}
-
-function renderTop10(){
- const t=document.getElementById("top10");
- t.innerHTML="";
- top10.forEach((p,i)=>{
- t.innerHTML+=`
- <div class="card">
-  <img src="${p.img}">
-  <div class="badge">TagShop Verified</div>
-  <div class="stars">★★★★★ UK Supplier</div>
-  <div class="price">£299</div>
-  <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-  <button onclick='addToShowcase(top10[${i}])'>Reserve with TagShop</button>
- </div>`;
- });
-}
-
-function checkout(){
- window.open(WISE);
- thanks.style.display="block";
-}
-
-renderTop10();
 </script>
 </body>
 </html>
