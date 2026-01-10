@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TagShop Admin / Search</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
+h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
+.section{max-width:1200px;margin:auto;padding:20px;}
+input,button{padding:10px;margin:5px 0;border-radius:8px;border:none;}
+#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;}
+#results::-webkit-scrollbar{height:8px}
+#results::-webkit-scrollbar-thumb{background:#f5d77c;}
+.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:220px;}
+.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
+button{width:100%;cursor:pointer;margin-top:5px;}
+.nav{text-align:center;margin:10px 0;}
+.nav button{width:auto;padding:8px 20px;margin:0 5px;}
+</style>
+</head>
+<body>
+
+<div class="section">
+<h1>TagShop Search & Curate</h1>
+<input id="q" placeholder="Search Rolex, Patek, AP, Omega…">
+<button onclick="search()">Search Dealer Network</button>
+</div>
+
+<div class="section nav">
+<button onclick="prevPage()">◀ Previous</button>
+<span id="pageInfo">Page 1</span>
+<button onclick="nextPage()">Next ▶</button>
+</div>
+
+<div class="section" id="results"></div>
+
+<div class="section">
+<h2>Your Curated Selection (max 25)</h2>
+<div id="showcase"></div>
+<button onclick="goToShop()">Go to Shop Page</button>
+</div>
+
+<script>
+const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
+const CX="f7e219616fe1d4629";
+const AFF="2545671";
+let startIndex=1, last=[], showcase=[], currentQuery="";
+
+function score(t){
+ let s=0;t=t.toLowerCase();
+ if(t.includes("aaa"))s+=3;
+ if(t.includes("box"))s+=2;
+ if(t.includes("papers"))s+=2;
+ if(t.includes("sapphire"))s+=2;
+ if(t.includes("904l"))s+=3;
+ if(t.includes("automatic"))s+=2;
+ return s;
+}
+
+async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
+async function fetchResults(){
+ const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+ const d=await r.json();
+ last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  score:score(i.title)
+ })).sort((a,b)=>b.score-a.score);
+ renderResults();
+ pageInfo.innerText="Page "+Math.ceil(startIndex/10);
+}
+
+function renderResults(){
+ results.innerHTML="";
+ last.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
+   <button onclick="window.open('${p.link}','_blank')">Shop with Supplier</button>
+   <button onclick="add(${i})">Add to Showcase</button>`;
+  results.appendChild(d);
+ });
+}
+
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
+// ---------------- Showcase ----------------
+function add(i){
+ const p=last[i];
+ if(showcase.find(x=>x.link===p.link))return;
+ if(showcase.length>=25) {alert("Max 25 items"); return;}
+ showcase.push(p);
+ renderShowcase();
+ saveShowcase();
+}
+function removeItem(i){showcase.splice(i,1); renderShowcase(); saveShowcase();}
+
+function renderShowcase(){
+ const sc=document.getElementById("showcase");
+ sc.innerHTML="";
+ showcase.forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <button onclick="removeItem(${i})">Remove</button>`;
+  sc.appendChild(d);
+ });
+}
+
+function saveShowcase(){
+ localStorage.setItem("tagshopShowcase",JSON.stringify(showcase));
+}
+
+function goToShop(){
+ window.location.href="shop.html";
+}
+window.onload=function(){
+ const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+ showcase=saved; renderShowcase();
+};
+</script>
+
+</body>
+</html>
