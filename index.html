@@ -4,71 +4,50 @@
 <meta charset="UTF-8">
 <title>TagShop – Luxury Watch Concierge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --gold:#f5d77c;
-  --glass:rgba(30,30,30,.55);
-  --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
-}
-body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
-h1,h2{font-family:Playfair Display;color:var(--gold);}
-
+:root{--gold:#f5d77c;--glass:rgba(0,0,0,.55);--diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d)}
+body{margin:0;font-family:Montserrat;background:#000;color:#fff}
+h1,h2{font-family:Playfair Display;color:var(--gold)}
 .hero-bg{position:fixed;inset:0;z-index:-2}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
-.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;animation:fade 30s infinite}
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
 .hero-bg img:nth-child(3){animation-delay:12s}
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
-@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
-
-.section{max-width:1200px;margin:auto;padding:30px 20px}
+@keyframes fade{0%{opacity:0}10%{opacity:1}20%{opacity:1}30%{opacity:0}100%{opacity:0}}
+.section{max-width:1200px;margin:auto;padding:25px}
 .glass{background:var(--glass);backdrop-filter:blur(16px);border-radius:20px;padding:25px;border:1px solid rgba(255,215,0,.3)}
-
-#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px}
-#results::-webkit-scrollbar{height:8px}
-#results::-webkit-scrollbar-thumb{background:var(--gold)}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;border:1px solid rgba(255,215,0,.25);min-width:220px}
-.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px}
-
-button{width:100%;background:var(--diamond);border:none;padding:12px;border-radius:30px;font-weight:700;margin-top:8px;cursor:pointer}
-.buy-dh{background:#111;color:#fff}
-
-#cartBar{position:fixed;bottom:20px;right:20px;background:var(--glass);backdrop-filter:blur(12px);padding:15px 25px;border-radius:30px;border:1px solid rgba(255,215,0,.4);display:none;z-index:99}
-.nav{text-align:center;margin-bottom:15px}
-.nav button{width:auto;padding:10px 25px;margin:0 10px}
+#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:10px}
+.card{background:rgba(255,255,255,.08);border-radius:15px;padding:15px;min-width:220px;border:1px solid rgba(255,215,0,.25)}
+.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:10px}
+button{background:var(--diamond);border:none;padding:10px;border-radius:30px;width:100%;margin-top:10px;font-weight:700}
+.buy{background:#111;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+#cartBar{position:fixed;bottom:15px;right:15px;background:var(--glass);padding:15px 25px;border-radius:30px;display:none}
 </style>
 </head>
 
 <body>
 
 <div class="hero-bg">
-<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&w=1600&q=80">
 </div>
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We source the best versions of luxury timepieces with correct weight, original markings and fast UK delivery. Shop direct or let TagShop handle everything.</p>
-<input id="q" placeholder="Search Rolex, Patek, AP, Omega, Breitling…">
+<p>We source premium replicas & best dealer watches with box, papers and UK delivery.</p>
+<input id="q" placeholder="Search Rolex, AP, Boxed, AAA…" style="width:100%;padding:10px;border-radius:10px">
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section">
-<div class="nav">
-<button onclick="prevPage()">◀ Previous</button>
-<span id="pageInfo">Page 1</span>
-<button onclick="nextPage()">Next ▶</button>
-</div>
 <div id="results"></div>
 </div>
 
@@ -78,109 +57,94 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 </div>
 
 <div class="section glass" id="checkout" style="display:none">
-<h2>Secure Checkout</h2>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<textarea placeholder="Delivery Address"></textarea>
-<button onclick="pay()">Pay securely with Wise</button>
-<p id="thanks" style="display:none;color:var(--gold)">Thank you — order confirmed.</p>
+<button onclick="pay()">Pay with Wise</button>
+<p id="thanks" style="display:none;color:var(--gold)">Order confirmed.</p>
 </div>
 
-<div id="cartBar">
-<span id="cartCount">0</span> Watches • <span id="cartTotal">£0</span>
-</div>
+<div id="cartBar"><span id="cartCount">0</span> watches • <span id="cartTotal">£0</span></div>
 
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
-const PRICE=149;
 
-let startIndex=1, last=[], showcase=[], currentQuery="";
+const stock=[
+...Array(50).fill().map((_,i)=>({
+title:["Rolex","AP","Omega","Cartier","Breitling","Tag Heuer","Patek","IWC","Hublot","Panerai"][i%10]+" Model "+(i+1),
+img:"https://source.unsplash.com/featured/?luxury,watch,"+(i+1),
+price:i%3?150:250
+}))
+];
 
-function score(t){
- let s=0;t=t.toLowerCase();
- if(t.includes("aaa"))s+=3;
- if(t.includes("box"))s+=2;
- if(t.includes("papers"))s+=2;
- if(t.includes("sapphire"))s+=2;
- if(t.includes("904l"))s+=3;
- if(t.includes("automatic"))s+=2;
- return s;
+const results=document.getElementById("results");
+const showcaseDiv=document.getElementById("showcase");
+const cartBar=document.getElementById("cartBar");
+const cartCount=document.getElementById("cartCount");
+const cartTotal=document.getElementById("cartTotal");
+const checkout=document.getElementById("checkout");
+const thanks=document.getElementById("thanks");
+let showcase=[]; let lastResults=[];
+
+render(stock);
+
+async function search(){
+ const term=document.getElementById("q").value;
+ try{
+  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${term}&cx=${CX}&key=${API}`);
+  const d=await r.json();
+  if(!d.items) throw "quota";
+  lastResults=d.items.map(x=>({
+    title:x.title,
+    img:x.pagemap?.cse_image?.[0]?.src||stock[0].img,
+    price:250,
+    link:x.link+(x.link.includes("?")?"&":"?")+"aff="+AFF
+  }));
+  render(lastResults);
+ }catch{
+  const f=stock.filter(x=>x.title.toLowerCase().includes(term.toLowerCase()));
+  render(f.length?f:stock);
+ }
 }
 
-async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
-async function fetchResults(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
- const d=await r.json();
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
-  score:score(i.title)
- })).sort((a,b)=>b.score-a.score);
- renderResults();
- pageInfo.innerText="Page "+Math.ceil(startIndex/10);
-}
-
-function renderResults(){
+function render(list){
  results.innerHTML="";
- last.forEach((p,i)=>{
+ list.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
-   <button class="buy-dh" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-   <button onclick="add(${i})">Add to TagShop</button>`;
+  d.innerHTML=`<img src="${p.img}"><h4>${p.title}</h4><div>£${p.price}</div>
+  ${p.link?`<button class="buy" onclick="window.open('${p.link}')">Buy Direct</button>`:""}
+  <button onclick="add(${i},${JSON.stringify(list)})">Add to TagShop</button>`;
   results.appendChild(d);
  });
 }
 
-function nextPage(){startIndex+=10;fetchResults()}
-function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
-
-function add(i){
- const p=last[i];
- if(showcase.find(x=>x.link===p.link))return;
+function add(i,list){
+ const p=list[i];
+ if(showcase.find(x=>x.title==p.title))return;
  showcase.push(p);
- renderShowcase();
- updateCart();
- checkout.style.display="block";
+ update();
 }
 
-function removeItem(i){
- showcase.splice(i,1);
- renderShowcase();
- updateCart();
- if(showcase.length===0){checkout.style.display="none";cartBar.style.display="none";}
-}
+function remove(i){showcase.splice(i,1);update()}
 
-function renderShowcase(){
- showcaseDiv=showcase;
- showcase.innerHTML="";
- document.getElementById("showcase").innerHTML="";
- showcaseDiv.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <button onclick="removeItem(${i})">Remove</button>`;
-  document.getElementById("showcase").appendChild(d);
+function update(){
+ showcaseDiv.innerHTML="";
+ let total=0;
+ showcase.forEach((p,i)=>{
+  total+=p.price;
+  showcaseDiv.innerHTML+=`<div class="card"><img src="${p.img}"><h4>${p.title}</h4><div>£${p.price}</div><button onclick="remove(${i})">Remove</button></div>`;
  });
-}
-
-function updateCart(){
- cartBar.style.display="block";
- cartCount.innerText=showcase.length;
- cartTotal.innerText="£"+(showcase.length*PRICE);
+ if(showcase.length){
+  cartBar.style.display="block";checkout.style.display="block";
+  cartCount.innerText=showcase.length;
+  cartTotal.innerText="£"+total;
+ }else{
+  cartBar.style.display="none";checkout.style.display="none";
+ }
 }
 
 function pay(){thanks.style.display="block";window.open(WISE)}
 </script>
-
 </body>
 </html>
