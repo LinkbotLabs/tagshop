@@ -67,11 +67,22 @@ const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 
+const watchImgs=[
+ "https://upload.wikimedia.org/wikipedia/commons/8/8c/Rolex_Submariner_116610LV.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/5/57/Audemars_Piguet_Royal_Oak.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/9/9f/Omega_Seamaster_300.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/0/09/Breitling_Navitimer.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/2/2f/Cartier_Santos_100.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/3/3a/Tag_Heuer_Carrera.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/4/4b/IWC_Big_Pilot.jpg",
+ "https://upload.wikimedia.org/wikipedia/commons/6/6e/Hublot_Big_Bang.jpg"
+];
+
 const fallback=[...Array(50)].map((_,i)=>({
-  title:["Rolex","AP","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"][i%8]+" Luxury Watch",
-  img:`https://source.unsplash.com/600x600/?luxury,watch,${i}`,
+  title:["Rolex","Audemars Piguet","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"][i%8]+" Luxury Watch",
+  img:watchImgs[i%8],
   price:i%3==0?250:150,
-  link:"#"
+  link:"https://www.dhgate.com/?f=bm|aff|"+AFF
 }));
 
 let results=[],cart=[];
