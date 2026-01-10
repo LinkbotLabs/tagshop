@@ -2,95 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop – Shop</title>
+<title>TagShop – Bold Luxury Watches</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* ---------- GLOBAL STYLES ---------- */
 body {
   margin: 0;
   font-family: Montserrat, sans-serif;
   background: #050505;
-  color: #f5d77c; /* all normal text gold */
+  color: #f5d77c;
+  overflow-x: hidden;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
   font-family: 'Playfair Display', serif;
-  color: #f5d77c; /* headings gold */
-  text-align: center;
+  color: #f5d77c;
+  margin: 0.5em 0;
 }
 
 p {
-  color: #f5d77c; /* paragraph text gold */
+  color: #f5d77c;
 }
 
 .section {
   max-width: 1200px;
   margin: auto;
-  padding: 20px;
+  padding: 60px 20px;
 }
 
-#showcase {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 15px;
-  scroll-snap-type: x mandatory;
-}
-
-#showcase::-webkit-scrollbar {
-  height: 10px;
-}
-
-#showcase::-webkit-scrollbar-thumb {
-  background: #f5d77c;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 15px;
-  min-width: 220px;
-  scroll-snap-align: start;
-  color: #f5d77c; /* card text gold */
-}
-
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 12px;
-  padding: 10px;
-}
-
-button {
-  width: 100%;
-  cursor: pointer;
-  margin-top: 5px;
-  padding: 10px;
-  border-radius: 12px;
-  border: none;
-  background: #f5d77c; /* button gold background */
-  color: #050505; /* dark text for contrast */
-  font-weight: 600;
-  transition: transform 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
+/* ---------- HERO SECTION ---------- */
 .hero-bg {
   position: fixed;
   inset: 0;
   z-index: -2;
-}
-
-.hero-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.8));
+  overflow: hidden;
 }
 
 .hero-bg img {
@@ -108,40 +54,131 @@ button:hover {
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
 
-@keyframes fade{
-  0%{opacity:0}
-  5%{opacity:1}
-  20%{opacity:1}
-  25%{opacity:0}
-  100%{opacity:0}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
 }
 
+@keyframes fade {
+  0%{opacity:0} 5%{opacity:1} 20%{opacity:1} 25%{opacity:0} 100%{opacity:0}
+}
+
+/* ---------- HERO TEXT ---------- */
+.hero-text {
+  position: relative;
+  text-align: center;
+  padding-top: 120px;
+}
+
+.hero-text h1 {
+  font-size: 3em;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.hero-text p {
+  font-size: 1.2em;
+  max-width: 800px;
+  margin: 20px auto;
+  line-height: 1.6;
+}
+
+/* ---------- SHOWCASE ---------- */
+#showcase {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scroll-snap-type: x mandatory;
+}
+
+#showcase::-webkit-scrollbar {
+  height: 10px;
+}
+#showcase::-webkit-scrollbar-thumb {
+  background: #f5d77c;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 15px;
+  min-width: 240px;
+  scroll-snap-align: start;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(245,215,124,0.6);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #111;
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.card h4 {
+  margin: 10px 0 5px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.card p {
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+
+button {
+  width: 100%;
+  cursor: pointer;
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #f5d77c;
+  color: #050505;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: #e0c156;
+}
+
+/* ---------- CHECKOUT FORM ---------- */
 #checkoutFormContainer {
   display: none;
-  background: rgba(30,30,30,.55);
-  padding: 20px;
+  background: rgba(30,30,30,.85);
+  padding: 30px;
   border-radius: 20px;
-  margin-top: 20px;
+  margin: 50px auto;
   border: 1px solid rgba(245,215,124,.4);
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 450px;
   color: #f5d77c;
 }
 
 #checkoutFormContainer input,
 #checkoutFormContainer textarea {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 10px;
   border: none;
   background: rgba(245,215,124,0.1);
-  color: #f5d77c; /* input text gold */
+  color: #f5d77c;
 }
 
 #checkoutFormContainer button {
-  margin-top: 10px;
+  margin-top: 12px;
   background: #f5d77c;
   color: #050505;
   font-weight: 600;
@@ -149,25 +186,30 @@ button:hover {
   border-radius: 12px;
   border: none;
   width: 100%;
+  font-size: 1em;
 }
 </style>
 </head>
 <body>
 
 <div class="hero-bg">
-<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+  <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+  <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+  <img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+  <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+  <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+</div>
+
+<div class="section hero-text">
+  <h1>TagShop Luxury Watches</h1>
+  <p>
+    AAA Quality • Free Shipping • Certificate & Presentation Box.<br>
+    Shop direct with verified suppliers or through TagShop for curated, tested timepieces. Premium quality, correct branding, and fast UK delivery.
+  </p>
 </div>
 
 <div class="section">
-<h1>TagShop Luxury Watches</h1>
-<p style="text-align:center">
-AAA Quality • Free Shipping • Certificate & Presentation Box. Feel free to shop direct with supplier, check reviews and photos, or shop with TagShop using our curated timepieces tested for quality, high grade, correct branding with presentation box and certified UK free shipping and guaranteed fast delivery. Our price reflects our service, thanks.
-</p>
-<div id="showcase"></div>
+  <div id="showcase"></div>
 </div>
 
 <div id="checkoutFormContainer"></div>
@@ -177,50 +219,50 @@ const WISE="https://wise.com/pay/me/davids14542";
 let showcase=[];
 
 function renderShowcase(){
- const sc=document.getElementById("showcase");
- sc.innerHTML="";
- showcase.slice(0,25).forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <p>Supplier: £${p.supplierPrice || 'N/A'} | TagShop: £${p.tagshopPrice || 'TBD'}</p>
-   <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
-   <button onclick="buySupplier('${p.link}')">Shop with Supplier</button>
-   <button onclick="checkout(${i})">Purchase with TagShop</button>`;
-  sc.appendChild(d);
- });
+  const sc=document.getElementById("showcase");
+  sc.innerHTML="";
+  showcase.slice(0,25).forEach((p,i)=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`
+      <img src="${p.img}">
+      <h4>${p.title}</h4>
+      <p>Supplier: £${p.supplierPrice || 'N/A'} | TagShop: £${p.tagshopPrice || 'TBD'}</p>
+      <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+      <button onclick="buySupplier('${p.link}')">Shop with Supplier</button>
+      <button onclick="checkout(${i})">Purchase with TagShop</button>`;
+    sc.appendChild(d);
+  });
 }
 
 function buySupplier(link){window.open(link,"_blank");}
 
 function checkout(i){
- const p=showcase[i];
- const c=document.getElementById("checkoutFormContainer");
- c.style.display="block";
- c.innerHTML=`
- <h2>Purchase with TagShop</h2>
- <p>${p.title}</p>
- <p>Price: £${p.tagshopPrice || 'TBD'}</p>
- <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
- <form id="contactForm">
-  <input type="text" placeholder="Full Name" required>
-  <input type="email" placeholder="Email" required>
-  <textarea placeholder="Delivery Address"></textarea>
-  <button type="submit">Confirm & Proceed to Payment</button>
- </form>`;
- document.getElementById("contactForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  window.open(WISE);
- });
+  const p=showcase[i];
+  const c=document.getElementById("checkoutFormContainer");
+  c.style.display="block";
+  c.innerHTML=`
+    <h2>Purchase with TagShop</h2>
+    <p>${p.title}</p>
+    <p>Price: £${p.tagshopPrice || 'TBD'}</p>
+    <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+    <form id="contactForm">
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <textarea placeholder="Delivery Address"></textarea>
+      <button type="submit">Confirm & Proceed to Payment</button>
+    </form>`;
+  document.getElementById("contactForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    window.open(WISE);
+  });
 }
 
 // Load showcase from localStorage
 window.onload=function(){
- const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
- showcase=saved; 
- renderShowcase();
+  const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+  showcase=saved; 
+  renderShowcase();
 };
 </script>
 
