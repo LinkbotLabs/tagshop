@@ -8,16 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --gold:#f5d77c;
-  --glass:rgba(25,25,25,.65);
+:root {
+  --gold:#d4af37;
+  --glass:rgba(15,15,15,0.75);
 }
 
-body{
+body {
   margin:0;
   font-family:Montserrat;
-  background:#050505;
   color:#fff;
+  background:#000;
 }
 
 /* HERO */
@@ -27,175 +27,115 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative;
+  text-align:center;
 }
 .hero::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.8));
+  background:rgba(0,0,0,.65);
 }
-.hero-box{
+.hero-content{
   position:relative;
+  max-width:1000px;
   background:var(--glass);
   padding:60px;
-  border-radius:20px;
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,215,0,.4);
-  text-align:center;
-  max-width:900px;
+  border-radius:18px;
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,215,0,.3);
 }
 .hero h1{
-  font-family:"Playfair Display";
+  font-family:Playfair Display;
   color:var(--gold);
   font-size:3rem;
 }
-.hero p{opacity:.9;}
+.hero p{font-size:1.1rem;opacity:.9;}
 .hero .cta{
-  display:inline-block;
-  margin-top:25px;
+  margin-top:20px;
   background:linear-gradient(135deg,#f5d77c,#b28d29);
-  padding:15px 40px;
-  border-radius:40px;
   color:#000;
+  padding:15px 40px;
+  border-radius:30px;
+  display:inline-block;
   font-weight:700;
   text-decoration:none;
 }
 
-/* Glass */
+/* Sections */
 .section{
+  padding:60px 20px;
   max-width:1200px;
   margin:auto;
-  padding:60px 20px;
 }
 .glass{
   background:var(--glass);
-  backdrop-filter:blur(15px);
-  border-radius:18px;
+  border-radius:15px;
   padding:30px;
+  backdrop-filter:blur(12px);
   border:1px solid rgba(255,215,0,.25);
 }
 
-/* Inputs */
-input,textarea{
+/* Search */
+input{
+  padding:12px;
   width:100%;
   max-width:500px;
-  padding:12px;
-  border-radius:30px;
   border:none;
-  margin-bottom:10px;
+  border-radius:30px;
 }
-
-/* Buttons */
 button{
-  background:linear-gradient(135deg,#f5d77c,#b28d29);
-  color:#000;
+  background:var(--gold);
   border:none;
   padding:12px 25px;
   border-radius:30px;
   font-weight:700;
   cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,.6);
-}
-button:hover{transform:translateY(-1px)}
-
-.quick button{
-  background:#222;
-  color:#fff;
-  margin:5px;
 }
 
 /* Products */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:25px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
 }
-
 .card{
-  background:rgba(255,255,255,.05);
-  border-radius:18px;
+  background:rgba(0,0,0,.75);
   padding:15px;
-  border:1px solid rgba(255,215,0,.25);
-  backdrop-filter:blur(12px);
-  box-shadow:0 15px 40px rgba(0,0,0,.7);
-  position:relative;
+  border-radius:15px;
+  border:1px solid rgba(255,215,0,.2);
 }
-
-.card img{
-  width:100%;
-  height:220px;
-  object-fit:contain;
-  background:#fff;
-  padding:10px;
-  border-radius:12px;
-}
-
-.card h4{
-  color:var(--gold);
-  font-size:1rem;
-  min-height:50px;
-}
-
-/* Price bubble */
-.price{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:linear-gradient(135deg,#f5d77c,#b28d29);
-  color:#000;
-  padding:6px 14px;
-  border-radius:20px;
-  font-weight:700;
-}
-
-/* Delivery */
-.delivery{
-  font-size:.8rem;
-  color:#7CFF7C;
-  margin-bottom:8px;
-}
-
-/* Card buttons */
-.buy-dh{
-  background:#111;
-  color:#fff;
-  width:100%;
-  margin-top:8px;
-}
-.buy-ts{
-  background:linear-gradient(135deg,#f5d77c,#b28d29);
-  color:#000;
-  width:100%;
-  margin-top:10px;
-}
+.card img{width:100%;border-radius:10px;}
+.card h4{color:var(--gold);}
+.buy-dh{background:#333;color:#fff;}
+.buy-ts{background:var(--gold);color:#000;margin-top:6px;width:100%}
 
 /* Checkout */
-#checkout{display:none;}
+#checkout{display:none;margin-top:40px;}
+input,textarea{margin:6px 0;}
 </style>
 </head>
 
 <body>
 
 <div class="hero">
-  <div class="hero-box">
+  <div class="hero-content">
     <h1>TagShop Luxury Watches</h1>
-    <p>Our experts select the best Rolex-style timepieces with UK pricing and insured delivery.</p>
+    <p>Hand-selected Rolex-style timepieces. UK price. Insured delivery. Authentic markings.</p>
     <p><strong>Buy direct or Buy with Confidence via TagShop.</strong></p>
-    <a href="#search" class="cta">Browse Collection</a>
+    <a href="#search" class="cta">Browse Watches</a>
   </div>
 </div>
 
 <div class="section glass" id="search">
-<h2>Search Watches</h2>
+<h2>Search DHgate Watches</h2>
 <input id="q" placeholder="Search luxury watches...">
 <button onclick="search()">Search</button>
-<div class="quick">
-<button onclick="quick('rolex explorer')">Explorer</button>
-<button onclick="quick('mens watches')">Men</button>
-<button onclick="quick('watch with box')">With Box</button>
-<button onclick="quick('chronograph')">Chronograph</button>
-</div>
+<p>
+<button onclick="quick('Mens watches')">Men’s Watches</button>
+<button onclick="quick('Rolex style watch')">Rolex Style</button>
+<button onclick="quick('Watch with box')">With Box</button>
+<button onclick="quick('Luxury chronograph')">Chronograph</button>
+</p>
 </div>
 
 <div class="section">
@@ -209,13 +149,13 @@ button:hover{transform:translateY(-1px)}
 </div>
 
 <div class="section glass" id="checkout">
-<h2>Secure UK Checkout</h2>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<input placeholder="Phone">
-<textarea placeholder="Delivery Address"></textarea>
+<h2>Delivery & Checkout</h2>
+<input id="name" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<textarea id="addr" placeholder="Delivery Address"></textarea>
 <button onclick="pay()">Proceed to Secure Wise Payment</button>
-<p id="thanks" style="display:none;color:var(--gold)">Thank you – your order confirmation has been emailed.</p>
+<p id="thanks" style="display:none;color:var(--gold)">Thank you! A confirmation email has been sent.</p>
 </div>
 
 <script>
@@ -224,40 +164,39 @@ const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 
-let last=[],showcase=[];
+let last=[]; let showcase=[];
 
 function quick(q){document.getElementById("q").value=q;search();}
 
 async function search(){
- const q=document.getElementById("q").value;
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}`);
- const d=await r.json();
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
-   title:i.title,
-   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+ let q=document.getElementById("q").value;
+ let r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}`);
+ let d=await r.json();
+ let res=d.items.filter(i=>i.link.includes("dhgate"));
+ last=res.map(i=>({
+   title:i.title, img:i.pagemap?.cse_image?.[0]?.src||"", 
    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF
  }));
- render(last,"results",true);
+ render(res,"results",true);
 }
 
-function render(arr,id){
+function render(arr,id,add){
  let box=document.getElementById(id); box.innerHTML="";
  arr.forEach((p,i)=>{
-   let d=document.createElement("div"); d.className="card";
-   d.innerHTML=`
-   <div class="price">£249</div>
+  let d=document.createElement("div"); d.className="card";
+  d.innerHTML=`
    <img src="${p.img}">
-   <div class="delivery">UK insured delivery</div>
    <h4>${p.title}</h4>
    <button class="buy-dh" onclick="window.open('${p.link}')">Buy on DHgate</button>
-   <button class="buy-ts" onclick="add(${i})">Add to TagShop</button>`;
-   box.appendChild(d);
+   <button class="buy-ts" onclick="add(${i})">Buy via TagShop</button>`;
+  box.appendChild(d);
  });
 }
 
 function add(i){
- showcase.push(last[i]);
- render(showcase,"showcase");
+ let p=last[i];
+ showcase.push(p);
+ render(showcase,"showcase",false);
  document.getElementById("checkout").style.display="block";
 }
 
