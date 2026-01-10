@@ -69,8 +69,8 @@ async function fetchResults(){
   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
   link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
   score:score(i.title),
-  supplierPrice: "",   // editable
-  tagshopPrice: ""     // editable
+  supplierPrice: "",
+  tagshopPrice: ""
  })).sort((a,b)=>b.score-a.score);
  renderResults();
  pageInfo.innerText="Page "+Math.ceil(startIndex/10);
@@ -134,10 +134,21 @@ function renderShowcase(){
   d.innerHTML=`
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <p>Supplier: £${p.supplierPrice} | TagShop: £${p.tagshopPrice}</p>
+   <label>Supplier Price:</label>
+   <input type="number" class="price-input" value="${p.supplierPrice}" onchange="updateShowcasePrice(${i}, 'supplier', this.value)">
+   <label>TagShop Price:</label>
+   <input type="number" class="price-input" value="${p.tagshopPrice}" onchange="updateShowcasePrice(${i}, 'tagshop', this.value)">
    <button onclick="removeItem(${i})">Remove</button>`;
   sc.appendChild(d);
  });
+}
+
+// Update price manually in showcase
+function updateShowcasePrice(i, type, value){
+  value = parseFloat(value) || 0;
+  if(type==='supplier') showcase[i].supplierPrice = value;
+  if(type==='tagshop') showcase[i].tagshopPrice = value;
+  saveShowcase();
 }
 
 function saveShowcase(){
@@ -146,9 +157,19 @@ function saveShowcase(){
 
 function goToShop(){ window.location.href="shop.html"; }
 
-window.onload=function(){
- const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
- showcase=saved; renderShowcase();
+// ---------------- Load existing showcase and ensure prices exist ----------------
+window.onload = function(){
+ const saved = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
+ // add price fields to old items if missing
+ showcase = saved.map(item => ({
+   title: item.title,
+   img: item.img,
+   link: item.link,
+   score: item.score || 0,
+   supplierPrice: item.supplierPrice || 0,
+   tagshopPrice: item.tagshopPrice || 0
+ }));
+ renderShowcase();
 };
 </script>
 
