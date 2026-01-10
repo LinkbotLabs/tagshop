@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{--gold:#f5d77c;--glass:rgba(0,0,0,.55);--diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d)}
+:root{--gold:#f5d77c;--glass:rgba(0,0,0,.6);--diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d)}
 body{margin:0;font-family:Montserrat;background:#000;color:#fff}
 h1,h2{font-family:Playfair Display;color:var(--gold)}
 .hero-bg{position:fixed;inset:0;z-index:-2}
@@ -47,9 +47,7 @@ button{background:var(--diamond);border:none;padding:10px;border-radius:30px;wid
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
-<div class="section">
-<div id="results"></div>
-</div>
+<div class="section"><div id="results"></div></div>
 
 <div class="section">
 <h2>Your Curated Selection</h2>
@@ -69,82 +67,53 @@ const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 
-const stock=[
-...Array(50).fill().map((_,i)=>({
-title:["Rolex","AP","Omega","Cartier","Breitling","Tag Heuer","Patek","IWC","Hublot","Panerai"][i%10]+" Model "+(i+1),
-img:"https://source.unsplash.com/featured/?luxury,watch,"+(i+1),
-price:i%3?150:250
-}))
-];
+const fallback=[...Array(50)].map((_,i)=>({
+  title:["Rolex","AP","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"][i%8]+" Luxury Watch",
+  img:"https://images.unsplash.com/photo-"+(1522312346375+i)+"?auto=format&w=500&q=80",
+  price:i%3==0?250:150,
+  link:"#"
+}));
 
-const results=document.getElementById("results");
-const showcaseDiv=document.getElementById("showcase");
-const cartBar=document.getElementById("cartBar");
-const cartCount=document.getElementById("cartCount");
-const cartTotal=document.getElementById("cartTotal");
-const checkout=document.getElementById("checkout");
-const thanks=document.getElementById("thanks");
-let showcase=[]; let lastResults=[];
+let results=[],cart=[];
 
-render(stock);
+window.onload=()=>render(fallback);
 
 async function search(){
- const term=document.getElementById("q").value;
- try{
-  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${term}&cx=${CX}&key=${API}`);
-  const d=await r.json();
-  if(!d.items) throw "quota";
-  lastResults=d.items.map(x=>({
-    title:x.title,
-    img:x.pagemap?.cse_image?.[0]?.src||stock[0].img,
-    price:250,
-    link:x.link+(x.link.includes("?")?"&":"?")+"aff="+AFF
-  }));
-  render(lastResults);
- }catch{
-  const f=stock.filter(x=>x.title.toLowerCase().includes(term.toLowerCase()));
-  render(f.length?f:stock);
- }
+const q=document.getElementById("q").value;
+try{
+const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q+" dhgate watch")}&cx=${CX}&key=${API}`);
+const d=await r.json();
+results=d.items.map(i=>({
+  title:i.title,
+  img:i.pagemap?.cse_image?.[0]?.src||fallback[0].img,
+  price:250,
+  link:i.link+(i.link.includes("?")?"&":"?")+"aff="+AFF
+}));
+render(results);
+}catch{render(fallback);}
 }
 
 function render(list){
- results.innerHTML="";
- list.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`<img src="${p.img}"><h4>${p.title}</h4><div>£${p.price}</div>
-  ${p.link?`<button class="buy" onclick="window.open('${p.link}')">Buy Direct</button>`:""}
-  <button onclick="add(${i},${JSON.stringify(list)})">Add to TagShop</button>`;
-  results.appendChild(d);
- });
+const r=document.getElementById("results");r.innerHTML="";
+list.forEach((p,i)=>{
+r.innerHTML+=`<div class=card><img src="${p.img}"><h4>${p.title}</h4><b>£${p.price}</b><button onclick="add(${i})">Add</button><button class=buy onclick="window.open('${p.link}')">Buy</button></div>`;
+});
+results=list;
 }
 
-function add(i,list){
- const p=list[i];
- if(showcase.find(x=>x.title==p.title))return;
- showcase.push(p);
- update();
+function add(i){
+cart.push(results[i]);
+document.getElementById("checkout").style.display="block";
+document.getElementById("cartBar").style.display="block";
+document.getElementById("cartCount").innerText=cart.length;
+document.getElementById("cartTotal").innerText="£"+cart.reduce((s,p)=>s+p.price,0);
 }
 
-function remove(i){showcase.splice(i,1);update()}
-
-function update(){
- showcaseDiv.innerHTML="";
- let total=0;
- showcase.forEach((p,i)=>{
-  total+=p.price;
-  showcaseDiv.innerHTML+=`<div class="card"><img src="${p.img}"><h4>${p.title}</h4><div>£${p.price}</div><button onclick="remove(${i})">Remove</button></div>`;
- });
- if(showcase.length){
-  cartBar.style.display="block";checkout.style.display="block";
-  cartCount.innerText=showcase.length;
-  cartTotal.innerText="£"+total;
- }else{
-  cartBar.style.display="none";checkout.style.display="none";
- }
+function pay(){
+window.open(WISE);
+document.getElementById("thanks").style.display="block";
 }
-
-function pay(){thanks.style.display="block";window.open(WISE)}
 </script>
+
 </body>
 </html>
