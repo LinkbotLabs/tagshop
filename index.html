@@ -10,117 +10,108 @@
 <style>
 :root{
   --gold:#f5d77c;
-  --glass:rgba(20,20,20,.55);
+  --glass:rgba(25,25,25,.55);
   --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
 }
-body{margin:0;font-family:Montserrat;background:#000;color:#fff;overflow-x:hidden}
-h1,h2{font-family:Playfair Display;color:var(--gold)}
-.section{max-width:1400px;margin:auto;padding:40px}
+body{
+  margin:0;
+  font-family:Montserrat;
+  background:#050505;
+  color:#fff;
+}
+h1,h2{font-family:"Playfair Display";color:var(--gold);}
+
+.hero{
+  background:url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+  padding:80px 20px;
+  text-align:center;
+  position:relative;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.6);
+}
+.hero-content{position:relative;max-width:900px;margin:auto}
+
+.trust-bar{
+  margin-top:20px;
+  padding:12px 20px;
+  border-radius:40px;
+  border:1px solid rgba(255,215,0,.4);
+  color:var(--gold);
+  background:rgba(0,0,0,.5);
+  box-shadow:0 0 25px rgba(245,215,124,.25);
+}
+
+.section{max-width:1300px;margin:auto;padding:30px}
 .glass{background:var(--glass);backdrop-filter:blur(18px);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,.35)}
 
-/* HERO */
-.hero-bg{position:fixed;inset:0;z-index:-2}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.85))}
-.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;animation:fade 60s infinite}
-.hero-bg img:nth-child(1){animation-delay:0s}
-.hero-bg img:nth-child(2){animation-delay:6s}
-.hero-bg img:nth-child(3){animation-delay:12s}
-.hero-bg img:nth-child(4){animation-delay:18s}
-.hero-bg img:nth-child(5){animation-delay:24s}
-.hero-bg img:nth-child(6){animation-delay:30s}
-.hero-bg img:nth-child(7){animation-delay:36s}
-.hero-bg img:nth-child(8){animation-delay:42s}
-.hero-bg img:nth-child(9){animation-delay:48s}
-.hero-bg img:nth-child(10){animation-delay:54s}
-@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
-
-/* CAROUSELS */
-#results,#top10{
-  display:flex;
-  gap:20px;
-  overflow-x:auto;
-  padding:20px 0;
-  scroll-snap-type:x mandatory;
-}
-#results>*,#top10>*{scroll-snap-align:start}
+#results,#top10{display:flex;gap:18px;overflow-x:auto;padding:20px 0;scroll-snap-type:x mandatory}
+#results > div,#top10 > div{scroll-snap-align:start}
 #results::-webkit-scrollbar,#top10::-webkit-scrollbar{height:8px}
 #results::-webkit-scrollbar-thumb,#top10::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
 
-/* CARDS */
 .card{
-  background:rgba(255,255,255,.08);
-  border-radius:20px;
-  padding:15px;
+  background:rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:12px;
   border:1px solid rgba(255,215,0,.3);
-  min-width:200px;
-  max-width:200px;
-  transition:.4s;
-  position:relative;
+  min-width:180px;
+  max-width:180px;
+  transition:.35s;
+  box-shadow:0 10px 30px rgba(0,0,0,.7);
 }
 .card:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 25px rgba(245,215,124,.8);
+  transform:translateY(-5px) scale(1.04);
+  box-shadow:
+    0 0 15px rgba(245,215,124,.5),
+    0 0 40px rgba(245,215,124,.3),
+    0 20px 50px rgba(0,0,0,.9);
+  border-color:#f5d77c;
 }
+
 .card img{
-  width:180px;height:180px;
+  width:160px;
+  height:160px;
   object-fit:contain;
   background:#fff;
   border-radius:12px;
   padding:8px;
-  transition:.5s;
+  transition:.4s;
 }
-.card:hover img{transform:scale(1.25)}
+.card:hover img{transform:scale(1.1)}
 
-.badge{
-  background:var(--gold);
-  color:#000;
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:.75rem;
-}
+.stars{color:#f5d77c;letter-spacing:2px;text-shadow:0 0 8px rgba(245,215,124,.6)}
+.verified{color:#7CFF7C;font-size:.7rem;margin:4px 0}
 
-/* BUTTONS */
 button{
   width:100%;
   border:none;
   padding:10px;
   border-radius:30px;
   font-weight:700;
-  margin-top:8px;
-  background:var(--diamond);
+  margin-top:6px;
   cursor:pointer;
-  box-shadow:0 0 12px rgba(245,215,124,.6);
-}
-button:hover{
-  box-shadow:0 0 25px rgba(255,255,255,.9),0 0 35px rgba(245,215,124,1);
+  background:var(--diamond);
 }
 .buy{background:#111;color:#fff}
-
-.nav{text-align:center}
-.nav button{width:auto;padding:8px 25px}
+.nav{text-align:center;margin:20px}
+.nav button{width:auto;padding:8px 20px}
 </style>
 </head>
 
 <body>
 
-<div class="hero-bg">
-<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a">
-<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1">
-<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a">
-<img src="https://images.unsplash.com/photo-1519741497674-611481863552">
-<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3">
-<img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5a">
-<img src="https://images.unsplash.com/photo-1600087626014-e652e18bbff2">
-<img src="https://images.unsplash.com/photo-1612817159954-5e36bcbf7b92">
-<img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa">
-<img src="https://images.unsplash.com/photo-1612293974874-327fa21c5f1b">
-</div>
-
-<div class="section glass">
-<h1>TagShop Luxury Watch Concierge</h1>
-<p>Dealer-verified luxury timepieces with correct weight, markings and UK delivery.</p>
-<input id="q" placeholder="Search Rolex, Omega, Patek, AP, TAG Heuer…">
-<button onclick="search()">Search Dealer Network</button>
+<div class="hero">
+  <div class="hero-content">
+    <h1>TagShop Luxury Watch Concierge</h1>
+    <p>We source the highest quality versions with correct weight, original markings and insured UK delivery.</p>
+    <div class="trust-bar">★★★★★ For your peace of mind we welcome you to check UK reviews on our supplier stores</div>
+    <input id="q" placeholder="Search Rolex, Omega, AP, Patek…" style="margin-top:20px;padding:12px;border-radius:30px;border:none;width:80%">
+    <button onclick="search()">Search Dealer Network</button>
+  </div>
 </div>
 
 <div class="section">
@@ -139,7 +130,7 @@ button:hover{
 
 <div class="section">
 <h2>Your Reserved Watches</h2>
-<div id="showcase"></div>
+<div id="showcase" style="display:flex;gap:18px;flex-wrap:wrap"></div>
 </div>
 
 <script>
@@ -150,27 +141,29 @@ const AFF="2545671";
 let startIndex=1,last=[],showcase=[];
 let top10=JSON.parse(localStorage.getItem("top10")||"[]");
 
-function dealerScore(t){
+function score(t){
  t=t.toLowerCase();let s=0;
  if(t.includes("aaa"))s+=3;
  if(t.includes("box"))s+=2;
- if(t.includes("papers"))s+=2;
  if(t.includes("sapphire"))s+=2;
  if(t.includes("904l"))s+=3;
- if(t.includes("automatic"))s+=2;
  return s;
 }
+
+function formatPrice(p){return Math.round(p)}
 
 async function search(){startIndex=1;fetchResults()}
 async function fetchResults(){
  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q.value)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
  last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>{
+  const price=(Math.random()*200+120);
   return{
    title:i.title,
-   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
+   img:i.pagemap?.cse_image?.[0]?.src||"https://i.imgur.com/JbGQH6g.png",
    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
-   score:dealerScore(i.title)
+   score:score(i.title),
+   price:price
   }
  }).sort((a,b)=>b.score-a.score);
  renderResults();
@@ -183,21 +176,19 @@ function renderResults(){
  results.innerHTML+=`
  <div class="card">
   <img src="${p.img}">
+  <div class="stars">★★★★★</div>
+  <div class="verified">✔ TagShop Verified</div>
   <h4>${p.title}</h4>
-  <div class="badge">Dealer Score ${p.score}</div>
+  <div style="color:#f5d77c">£${formatPrice(p.price)}</div>
   <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
   <button onclick="addTop10(${i})">Add to Top 10</button>
  </div>`;
  });
 }
 
-function nextPage(){startIndex+=10;fetchResults()}
-function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
-
 function addTop10(i){
- if(top10.length>=10)return;
  const p=last[i];
- if(top10.find(x=>x.link===p.link))return;
+ if(top10.find(x=>x.link===p.link)||top10.length>=10)return;
  top10.push(p);
  localStorage.setItem("top10",JSON.stringify(top10));
  renderTop10();
@@ -206,26 +197,52 @@ function addTop10(i){
 function addToShowcase(p){
  if(showcase.find(x=>x.link===p.link))return;
  showcase.push(p);
- document.getElementById("showcase").innerHTML+=`
- <div class="card"><img src="${p.img}"><h4>${p.title}</h4><div style="color:#f5d77c">£299</div></div>`;
+ renderShowcase();
 }
 
 function renderTop10(){
- const c=document.getElementById("top10");
- c.innerHTML="";
+ top10.innerHTML="";
+ document.getElementById("top10").innerHTML="";
  top10.forEach((p,i)=>{
-  c.innerHTML+=`
-   <div class="card">
-    <img src="${p.img}">
-    <h4>${p.title}</h4>
-    <div class="badge">TagShop Verified</div>
-    <div style="color:#f5d77c">£299</div>
-    <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
-    <button onclick="addToShowcase(top10[${i}])">Reserve with TagShop</button>
-   </div>`;
+  document.getElementById("top10").innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <div class="stars">★★★★★</div>
+   <div class="verified">✔ TagShop Verified</div>
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">£299</div>
+   <button class="buy" onclick="window.open('${p.link}','_blank')">Buy Direct</button>
+   <button onclick="addToShowcase(top10[${i}])">Reserve with TagShop</button>
+   <button onclick="removeTop(${i})">Remove</button>
+  </div>`;
  });
 }
+
+function removeTop(i){
+ top10.splice(i,1);
+ localStorage.setItem("top10",JSON.stringify(top10));
+ renderTop10();
+}
+
+function renderShowcase(){
+ showcaseEl=document.getElementById("showcase");
+ showcaseEl.innerHTML="";
+ showcase.forEach(p=>{
+  showcaseEl.innerHTML+=`
+  <div class="card">
+   <img src="${p.img}">
+   <div class="stars">★★★★★</div>
+   <h4>${p.title}</h4>
+   <div style="color:#f5d77c">£299</div>
+  </div>`;
+ });
+}
+
+function nextPage(){startIndex+=10;fetchResults()}
+function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
+
 renderTop10();
 </script>
+
 </body>
 </html>
