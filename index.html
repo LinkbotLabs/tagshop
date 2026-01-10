@@ -7,7 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{--gold:#f5d77c;--glass:rgba(0,0,0,.6);--diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d)}
+:root{
+ --gold:#f5d77c;
+ --glass:rgba(0,0,0,.6);
+ --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d)
+}
 body{margin:0;font-family:Montserrat;background:#000;color:#fff}
 h1,h2{font-family:Playfair Display;color:var(--gold)}
 .hero-bg{position:fixed;inset:0;z-index:-2}
@@ -68,21 +72,23 @@ const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 
 const watchImgs=[
- "https://upload.wikimedia.org/wikipedia/commons/8/8c/Rolex_Submariner_116610LV.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/5/57/Audemars_Piguet_Royal_Oak.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/9/9f/Omega_Seamaster_300.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/0/09/Breitling_Navitimer.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/2/2f/Cartier_Santos_100.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/3/3a/Tag_Heuer_Carrera.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/4/4b/IWC_Big_Pilot.jpg",
- "https://upload.wikimedia.org/wikipedia/commons/6/6e/Hublot_Big_Bang.jpg"
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/rolex.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/ap.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/omega.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/breitling.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/cartier.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/tagheuer.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/iwc.jpg",
+ "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/hublot.jpg"
 ];
 
+const brands=["Rolex","Audemars Piguet","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"];
+
 const fallback=[...Array(50)].map((_,i)=>({
-  title:["Rolex","Audemars Piguet","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"][i%8]+" Luxury Watch",
-  img:watchImgs[i%8],
-  price:i%3==0?250:150,
-  link:"https://www.dhgate.com/?f=bm|aff|"+AFF
+ title:brands[i%8]+" Luxury Watch",
+ img:watchImgs[i%8],
+ price:i%3==0?250:150,
+ link:"https://www.dhgate.com/?f=bm|aff|"+AFF
 }));
 
 let results=[],cart=[];
@@ -90,39 +96,49 @@ let results=[],cart=[];
 window.onload=()=>render(fallback);
 
 async function search(){
-const q=document.getElementById("q").value;
-try{
-const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q+" dhgate watch")}&cx=${CX}&key=${API}`);
-const d=await r.json();
-results=d.items.map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src||fallback[0].img,
-  price:250,
-  link:i.link+(i.link.includes("?")?"&":"?")+"aff="+AFF
-}));
-render(results);
-}catch{render(fallback);}
+ const q=document.getElementById("q").value;
+ try{
+  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q+" dhgate watch")}&cx=${CX}&key=${API}`);
+  const d=await r.json();
+  results=d.items.map(i=>({
+    title:i.title,
+    img:i.pagemap?.cse_image?.[0]?.src || fallback[0].img,
+    price:250,
+    link:i.link+(i.link.includes("?")?"&":"?")+"aff="+AFF
+  }));
+  render(results);
+ }catch{
+  render(fallback);
+ }
 }
 
 function render(list){
-const r=document.getElementById("results");r.innerHTML="";
-list.forEach((p,i)=>{
-r.innerHTML+=`<div class=card><img src="${p.img}"><h4>${p.title}</h4><b>£${p.price}</b><button onclick="add(${i})">Add</button><button class=buy onclick="window.open('${p.link}')">Buy</button></div>`;
-});
-results=list;
+ const r=document.getElementById("results");
+ r.innerHTML="";
+ list.forEach((p,i)=>{
+  r.innerHTML+=`
+   <div class="card">
+    <img src="${p.img}">
+    <h4>${p.title}</h4>
+    <b>£${p.price}</b>
+    <button onclick="add(${i})">Add</button>
+    <button class="buy" onclick="window.open('${p.link}')">Buy</button>
+   </div>`;
+ });
+ results=list;
 }
 
 function add(i){
-cart.push(results[i]);
-document.getElementById("checkout").style.display="block";
-document.getElementById("cartBar").style.display="block";
-document.getElementById("cartCount").innerText=cart.length;
-document.getElementById("cartTotal").innerText="£"+cart.reduce((s,p)=>s+p.price,0);
+ cart.push(results[i]);
+ document.getElementById("checkout").style.display="block";
+ document.getElementById("cartBar").style.display="block";
+ document.getElementById("cartCount").innerText=cart.length;
+ document.getElementById("cartTotal").innerText="£"+cart.reduce((s,p)=>s+p.price,0);
 }
 
 function pay(){
-window.open(WISE);
-document.getElementById("thanks").style.display="block";
+ window.open(WISE);
+ document.getElementById("thanks").style.display="block";
 }
 </script>
 
