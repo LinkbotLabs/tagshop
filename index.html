@@ -6,27 +6,150 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
-h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
-.section{max-width:1200px;margin:auto;padding:20px;}
-#showcase{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;scroll-snap-type:x mandatory;}
-#showcase::-webkit-scrollbar{height:10px}
-#showcase::-webkit-scrollbar-thumb{background:#f5d77c;}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:220px;scroll-snap-align:start;}
-.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
-button{width:100%;cursor:pointer;margin-top:5px;padding:10px;border-radius:12px;border:none;}
-.hero-bg{position:fixed;inset:0;z-index:-2}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
-.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
+body {
+  margin: 0;
+  font-family: Montserrat, sans-serif;
+  background: #050505;
+  color: #f5d77c; /* all normal text gold */
+}
+
+h1, h2 {
+  font-family: 'Playfair Display', serif;
+  color: #f5d77c; /* headings gold */
+  text-align: center;
+}
+
+p {
+  color: #f5d77c; /* paragraph text gold */
+}
+
+.section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+#showcase {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scroll-snap-type: x mandatory;
+}
+
+#showcase::-webkit-scrollbar {
+  height: 10px;
+}
+
+#showcase::-webkit-scrollbar-thumb {
+  background: #f5d77c;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 15px;
+  min-width: 220px;
+  scroll-snap-align: start;
+  color: #f5d77c; /* card text gold */
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+button {
+  width: 100%;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #f5d77c; /* button gold background */
+  color: #050505; /* dark text for contrast */
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.8));
+}
+
+.hero-bg img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fade 30s infinite;
+  opacity: 0;
+}
+
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
 .hero-bg img:nth-child(3){animation-delay:12s}
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
-@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
-#checkoutFormContainer{display:none;background:rgba(30,30,30,.55);padding:20px;border-radius:20px;margin-top:20px;border:1px solid rgba(245,215,124,.4);max-width:400px;margin:auto}
-#checkoutFormContainer input,#checkoutFormContainer textarea{width:100%;padding:8px;margin-bottom:10px;border-radius:8px;border:none}
-#checkoutFormContainer button{margin-top:10px}
+
+@keyframes fade{
+  0%{opacity:0}
+  5%{opacity:1}
+  20%{opacity:1}
+  25%{opacity:0}
+  100%{opacity:0}
+}
+
+#checkoutFormContainer {
+  display: none;
+  background: rgba(30,30,30,.55);
+  padding: 20px;
+  border-radius: 20px;
+  margin-top: 20px;
+  border: 1px solid rgba(245,215,124,.4);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #f5d77c;
+}
+
+#checkoutFormContainer input,
+#checkoutFormContainer textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(245,215,124,0.1);
+  color: #f5d77c; /* input text gold */
+}
+
+#checkoutFormContainer button {
+  margin-top: 10px;
+  background: #f5d77c;
+  color: #050505;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+}
 </style>
 </head>
 <body>
@@ -41,7 +164,9 @@ button{width:100%;cursor:pointer;margin-top:5px;padding:10px;border-radius:12px;
 
 <div class="section">
 <h1>TagShop Luxury Watches</h1>
-<p style="text-align:center">AAA Quality • Free Shipping • Certificate & Presentation Box feel free to shop direct with supplier check reviews and photos and purchase or shop with tagshop using our curated time pieces tested for quality high grade correct branding with presentation box and certified uk free shipping and guaranteed fast delivery our price reflects our service thanks </p>
+<p style="text-align:center">
+AAA Quality • Free Shipping • Certificate & Presentation Box. Feel free to shop direct with supplier, check reviews and photos, or shop with TagShop using our curated timepieces tested for quality, high grade, correct branding with presentation box and certified UK free shipping and guaranteed fast delivery. Our price reflects our service, thanks.
+</p>
 <div id="showcase"></div>
 </div>
 
