@@ -2,179 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop – Luxury Watch Concierge</title>
+<title>TagShop – Shop</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Montserrat', sans-serif; margin: 20px; background: #f7f7f7; }
-  h1, h2 { font-family: 'Playfair Display', serif; }
-  #searchContainer { margin-bottom: 20px; }
-  #searchResults div, #productWall div { background: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-  button { margin-left: 10px; padding: 5px 10px; cursor: pointer; }
-  #checkoutFormContainer { background: #fff; padding: 20px; border-radius: 8px; display:none; max-width: 400px; margin-top: 20px; }
-  input, textarea { width: 100%; padding: 5px; margin-bottom: 10px; }
-  .pagination { margin-top: 10px; }
+body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
+h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
+.section{max-width:1200px;margin:auto;padding:20px;}
+#showcase{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;scroll-snap-type:x mandatory;}
+#showcase::-webkit-scrollbar{height:10px}
+#showcase::-webkit-scrollbar-thumb{background:#f5d77c;}
+.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:220px;scroll-snap-align:start;}
+.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
+button{width:100%;cursor:pointer;margin-top:5px;padding:10px;border-radius:12px;border:none;}
+.hero-bg{position:fixed;inset:0;z-index:-2}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;animation:fade 30s infinite;opacity:0}
+.hero-bg img:nth-child(1){animation-delay:0s}
+.hero-bg img:nth-child(2){animation-delay:6s}
+.hero-bg img:nth-child(3){animation-delay:12s}
+.hero-bg img:nth-child(4){animation-delay:18s}
+.hero-bg img:nth-child(5){animation-delay:24s}
+@keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
+#checkoutFormContainer{display:none;background:rgba(30,30,30,.55);padding:20px;border-radius:20px;margin-top:20px;border:1px solid rgba(245,215,124,.4);max-width:400px;margin:auto}
+#checkoutFormContainer input,#checkoutFormContainer textarea{width:100%;padding:8px;margin-bottom:10px;border-radius:8px;border:none}
+#checkoutFormContainer button{margin-top:10px}
 </style>
 </head>
 <body>
 
-<h1>TagShop – Luxury Watch Concierge</h1>
-
-<!-- Admin login -->
-<button id="adminLoginBtn">Admin Login</button>
-
-<!-- Admin search -->
-<div id="searchContainer" style="display:none;">
-  <h2>Admin Search</h2>
-  <input type="text" id="searchInput" placeholder="Search watches">
-  <div id="searchResults"></div>
-  <div class="pagination">
-    <button id="prevBtn">Previous</button>
-    <button id="nextBtn">Next</button>
-  </div>
+<div class="hero-bg">
+<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
 </div>
 
-<!-- Product wall visible to public -->
-<h2>Product Wall</h2>
-<div id="productWall"></div>
+<div class="section">
+<h1>TagShop Luxury Watches</h1>
+<p style="text-align:center">AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+<div id="showcase"></div>
+</div>
 
-<!-- Checkout/contact form -->
 <div id="checkoutFormContainer"></div>
 
 <script>
-// -------------------- Product Data --------------------
-const products = [
-  { id: 1, name: "Rolex Submariner", brand: "Rolex", features: ["Box", "Automatic"], price: 12000, supplierLink:"#"},
-  { id: 2, name: "Omega Seamaster", brand: "Omega", features: ["Box", "Chronometer"], price: 9000, supplierLink:"#"},
-  { id: 3, name: "Tag Heuer Carrera", brand: "Tag Heuer", features: ["Box"], price: 7500, supplierLink:"#"},
-  { id: 4, name: "Patek Philippe Nautilus", brand: "Patek Philippe", features: ["Box"], price: 30000, supplierLink:"#"}
-  // Add more products here
-];
+const WISE="https://wise.com/pay/me/davids14542";
+let showcase=[];
 
-// -------------------- Admin Login --------------------
-let isAdmin = false;
-const adminPassword = "YOUR_SECRET_PASSWORD"; // change to your password
-
-document.getElementById("adminLoginBtn").addEventListener("click", () => {
-  const password = prompt("Enter admin password:");
-  if(password === adminPassword){
-    isAdmin = true;
-    document.getElementById("searchContainer").style.display = "block";
-    alert("Admin mode enabled");
-  } else {
-    alert("Wrong password");
-  }
-});
-
-// -------------------- Search --------------------
-const searchInput = document.getElementById("searchInput");
-const searchResultsContainer = document.getElementById("searchResults");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-
-let currentResults = [];
-let currentPage = 0;
-const resultsPerPage = 2; // adjust number of results per page
-
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase();
-  currentResults = products.filter(p => 
-    p.name.toLowerCase().includes(query) ||
-    p.brand.toLowerCase().includes(query) ||
-    p.features.some(f => f.toLowerCase().includes(query))
-  );
-  currentPage = 0;
-  renderSearchResults();
-});
-
-function renderSearchResults(){
-  searchResultsContainer.innerHTML = "";
-  if(currentResults.length === 0){
-    searchResultsContainer.innerHTML = "<p>No results</p>";
-    return;
-  }
-  const start = currentPage * resultsPerPage;
-  const end = start + resultsPerPage;
-  const pageResults = currentResults.slice(start, end);
-
-  pageResults.forEach(p => {
-    const div = document.createElement("div");
-    div.innerHTML = `${p.name} - ${p.brand} - $${p.price} 
-      <button class="addBtn">Add to Wall</button>`;
-    div.querySelector(".addBtn").addEventListener("click", () => addToWall(p));
-    searchResultsContainer.appendChild(div);
-  });
+function renderShowcase(){
+ const sc=document.getElementById("showcase");
+ sc.innerHTML="";
+ showcase.slice(0,25).forEach((p,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <img src="${p.img}">
+   <h4>${p.title}</h4>
+   <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+   <button onclick="buySupplier('${p.link}')">Shop with Supplier</button>
+   <button onclick="checkout(${i})">Purchase with TagShop</button>`;
+  sc.appendChild(d);
+ });
 }
 
-prevBtn.addEventListener("click", () => {
-  if(currentPage > 0){ currentPage--; renderSearchResults(); }
-});
+function buySupplier(link){window.open(link,"_blank");}
 
-nextBtn.addEventListener("click", () => {
-  if((currentPage + 1) * resultsPerPage < currentResults.length){
-    currentPage++; renderSearchResults();
-  }
-});
-
-// -------------------- Product Wall --------------------
-let productWall = [];
-
-function addToWall(product){
-  if(!productWall.find(p => p.id === product.id)){
-    productWall.push(product);
-    renderWall();
-  }
+function checkout(i){
+ const p=showcase[i];
+ const c=document.getElementById("checkoutFormContainer");
+ c.style.display="block";
+ c.innerHTML=`
+ <h2>Purchase with TagShop</h2>
+ <p>${p.title}</p>
+ <form id="contactForm">
+  <input type="text" placeholder="Full Name" required>
+  <input type="email" placeholder="Email" required>
+  <textarea placeholder="Delivery Address"></textarea>
+  <button type="submit">Confirm & Proceed to Payment</button>
+ </form>`;
+ document.getElementById("contactForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  window.open(WISE);
+ });
 }
 
-function renderWall(){
-  const wall = document.getElementById("productWall");
-  wall.innerHTML = "";
-  productWall.forEach(p => {
-    const div = document.createElement("div");
-    div.innerHTML = `${p.name} - $${p.price} 
-      <button class="supplierBtn">Buy with Supplier</button> 
-      <button class="tagshopBtn">Buy with TagShop</button>`;
-    
-    // Buy with Supplier
-    div.querySelector(".supplierBtn").addEventListener("click", () => {
-      window.open(p.supplierLink, "_blank");
-    });
-
-    // Buy with TagShop
-    div.querySelector(".tagshopBtn").addEventListener("click", () => openCheckout(p));
-
-    wall.appendChild(div);
-  });
-}
-
-// -------------------- Checkout / Contact Form --------------------
-const checkoutContainer = document.getElementById("checkoutFormContainer");
-
-function openCheckout(product){
-  checkoutContainer.style.display = "block";
-  checkoutContainer.innerHTML = `
-    <h3>Buying with TagShop</h3>
-    <p>Product: ${product.name}</p>
-    <p>Brand: ${product.brand}</p>
-    <p>Price: $${product.price}</p>
-    <form id="contactForm">
-      <label>Name:</label><br><input type="text" name="name" required><br>
-      <label>Email:</label><br><input type="email" name="email" required><br>
-      <label>Message / Notes:</label><br>
-      <textarea name="message" placeholder="Optional"></textarea><br>
-      <button type="submit">Confirm & Pay</button>
-    </form>
-  `;
-
-  document.getElementById("contactForm").addEventListener("submit", (e)=>{
-    e.preventDefault();
-    // Here you can also send form data via EmailJS or Formspree if desired
-
-    // Redirect to Wise
-    window.location.href = "https://wise.com/pay/your-payment-link";
-  });
-}
-
+window.onload=function(){
+ const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+ showcase=saved; renderShowcase();
+};
 </script>
+
 </body>
 </html>
