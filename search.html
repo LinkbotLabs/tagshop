@@ -69,8 +69,8 @@ async function fetchResults(){
   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
   link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
   score:score(i.title),
-  supplierPrice: "",   // manually editable
-  tagshopPrice: ""     // manually editable
+  supplierPrice: "",   // editable
+  tagshopPrice: ""     // editable
  })).sort((a,b)=>b.score-a.score);
  renderResults();
  pageInfo.innerText="Page "+Math.ceil(startIndex/10);
@@ -100,14 +100,25 @@ function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
 
 // ---------------- Showcase ----------------
 function add(i){
- const p=last[i];
- // get manual prices
- p.supplierPrice = document.getElementById(`supplier-${i}`).value;
- p.tagshopPrice = document.getElementById(`tagshop-${i}`).value;
- 
- if(showcase.find(x=>x.link===p.link)) return;
- if(showcase.length>=25) {alert("Max 25 items"); return;}
- showcase.push(p);
+ const p = last[i];
+ // read and parse prices
+ const supplier = parseFloat(document.getElementById(`supplier-${i}`).value) || 0;
+ const tagshop = parseFloat(document.getElementById(`tagshop-${i}`).value) || 0;
+
+ // create new object to push into showcase
+ const item = {
+   title: p.title,
+   img: p.img,
+   link: p.link,
+   score: p.score,
+   supplierPrice: supplier,
+   tagshopPrice: tagshop
+ };
+
+ if(showcase.find(x => x.link === item.link)) return;
+ if(showcase.length >= 25) { alert("Max 25 items"); return; }
+
+ showcase.push(item);
  renderShowcase();
  saveShowcase();
 }
