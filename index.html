@@ -71,15 +71,18 @@ const CX="f7e219616fe1d4629";
 const AFF="2545671";
 const WISE="https://wise.com/pay/me/davids14542";
 
+// Proxy GitHub raw images so GitHub Pages allows them
+const proxy = u => "https://images.weserv.nl/?url=" + encodeURIComponent(u.replace("https://",""));
+
 const watchImgs=[
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/rolex.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/ap.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/omega.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/breitling.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/cartier.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/tagheuer.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/iwc.jpg",
- "https://raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/hublot.jpg"
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/rolex.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/ap.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/omega.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/breitling.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/cartier.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/tagheuer.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/iwc.jpg"),
+ proxy("raw.githubusercontent.com/linkbotlabs/tagshop-assets/main/hublot.jpg")
 ];
 
 const brands=["Rolex","Audemars Piguet","Omega","Breitling","Cartier","Tag Heuer","IWC","Hublot"];
@@ -102,7 +105,7 @@ async function search(){
   const d=await r.json();
   results=d.items.map(i=>({
     title:i.title,
-    img:i.pagemap?.cse_image?.[0]?.src || fallback[0].img,
+    img: proxy(i.pagemap?.cse_image?.[0]?.src || watchImgs[0]),
     price:250,
     link:i.link+(i.link.includes("?")?"&":"?")+"aff="+AFF
   }));
