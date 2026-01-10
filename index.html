@@ -10,8 +10,8 @@
 <style>
 :root{
  --gold:#f5d77c;
- --glass:rgba(40,40,40,.65);
- --diamond:linear-gradient(145deg,#fff,#f5d77c,#caa54d);
+ --glass:rgba(40,40,40,.6);
+ --diamond:linear-gradient(145deg,#ffffff,#f5d77c,#caa54d);
 }
 
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;overflow-x:hidden}
@@ -25,6 +25,7 @@ body{margin:0;font-family:Montserrat;background:#050505;color:#fff;overflow-x:hi
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
 @keyframes fade{0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}100%{opacity:0}}
+
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.85))}
 
 .section{max-width:1200px;margin:auto;padding:30px 20px}
@@ -53,29 +54,6 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
  backdrop-filter:blur(18px);padding:15px 25px;border-radius:40px;
  border:1px solid rgba(255,215,0,.4);display:none;z-index:10
 }
-
-.badges span{
- display:inline-block;
- background:#111;
- padding:8px 15px;
- border-radius:20px;
- margin:5px;
- border:1px solid var(--gold);
- font-size:.8rem;
-}
-
-#vip{
- position:fixed;
- bottom:90px;
- right:20px;
- background:#25D366;
- color:#000;
- padding:15px 20px;
- border-radius:40px;
- font-weight:700;
- cursor:pointer;
- z-index:10;
-}
 </style>
 </head>
 
@@ -91,14 +69,7 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 
 <div class="section glass">
 <h1>TagShop Luxury Watch Concierge</h1>
-<p>We verify, source and deliver the best version of every watch. Correct weight, original markings, insured UK delivery.</p>
-
-<div class="badges">
-<span>✔ Verified Suppliers</span>
-<span>✔ Insured Delivery</span>
-<span>✔ UK Support</span>
-<span>✔ Quality Checked</span>
-</div>
+<p>We source the best version of every timepiece with correct weight, original markings and insured UK delivery. Buy direct or buy with confidence via TagShop.</p>
 </div>
 
 <div class="section">
@@ -111,13 +82,14 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 </div>
 
 <div class="section glass">
-<input id="q" placeholder="Search Rolex, Omega, Patek, AP, Breitling…">
+<input id="q" placeholder="Search Rolex, Omega, AP, Patek, Breitling…">
 <button onclick="search()">Search</button>
 </div>
 
 <div class="section glass">
-<h2>Recommended For You</h2>
-<div id="recommended" class="grid"></div>
+<h2>Why Buy With TagShop?</h2>
+<p>Some sellers misrepresent products or don’t communicate. We verify, source and ship the best version to your door — guaranteed.</p>
+<p><strong>Only 2 pieces of each model are sourced per week.</strong></p>
 </div>
 
 <div class="section">
@@ -126,10 +98,7 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 </div>
 
 <div class="section glass" id="checkout" style="display:none">
-<p>⏳ Reserved for <span id="timer">10:00</span></p>
-<label><input type="checkbox" id="box"> Add premium box (+£20)</label><br>
-<label><input type="checkbox" id="fast"> Express insured shipping (+£30)</label>
-<br><br>
+<p>⏳ Your watches are reserved for <span id="timer">10:00</span></p>
 <input placeholder="Full Name">
 <input placeholder="Email">
 <textarea placeholder="Delivery Address"></textarea>
@@ -141,10 +110,6 @@ button{width:100%;background:var(--diamond);border:none;padding:12px;border-radi
 <span id="cartCount">0</span> Reserved • <span id="cartTotal">£0</span>
 </div>
 
-<div id="vip" onclick="window.open('https://wa.me/447000000000')">
-💬 VIP Concierge
-</div>
-
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
@@ -154,6 +119,9 @@ const PRICE=249;
 
 let last=[],showcase=[],time=600;
 
+function scrollLeft(){document.getElementById("results").scrollLeft-=600}
+function scrollRight(){document.getElementById("results").scrollLeft+=600}
+
 setInterval(()=>{
  if(showcase.length>0){
   time--;
@@ -161,9 +129,6 @@ setInterval(()=>{
   document.getElementById("timer").innerText=`${m}:${s.toString().padStart(2,"0")}`;
  }
 },1000);
-
-function scrollLeft(){document.getElementById("results").scrollLeft-=600}
-function scrollRight(){document.getElementById("results").scrollLeft+=600}
 
 async function search(){
  const q=document.getElementById("q").value;
@@ -175,7 +140,6 @@ async function search(){
   link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF
  }));
  render(last,"results");
- render(last.slice(0,3),"recommended");
 }
 
 function render(arr,id){
@@ -184,7 +148,7 @@ function render(arr,id){
  arr.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
-  if(id==="results" || id==="recommended"){
+  if(id==="results"){
    d.innerHTML=`
     <img src="${p.img}">
     <h4>${p.title}</h4>
@@ -223,14 +187,9 @@ function removeItem(i){
 
 function updateCart(){
  document.getElementById("cartBar").style.display="block";
- let total=showcase.length*PRICE;
- if(document.getElementById("box").checked) total+=20;
- if(document.getElementById("fast").checked) total+=30;
  document.getElementById("cartCount").innerText=showcase.length;
- document.getElementById("cartTotal").innerText="£"+total;
+ document.getElementById("cartTotal").innerText="£"+(showcase.length*PRICE);
 }
-
-document.addEventListener("change",updateCart);
 
 function pay(){
  document.getElementById("thanks").style.display="block";
