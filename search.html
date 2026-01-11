@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <title>TagShop Admin – Search & Curate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
 h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
@@ -14,19 +16,23 @@ h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
 .card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
 input,button{width:100%;padding:8px;margin-top:6px;border-radius:8px;border:none;}
 button{cursor:pointer;background:#f5d77c;color:#050505;font-weight:600;}
+#pager{display:flex;justify-content:center;align-items:center;gap:15px;margin-top:15px;}
+#pager span{font-weight:600;}
 </style>
 </head>
+
 <body>
 
 <div class="section">
 <h1>TagShop Dealer Search</h1>
 <input id="q" placeholder="Rolex Submariner, AP Royal Oak, Patek…">
-<button onclick="search()">Search</button>
+<button onclick="search(true)">Search</button>
 </div>
 
 <div class="section">
 <h2>Dealer Results</h2>
 <div id="results"></div>
+<div id="pager"></div>
 </div>
 
 <div class="section">
@@ -41,6 +47,9 @@ const CX="f7e219616fe1d4629";
 const AFF="2545671";
 
 let last=[], showcase=[];
+let currentQuery="";
+let startIndex=1;
+const pageSize=10;
 
 function score(t){
  t=t.toLowerCase();
@@ -53,12 +62,20 @@ function score(t){
  return s;
 }
 
-async function search(){
- const q=document.getElementById("q").value;
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(q)}&cx=${CX}&key=${API}`);
+async function search(newSearch){
+ if(newSearch){
+   startIndex=1;
+   currentQuery=document.getElementById("q").value;
+ }
+
+ if(!currentQuery) return;
+
+ const r=await fetch(
+  `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`
+ );
  const d=await r.json();
 
- last=d.items.map(i=>({
+ last=(d.items||[]).map(i=>({
    title:i.title,
    img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
@@ -68,6 +85,7 @@ async function search(){
  })).sort((a,b)=>b.score-a.score);
 
  renderResults();
+ updatePager(d.searchInformation?.totalResults || 0);
 }
 
 function renderResults(){
@@ -84,6 +102,27 @@ function renderResults(){
   `;
   results.appendChild(d);
  });
+}
+
+function updatePager(total){
+ const page=Math.ceil(startIndex/pageSize);
+ const maxPage=Math.ceil(total/pageSize);
+
+ pager.innerHTML=`
+   <button onclick="prevPage()" ${page<=1?"disabled":""}>◀ Previous</button>
+   <span>Page ${page} of ${maxPage}</span>
+   <button onclick="nextPage()" ${page>=maxPage?"disabled":""}>Next ▶</button>
+ `;
+}
+
+function nextPage(){
+ startIndex+=pageSize;
+ search(false);
+}
+
+function prevPage(){
+ startIndex=Math.max(1,startIndex-pageSize);
+ search(false);
 }
 
 function add(i){
@@ -114,7 +153,8 @@ function renderShowcase(){
 
 function remove(i){
  showcase.splice(i,1);
- save(); renderShowcase();
+ save(); 
+ renderShowcase();
 }
 
 function save(){
@@ -125,11 +165,13 @@ function goShop(){ location.href="shop.html"; }
 
 const results=document.getElementById("results");
 const showcaseDiv=document.getElementById("showcase");
+const pager=document.getElementById("pager");
 
 window.onload=function(){
  showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
  renderShowcase();
 };
 </script>
+
 </body>
 </html>
