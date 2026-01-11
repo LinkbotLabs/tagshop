@@ -5,263 +5,187 @@
 <title>TagShop – Bold Luxury Watches</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-/* ---------- GLOBAL STYLES ---------- */
-body {
-  margin: 0;
-  font-family: Montserrat, sans-serif;
-  background: #050505;
-  color: #f5d77c;
-  overflow-x: hidden;
+body{
+  margin:0;
+  font-family:Montserrat,sans-serif;
+  background:#050505;
+  color:#f5d77c;
+  overflow-x:hidden;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Playfair Display', serif;
-  color: #f5d77c;
-  margin: 0.5em 0;
+h1,h2,h3,h4{
+  font-family:'Playfair Display',serif;
+  color:#f5d77c;
 }
 
-p {
-  color: #f5d77c;
+.section{
+  max-width:1200px;
+  margin:auto;
+  padding:60px 20px;
 }
 
-.section {
-  max-width: 1200px;
-  margin: auto;
-  padding: 60px 20px;
+/* HERO */
+.hero-bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
 }
-
-/* ---------- HERO SECTION ---------- */
-.hero-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  overflow: hidden;
+.hero-bg img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  animation:fade 30s infinite;
+  opacity:0;
 }
-
-.hero-bg img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  animation: fade 30s infinite;
-  opacity: 0;
-}
-
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
 .hero-bg img:nth-child(3){animation-delay:12s}
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
-
-.hero-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
+@keyframes fade{
+  0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}
+}
+.hero-bg:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.9));
 }
 
-@keyframes fade {
-  0%{opacity:0} 5%{opacity:1} 20%{opacity:1} 25%{opacity:0} 100%{opacity:0}
+.hero-text{
+  text-align:center;
+  padding-top:120px;
 }
 
-/* ---------- HERO TEXT ---------- */
-.hero-text {
-  position: relative;
-  text-align: center;
-  padding-top: 120px;
+/* CAROUSEL */
+#showcase{
+  overflow:hidden;
+}
+.carousel-track{
+  display:flex;
+  gap:30px;
+  transition:transform .6s cubic-bezier(.4,0,.2,1);
 }
 
-.hero-text h1 {
-  font-size: 3em;
-  font-weight: 700;
-  letter-spacing: 2px;
+.card{
+  min-width:260px;
+  background:rgba(255,255,255,.05);
+  border-radius:20px;
+  padding:15px;
+  box-shadow:0 0 25px rgba(0,0,0,.6);
 }
 
-.hero-text p {
-  font-size: 1.2em;
-  max-width: 800px;
-  margin: 20px auto;
-  line-height: 1.6;
+.card img{
+  width:160%;
+  height:240px;
+  object-fit:cover;
+  transform:translate(-18%,-10%) rotateY(0deg);
+  border-radius:14px;
+  background:#000;
+  transition:transform .15s ease;
+  touch-action:none;
 }
 
-/* ---------- SHOWCASE ---------- */
-#showcase {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 20px;
-  scroll-snap-type: x mandatory;
-}
-
-#showcase::-webkit-scrollbar {
-  height: 10px;
-}
-#showcase::-webkit-scrollbar-thumb {
-  background: #f5d77c;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 15px;
-  min-width: 240px;
-  scroll-snap-align: start;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(245,215,124,0.6);
-}
-
-.card img {
-  width: 100%;
-  height: 220px;
-  object-fit: contain;
-  background: #111;
-  border-radius: 14px;
-  padding: 10px;
-}
-
-.card h4 {
-  margin: 10px 0 5px;
-  font-size: 1.1em;
-  font-weight: 600;
-}
-
-.card p {
-  font-size: 0.9em;
-  margin: 5px 0;
-}
-
-button {
-  width: 100%;
-  cursor: pointer;
-  margin-top: 8px;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: #f5d77c;
-  color: #050505;
-  font-weight: 600;
-  letter-spacing: 1px;
-  transition: transform 0.2s, background 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-  background: #e0c156;
-}
-
-/* ---------- CHECKOUT FORM ---------- */
-#checkoutFormContainer {
-  display: none;
-  background: rgba(30,30,30,.85);
-  padding: 30px;
-  border-radius: 20px;
-  margin: 50px auto;
-  border: 1px solid rgba(245,215,124,.4);
-  max-width: 450px;
-  color: #f5d77c;
-}
-
-#checkoutFormContainer input,
-#checkoutFormContainer textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(245,215,124,0.1);
-  color: #f5d77c;
-}
-
-#checkoutFormContainer button {
-  margin-top: 12px;
-  background: #f5d77c;
-  color: #050505;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 12px;
-  border: none;
-  width: 100%;
-  font-size: 1em;
+button{
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#f5d77c;
+  color:#000;
+  font-weight:600;
 }
 </style>
 </head>
+
 <body>
 
 <div class="hero-bg">
-  <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
-  <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
-  <img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
-  <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
-  <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
 </div>
 
 <div class="section hero-text">
-  <h1>TagShop Luxury Watches</h1>
-  <p>
-    AAA Quality • Free Shipping • Certificate & Presentation Box.<br>
-    Shop direct with verified suppliers or through TagShop for curated, tested timepieces. Premium quality, correct branding, and fast UK delivery.
-  </p>
+<h1>TagShop Luxury Watches</h1>
+<p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
 </div>
 
 <div class="section">
-  <div id="showcase"></div>
+  <div id="showcase">
+    <div class="carousel-track" id="carouselTrack"></div>
+  </div>
 </div>
-
-<div id="checkoutFormContainer"></div>
 
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
 let showcase=[];
+let index=0;
+let startX=0;
 
 function renderShowcase(){
-  const sc=document.getElementById("showcase");
-  sc.innerHTML="";
-  showcase.slice(0,25).forEach((p,i)=>{
+  const track=document.getElementById("carouselTrack");
+  track.innerHTML="";
+  showcase.forEach((p,i)=>{
     const d=document.createElement("div");
     d.className="card";
     d.innerHTML=`
-      <img src="${p.img}">
+      <img src="${p.img}" class="spin-img">
       <h4>${p.title}</h4>
-      <p>Supplier: £${p.supplierPrice || 'N/A'} | TagShop: £${p.tagshopPrice || 'TBD'}</p>
-      <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
-      <button onclick="buySupplier('${p.link}')">Shop with Supplier</button>
-      <button onclick="checkout(${i})">Purchase with TagShop</button>`;
-    sc.appendChild(d);
+      <p>£${p.tagshopPrice||'TBD'}</p>
+      <button onclick="window.open('${p.link}')">Supplier</button>
+      <button onclick="window.open('${WISE}')">Buy</button>
+    `;
+    track.appendChild(d);
+  });
+  enableSpin();
+  updateCarousel();
+}
+
+function updateCarousel(){
+  const card=document.querySelector(".card");
+  if(!card) return;
+  const w=card.offsetWidth+30;
+  document.getElementById("carouselTrack").style.transform=`translateX(-${index*w}px)`;
+}
+
+document.getElementById("showcase").addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+document.getElementById("showcase").addEventListener("touchend",e=>{
+  const diff=startX-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>50){
+    if(diff>0 && index<showcase.length-1) index++;
+    if(diff<0 && index>0) index--;
+  }
+  updateCarousel();
+});
+
+/* 360° TAP-ROTATE */
+function enableSpin(){
+  document.querySelectorAll(".spin-img").forEach(img=>{
+    let start=0;
+    img.addEventListener("touchstart",e=>{
+      start=e.touches[0].clientX;
+    });
+    img.addEventListener("touchmove",e=>{
+      const diff=e.touches[0].clientX-start;
+      img.style.transform=`translate(-18%,-10%) rotateY(${diff/5}deg) scale(1.05)`;
+    });
+    img.addEventListener("touchend",()=>{
+      img.style.transform="translate(-18%,-10%) rotateY(0deg)";
+    });
   });
 }
 
-function buySupplier(link){window.open(link,"_blank");}
-
-function checkout(i){
-  const p=showcase[i];
-  const c=document.getElementById("checkoutFormContainer");
-  c.style.display="block";
-  c.innerHTML=`
-    <h2>Purchase with TagShop</h2>
-    <p>${p.title}</p>
-    <p>Price: £${p.tagshopPrice || 'TBD'}</p>
-    <p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
-    <form id="contactForm">
-      <input type="text" placeholder="Full Name" required>
-      <input type="email" placeholder="Email" required>
-      <textarea placeholder="Delivery Address"></textarea>
-      <button type="submit">Confirm & Proceed to Payment</button>
-    </form>`;
-  document.getElementById("contactForm").addEventListener("submit",e=>{
-    e.preventDefault();
-    window.open(WISE);
-  });
-}
-
-// Load showcase from localStorage
-window.onload=function(){
-  const saved=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
-  showcase=saved; 
+window.onload=()=>{
+  showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
   renderShowcase();
 };
 </script>
