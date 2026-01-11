@@ -62,12 +62,17 @@ function score(t){
  return s;
 }
 
+function searchSupplier(title){
+ const q = encodeURIComponent(title.replace(/[^a-zA-Z0-9 ]/g," "));
+ const url = "https://www.dhgate.com/wholesale/search.do?searchkey=" + q;
+ window.open(url,"_blank");
+}
+
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
    currentQuery=document.getElementById("q").value;
  }
-
  if(!currentQuery) return;
 
  const r=await fetch(
@@ -91,14 +96,23 @@ async function search(newSearch){
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
+  const safeTitle = p.title.replace(/'/g,"");
   const d=document.createElement("div");
   d.className="card";
   d.innerHTML=`
    <img src="${p.img}">
    <h4>${p.title}</h4>
+
+   <button onclick="searchSupplier('${safeTitle}')">
+     🔍 Search Supplier
+   </button>
+
    <input placeholder="Supplier Price" type="number" id="s${i}">
    <input placeholder="TagShop Price" type="number" id="t${i}">
-   <button onclick="add(${i})">Add to Showcase</button>
+
+   <button onclick="add(${i})">
+     ➕ Add to Showcase
+   </button>
   `;
   results.appendChild(d);
  });
@@ -106,7 +120,7 @@ function renderResults(){
 
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
- const maxPage=Math.ceil(total/pageSize);
+ const maxPage=Math.ceil(total/pageSize) || 1;
 
  pager.innerHTML=`
    <button onclick="prevPage()" ${page<=1?"disabled":""}>◀ Previous</button>
