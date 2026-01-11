@@ -7,20 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+/* GENERAL STYLES */
 body {
   margin:0;
   background:#050505;
   color:#f5d77c;
   font-family:Montserrat;
-  overflow-x:hidden;
 }
-h1 {
-  text-align:center;
+h1, h2 {
   font-family:Playfair Display;
-  margin:30px 0;
+  color:#f5d77c;
+  text-align:center;
+  margin:20px 0;
 }
 .section {
   padding:20px;
+  max-width:1200px;
+  margin:auto;
 }
 .tier-title {
   font-size:1.6em;
@@ -38,22 +41,19 @@ h1 {
 }
 .grid {
   display:flex;
-  flex-wrap: wrap;
-  justify-content:center;
   gap:20px;
+  overflow-x:auto;
   padding:20px;
 }
 .card {
   min-width:240px;
-  max-width:280px;
   background:rgba(255,255,255,.06);
   border-radius:18px;
   padding:15px;
-  text-align:center;
 }
 .card img {
   width:100%;
-  height:auto;
+  height:220px;
   object-fit:contain;
   background:#111;
   border-radius:12px;
@@ -70,67 +70,118 @@ button {
   font-weight:600;
   cursor:pointer;
 }
-#reviews {
-  max-width:900px;
-  margin:30px auto;
+
+/* SIDE PANEL */
+#side-panel {
+  position:fixed;
+  right:0;
+  top:0;
+  width:300px;
+  height:100%;
+  background:rgba(0,0,0,0.9);
   padding:20px;
+  overflow-y:auto;
+  border-left:2px solid #f5d77c;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+  z-index:1000;
+}
+#side-panel h3 {
+  color:#f5d77c;
+  margin-top:20px;
 }
 .review {
   background:rgba(245,215,124,.08);
   border-radius:12px;
-  padding:15px;
-  margin-bottom:15px;
-  font-size:.9em;
-}
-.review h4 {
-  margin:0 0 5px;
-}
-.review p {
-  margin:0;
-}
-form {
-  max-width:500px;
-  margin:20px auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-form input, form textarea, form button {
-  width:100%;
   padding:10px;
-  border-radius:8px;
-  border:none;
+  margin-bottom:10px;
+  font-size:0.9em;
 }
-form button {
-  background:#f5d77c;
-  color:#050505;
-  font-weight:600;
-  cursor:pointer;
+#reviews {
+  max-height:300px;
+  overflow-y:auto;
 }
-@media (max-width:750px) {
-  .grid {
-    flex-direction:column;
-    align-items:center;
-  }
-  .card {
-    max-width:90%;
-  }
+
+/* HERO CAROUSEL */
+.hero-carousel {
+  position:relative;
+  width:100%;
+  height:300px;
+  margin-bottom:20px;
+  border-radius:12px;
+  overflow:hidden;
+}
+.hero-carousel img {
+  width:100%;
+  height:300px;
+  object-fit:cover;
+  position:absolute;
+  top:0;
+  left:0;
+  opacity:0;
+  transition: opacity 1s ease-in-out;
+}
+.hero-carousel img.active {
+  opacity:1;
+}
+.hero-overlay {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+}
+.hero-text {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  color:#f5d77c;
+  font-family:Playfair Display;
+  font-size:1.5em;
+  text-align:center;
+}
+
+/* NOTICE */
+.notice {
+  background:rgba(245,215,124,.08);
+  padding:10px;
+  margin:10px auto 20px;
+  max-width:900px;
+  text-align:center;
+  border-radius:12px;
+  font-size:1em;
+}
+
+/* LAYOUT */
+.content {
+  margin-right:320px; /* leave space for side panel */
 }
 </style>
 </head>
 
 <body>
 
-<h1>TagShop Luxury Watches</h1>
+<div class="hero-carousel" id="hero-carousel">
+  <img src="https://i.imgur.com/8qK5GqM.jpg" class="active">
+  <img src="https://i.imgur.com/wQ1bJkl.jpg">
+  <img src="https://i.imgur.com/LdNJu6F.jpg">
+  <div class="hero-overlay"></div>
+  <div class="hero-text">Premium Watches, Curated Just For You</div>
+</div>
 
-<!-- Product Tiers -->
+<h1>TagShop Luxury Watches</h1>
+<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
+
+<div class="content">
+
 <div class="section">
   <div class="tier-title">Elite Swiss Grade (£600+)</div>
   <div class="tier-info">
     Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. 
     For collectors who want the closest possible match to genuine luxury watches.
   </div>
-  <div id="tier-elite" class="grid">Loading watches...</div>
+  <div id="tier-elite" class="grid"></div>
 </div>
 
 <div class="section">
@@ -139,7 +190,7 @@ form button {
     Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
     Exceptional value for serious buyers.
   </div>
-  <div id="tier-premium" class="grid">Loading watches...</div>
+  <div id="tier-premium" class="grid"></div>
 </div>
 
 <div class="section">
@@ -148,35 +199,86 @@ form button {
     Strong quality with great appearance and durability. 
     Ideal for daily wear and customers who want luxury looks at a sensible price.
   </div>
-  <div id="tier-value" class="grid">Loading watches...</div>
+  <div id="tier-value" class="grid"></div>
 </div>
 
 <div class="section">
   <div class="tier-title">Entry Luxury (Under £180)</div>
   <div class="tier-info">
-    Budget-friendly luxury designs. 
-    Stylish, attractive and perfect for gifts or first-time buyers.
+    Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.
   </div>
-  <div id="tier-entry" class="grid">Loading watches...</div>
+  <div id="tier-entry" class="grid"></div>
 </div>
 
-<!-- Reviews Section -->
-<div class="section" id="reviews">
-  <h2>Customer Reviews</h2>
 </div>
 
-<!-- Contact Form -->
-<div class="section">
-  <h2>Contact Us</h2>
-  <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="_replyto" placeholder="Your Email" required>
-    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-    <button type="submit">Send Message</button>
-  </form>
+<!-- SIDE PANEL -->
+<div id="side-panel">
+  <h3>Why Buy With TagShop</h3>
+  <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
+
+  <h3>Supplier Route</h3>
+  <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>
+
+  <h3>Customer Reviews</h3>
+  <div id="reviews">
+    <div class="review">
+      <strong>jim****078</strong> | April 15, 2023<br>
+      First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
+    </div>
+    <div class="review">
+      <strong>romm****3_59</strong> | June 25, 2024<br>
+      Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
+    </div>
+    <div class="review">
+      <strong>stus****son</strong> | Nov 23, 2023<br>
+      Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
+    </div>
+    <div class="review">
+      <strong>danny****son88</strong> | March 03,2022<br>
+      Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
+    </div>
+  </div>
 </div>
 
-<!-- Tawk.to Live Chat -->
+<script>
+const WISE="https://wise.com/pay/me/davids14542";
+
+const elite = document.getElementById("tier-elite");
+const premium = document.getElementById("tier-premium");
+const value = document.getElementById("tier-value");
+const entry = document.getElementById("tier-entry");
+
+let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
+
+showcase.forEach(p=>{
+ const price = parseFloat(p.tagshopPrice) || 0;
+ const card = document.createElement("div");
+ card.className="card";
+ card.innerHTML=`
+   <img src="${p.img}">
+   <h3>${p.title}</h3>
+   <p>£${p.tagshopPrice}</p>
+   <button onclick="window.open('${p.link}')">Shop with Supplier</button>
+   <button onclick="window.open('${WISE}')">Buy via TagShop</button>
+ `;
+ if(price >= 600) elite.appendChild(card);
+ else if(price >= 350) premium.appendChild(card);
+ else if(price >= 180) value.appendChild(card);
+ else entry.appendChild(card);
+});
+
+// HERO CAROUSEL
+const heroImages = document.querySelectorAll("#hero-carousel img");
+let current = 0;
+setInterval(()=>{
+ heroImages[current].classList.remove("active");
+ current = (current+1)%heroImages.length;
+ heroImages[current].classList.add("active");
+},5000);
+</script>
+
+<!-- Tawk.to live chat -->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -187,85 +289,6 @@ s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
-</script>
-
-<script>
-const WISE="https://wise.com/pay/me/davids14542";
-
-const elite = document.getElementById("tier-elite");
-const premium = document.getElementById("tier-premium");
-const value = document.getElementById("tier-value");
-const entry = document.getElementById("tier-entry");
-const reviewsDiv = document.getElementById("reviews");
-
-// Sample reviews data (replace with your sourced reviews)
-const reviews = [
-  {
-    name:"stus****son",
-    date:"Nov 23, 2023",
-    title:"High Grade Quartz Chronograph Mens",
-    text:"Finally got myself the no date Submariner and love its simplicity. Quality ceramic bezel, lume glows bright, dial is on point. Jason was spot on with his comms and delivery to UK was fast."
-  },
-  {
-    name:"danny****son88",
-    date:"Mar 03, 2022",
-    title:"St9 Steel 41MM Steel Watch Big Automatic",
-    text:"Very happy with my sub no date watch. Shipping took around 2 weeks, packaging was good, will be using this seller again."
-  },
-  {
-    name:"Jas****all",
-    date:"Mar 07, 2020",
-    title:"YZ Men Watch D Blue SEA-DWELLER",
-    text:"Immense quality for the price. Glide lock works well. Finishing is excellent and keeping decent time."
-  },
-  {
-    name:"jim****078",
-    date:"Apr 15, 2023",
-    title:"ST9 Wristwatches Sapphire Black watch Cer",
-    text:"First time using Jason007 but was reassured by the reviews. The watch is very good quality, bezel clicks anti-clockwise, face matches perfectly."
-  },
-  {
-    name:"sha***ez",
-    date:"Jun 25, 2022",
-    title:"ST9 Wristwatches Sapphire Black watch Cer",
-    text:"Woooow!!! Couldn’t be happier with my purchase. Communication amazing, product exceeded expectations."
-  }
-];
-
-reviews.forEach(r=>{
-  const d = document.createElement("div");
-  d.className="review";
-  d.innerHTML=`<h4>${r.name} - ${r.date}</h4>
-               <strong>${r.title}</strong>
-               <p>${r.text}</p>`;
-  reviewsDiv.appendChild(d);
-});
-
-// Load showcase products from localStorage
-let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
-
-if(!showcase.length){
-  document.querySelectorAll('.grid').forEach(el=>{
-    el.innerHTML='<p style="color:#ccc;text-align:center;width:100%;">No products added yet.</p>';
-  });
-} else {
-  showcase.forEach(p=>{
-    const price = parseFloat(p.tagshopPrice)||0;
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-      <img src="${p.img}">
-      <h3>${p.title}</h3>
-      <p>£${p.tagshopPrice}</p>
-      <button onclick="window.open('${p.link}')">Shop with Supplier</button>
-      <button onclick="window.open('${WISE}')">Buy via TagShop</button>
-    `;
-    if(price >= 600) elite.appendChild(card);
-    else if(price >= 350) premium.appendChild(card);
-    else if(price >= 180) value.appendChild(card);
-    else entry.appendChild(card);
-  });
-}
 </script>
 
 </body>
