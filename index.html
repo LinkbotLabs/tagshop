@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop – Bold Luxury Watches</title>
+<title>TagShop – Private Watch Exchange</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
-  font-family:Montserrat,sans-serif;
   background:#050505;
   color:#f5d77c;
+  font-family:Montserrat,sans-serif;
   overflow-x:hidden;
 }
 
-h1,h2,h3,h4{
+h1,h2,h3{
   font-family:'Playfair Display',serif;
-  color:#f5d77c;
 }
 
 .section{
@@ -37,8 +37,8 @@ h1,h2,h3,h4{
   width:100%;
   height:100%;
   object-fit:cover;
-  animation:fade 30s infinite;
   opacity:0;
+  animation:fade 30s infinite;
 }
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
@@ -48,28 +48,27 @@ h1,h2,h3,h4{
 @keyframes fade{
   0%{opacity:0}5%{opacity:1}20%{opacity:1}25%{opacity:0}
 }
-.hero-bg:after{
+.hero-bg::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.9));
+  background:
+   radial-gradient(circle at 50% 30%, rgba(255,215,140,.15), rgba(0,0,0,.9)),
+   linear-gradient(to bottom, rgba(0,0,0,.4), rgba(0,0,0,.95));
 }
 
 .hero-text{
   text-align:center;
-  padding-top:120px;
+  padding-top:140px;
 }
 
-/* CAROUSEL */
-#showcase{
-  overflow:hidden;
-}
+/* CARDS */
+#showcase{overflow:hidden}
 .carousel-track{
   display:flex;
   gap:30px;
-  transition:transform .6s cubic-bezier(.4,0,.2,1);
+  transition:.6s cubic-bezier(.4,0,.2,1);
 }
-
 .card{
   min-width:260px;
   background:rgba(255,255,255,.05);
@@ -77,27 +76,50 @@ h1,h2,h3,h4{
   padding:15px;
   box-shadow:0 0 25px rgba(0,0,0,.6);
 }
-
 .card img{
   width:160%;
   height:240px;
   object-fit:cover;
-  transform:translate(-18%,-10%) rotateY(0deg);
+  transform:translate(-18%,-10%) scale(1.6);
   border-radius:14px;
-  background:#000;
-  transition:transform .15s ease;
-  touch-action:none;
+  transition:transform .2s ease;
 }
+.card h4{margin:10px 0 5px}
+.card p{font-size:.9em;line-height:1.4}
 
 button{
   width:100%;
   margin-top:8px;
   padding:12px;
-  border-radius:12px;
   border:none;
+  border-radius:12px;
   background:#f5d77c;
   color:#000;
   font-weight:600;
+}
+
+/* PANELS */
+.panel{
+  border:1px solid rgba(245,215,124,.3);
+  border-radius:12px;
+  margin-bottom:20px;
+  background:rgba(0,0,0,.6);
+  overflow:hidden;
+}
+.panel-title{
+  padding:18px;
+  cursor:pointer;
+  font-weight:600;
+}
+.panel-content{
+  max-height:0;
+  overflow:hidden;
+  transition:.5s ease;
+  padding:0 18px;
+}
+.panel-content p{
+  margin:15px 0;
+  line-height:1.6;
 }
 </style>
 </head>
@@ -105,89 +127,70 @@ button{
 <body>
 
 <div class="hero-bg">
-<img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1601924638867-3ec62b5d35a1?auto=format&fit=crop&w=1600&q=80">
-<img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1609587312208-cea54be969e7?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1587836374828-4db7f7d6d2c6?auto=format&fit=crop&w=1600&q=80">
+<img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1600&q=80">
 <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=1600&q=80">
 </div>
 
 <div class="section hero-text">
-<h1>TagShop Luxury Watches</h1>
-<p>AAA Quality • Free Shipping • Certificate & Presentation Box</p>
+<h1>TagShop Private Watch Exchange</h1>
+<p>Curated Timepieces • Verified Batches • Collector-Grade</p>
 </div>
 
 <div class="section">
-  <div id="showcase">
-    <div class="carousel-track" id="carouselTrack"></div>
-  </div>
+<div id="showcase"><div class="carousel-track" id="carouselTrack"></div></div>
+</div>
+
+<div class="section">
+<div class="panel">
+<div class="panel-title">About TagShop</div>
+<div class="panel-content"><p>TagShop operates as a private acquisition desk for collectors seeking the best available versions of iconic luxury watches. We reject mass-market batches and select only the top-tier production runs.</p></div>
+</div>
+
+<div class="panel">
+<div class="panel-title">Shop Direct</div>
+<div class="panel-content"><p>Direct supplier listings allow experienced buyers to source watches the same way resellers and dealers do — straight from the production floor.</p></div>
+</div>
+
+<div class="panel">
+<div class="panel-title">Shop With TagShop</div>
+<div class="panel-content"><p>Every TagShop piece is hand-selected, quality-checked and delivered with presentation box and documentation.</p></div>
+</div>
+
+<div class="panel">
+<div class="panel-title">Vault Collection</div>
+<div class="panel-content"><p>Vault pieces are investment-grade watches reserved for collectors seeking the highest dial accuracy, steel finishing and movement stability.</p></div>
+</div>
 </div>
 
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
-let showcase=[];
-let index=0;
-let startX=0;
+let showcase = JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+let index=0,startX=0;
 
-function renderShowcase(){
-  const track=document.getElementById("carouselTrack");
-  track.innerHTML="";
+function render(){
+  const t=document.getElementById("carouselTrack");
+  t.innerHTML="";
   showcase.forEach((p,i)=>{
     const d=document.createElement("div");
     d.className="card";
     d.innerHTML=`
-      <img src="${p.img}" class="spin-img">
+      <img src="${p.img}">
       <h4>${p.title}</h4>
-      <p>£${p.tagshopPrice||'TBD'}</p>
+      <p>${p.tier||"Elite"} Collection<br>${p.desc||"Collector-grade dial, steel and movement selected for long-term ownership."}</p>
+      <p>£${p.tagshopPrice||"TBD"}</p>
       <button onclick="window.open('${p.link}')">Supplier</button>
-      <button onclick="window.open('${WISE}')">Buy</button>
-    `;
-    track.appendChild(d);
-  });
-  enableSpin();
-  updateCarousel();
-}
-
-function updateCarousel(){
-  const card=document.querySelector(".card");
-  if(!card) return;
-  const w=card.offsetWidth+30;
-  document.getElementById("carouselTrack").style.transform=`translateX(-${index*w}px)`;
-}
-
-document.getElementById("showcase").addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-});
-document.getElementById("showcase").addEventListener("touchend",e=>{
-  const diff=startX-e.changedTouches[0].clientX;
-  if(Math.abs(diff)>50){
-    if(diff>0 && index<showcase.length-1) index++;
-    if(diff<0 && index>0) index--;
-  }
-  updateCarousel();
-});
-
-/* 360° TAP-ROTATE */
-function enableSpin(){
-  document.querySelectorAll(".spin-img").forEach(img=>{
-    let start=0;
-    img.addEventListener("touchstart",e=>{
-      start=e.touches[0].clientX;
-    });
-    img.addEventListener("touchmove",e=>{
-      const diff=e.touches[0].clientX-start;
-      img.style.transform=`translate(-18%,-10%) rotateY(${diff/5}deg) scale(1.05)`;
-    });
-    img.addEventListener("touchend",()=>{
-      img.style.transform="translate(-18%,-10%) rotateY(0deg)";
-    });
+      <button onclick="window.open('${WISE}')">Acquire</button>`;
+    t.appendChild(d);
   });
 }
+render();
 
-window.onload=()=>{
-  showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
-  renderShowcase();
-};
+document.querySelectorAll(".panel-title").forEach(t=>{
+  t.onclick=()=>{const p=t.nextElementSibling;p.style.maxHeight=p.style.maxHeight?null:p.scrollHeight+"px";}
+});
 </script>
 
 </body>
