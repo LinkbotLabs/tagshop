@@ -43,9 +43,9 @@ h1, h2 {
   display:flex;
   flex-direction:column; /* vertical scrolling */
   gap:20px;
-  max-height:500px; /* adjust per tier */
+  max-height:400px;
   overflow-y:auto;
-  padding:10px 0;
+  padding:10px;
 }
 .card {
   min-width:240px;
@@ -73,15 +73,63 @@ button {
   cursor:pointer;
 }
 
-/* HERO */
+/* SIDE PANEL */
+#side-panel {
+  position:fixed;
+  right:0;
+  top:0;
+  width:300px;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  padding:20px;
+  overflow-y:auto;
+  border-left:2px solid #f5d77c;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+  z-index:1000;
+}
+#side-panel h3 {
+  color:#f5d77c;
+  margin-top:20px;
+  cursor:pointer;
+}
+.side-content {
+  display:none;
+  margin-top:10px;
+  font-size:0.9em;
+  background:rgba(245,215,124,.08);
+  border-radius:12px;
+  padding:10px;
+}
+.review {
+  background:rgba(245,215,124,.08);
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:10px;
+  font-size:0.9em;
+}
+
+/* HERO CAROUSEL */
 .hero-carousel {
   position:relative;
   width:100%;
   height:400px;
   margin-bottom:20px;
-  overflow:hidden;
-  background: url('https://i.imgur.com/8qK5GqM.jpg') center/cover no-repeat;
   border-radius:12px;
+  overflow:hidden;
+}
+.hero-carousel .hero-slide {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  opacity:0;
+  transition:opacity 1s ease-in-out;
+}
+.hero-carousel .hero-slide.active {
+  opacity:1;
 }
 .hero-overlay {
   position:absolute;
@@ -113,85 +161,27 @@ button {
   font-size:1em;
 }
 
-/* DRAWER PANELS */
-.drawer-button {
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  border:none;
-  background:#f5d77c;
-  color:#050505;
-  font-weight:600;
-  cursor:pointer;
-  text-align:left;
-}
-.drawer-content {
-  max-height:0;
-  overflow:hidden;
-  transition:max-height 0.3s ease;
-  background:rgba(245,215,124,.08);
-  padding:0 15px;
-  border-radius:12px;
-  margin-bottom:10px;
-  font-size:0.9em;
-}
-.drawer-content.open {
-  max-height:500px; /* adjust as needed */
-  padding:15px;
-}
-
 /* LAYOUT */
 .content {
-  margin-right:20px; /* leave space for drawers if needed */
+  margin-right:320px; /* leave space for side panel */
 }
 </style>
 </head>
 
 <body>
 
-<div class="hero-carousel">
+<!-- HERO CAROUSEL -->
+<div class="hero-carousel" id="hero-carousel">
+  <div class="hero-slide active" style="background-image:url('https://i.imgur.com/8qK5GqM.jpg');"></div>
+  <div class="hero-slide" style="background-image:url('https://i.imgur.com/wQ1bJkl.jpg');"></div>
+  <div class="hero-slide" style="background-image:url('https://i.imgur.com/LdNJu6F.jpg');"></div>
   <div class="hero-overlay"></div>
   <div class="hero-text">Premium Watches, Curated Just For You</div>
 </div>
 
 <h1>TagShop Luxury Watches</h1>
-<div class="notice">All watches have the correct markings and will look as expected when they arrive to you.</div>
+<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
 
-<!-- DRAWER PANELS -->
-<div class="content" style="max-width:300px; margin:auto;">
-  <button class="drawer-button">About TagShop</button>
-  <div class="drawer-content">
-    <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support for our customers. Each piece is carefully inspected before it reaches you.</p>
-  </div>
-
-  <button class="drawer-button">Supplier Route</button>
-  <div class="drawer-content">
-    <p>Buying directly from suppliers can save money but may involve navigating exchange rates, slower shipping, and varying quality checks. Finding the perfect watch can be time-consuming.</p>
-  </div>
-
-  <button class="drawer-button">Customer Reviews</button>
-  <div class="drawer-content" id="reviews">
-    <div class="review">
-      <strong>jim****078</strong> | April 15, 2023<br>
-      First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
-    </div>
-    <div class="review">
-      <strong>romm****3_59</strong> | June 25, 2024<br>
-      Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
-    </div>
-    <div class="review">
-      <strong>stus****son</strong> | Nov 23, 2023<br>
-      Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
-    </div>
-    <div class="review">
-      <strong>danny****son88</strong> | March 03,2022<br>
-      Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
-    </div>
-  </div>
-</div>
-
-<!-- PRODUCT TIERS -->
 <div class="content">
 
 <div class="section">
@@ -231,18 +221,30 @@ button {
 
 </div>
 
+<!-- SIDE PANEL -->
+<div id="side-panel">
+  <h3 onclick="toggleContent('about')">About TagShop</h3>
+  <div id="about" class="side-content">
+    Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.
+  </div>
+
+  <h3 onclick="toggleContent('supplier')">Supplier Route</h3>
+  <div id="supplier" class="side-content">
+    Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.
+  </div>
+
+  <h3 onclick="toggleContent('reviews')">Customer Reviews</h3>
+  <div id="reviews" class="side-content">
+    <div class="review"><strong>jim****078</strong> | April 15, 2023<br>First time using Jason007… Lovely watch. Will order more.</div>
+    <div class="review"><strong>romm****3_59</strong> | June 25, 2024<br>Ul Submariner (No date)… Rehaut aligned perfectly.</div>
+    <div class="review"><strong>stus****son</strong> | Nov 23, 2023<br>Finally got the no date Submariner… Quality ceramic bezel, fast delivery to UK.</div>
+    <div class="review"><strong>danny****son88</strong> | March 03,2022<br>Very happy with my sub no date watch… Packaging good, tracking available.</div>
+  </div>
+</div>
+
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
 
-// Drawer toggle
-document.querySelectorAll('.drawer-button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const content = btn.nextElementSibling;
-    content.classList.toggle('open');
-  });
-});
-
-// Populate products
 const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
@@ -266,6 +268,21 @@ showcase.forEach(p=>{
  else if(price >= 180) value.appendChild(card);
  else entry.appendChild(card);
 });
+
+// HERO CAROUSEL
+const heroSlides = document.querySelectorAll(".hero-slide");
+let currentSlide = 0;
+setInterval(()=>{
+ heroSlides[currentSlide].classList.remove("active");
+ currentSlide = (currentSlide+1) % heroSlides.length;
+ heroSlides[currentSlide].classList.add("active");
+},5000);
+
+// SIDE PANEL TOGGLE
+function toggleContent(id){
+  const el = document.getElementById(id);
+  el.style.display = (el.style.display === "block") ? "none" : "block";
+}
 </script>
 
 <!-- Tawk.to live chat -->
