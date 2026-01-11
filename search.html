@@ -27,7 +27,7 @@ a{display:block;}
 <div class="section">
 <h1>TagShop Dealer Search</h1>
 <input id="q" placeholder="Rolex Submariner, AP Royal Oak, Patek…">
-<button onclick="search(true)">Search</button>
+<button id="searchBtn">Search</button>
 </div>
 
 <div class="section">
@@ -46,13 +46,18 @@ a{display:block;}
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
+const WISE="https://wise.com/pay/me/davids14542";
 
 let last=[], showcase=[];
 let currentQuery="";
 let startIndex=1;
 const pageSize=10;
 
-// scoring function for results
+const results=document.getElementById("results");
+const showcaseDiv=document.getElementById("showcase");
+const pager=document.getElementById("pager");
+
+// Score function (optional)
 function score(t){
  t=t.toLowerCase();
  let s=0;
@@ -64,18 +69,15 @@ function score(t){
  return s;
 }
 
-// --- SEARCH SUPPLIER BUTTON FIX ---
+// OPEN SUPPLIER LINK (same logic as shop page)
 function searchSupplier(title){
-    if(!title) return;
-    // remove special characters
-    let clean = title.replace(/[^\w\s]/gi, '');
-    // replace spaces with '+'
-    let query = clean.trim().replace(/\s+/g, '+');
-    const url = "https://www.dhgate.com/wholesale?SearchText=" + query;
-    window.open(url, "_blank");
+ // Use the same URL construction as Shop page
+ const safeTitle = encodeURIComponent(title.replace(/[^a-zA-Z0-9 ]/g," "));
+ const url = `https://www.dhgate.com/wholesale/${safeTitle}.html`;
+ window.open(url,"_blank");
 }
 
-// perform search
+// SEARCH FUNCTION
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
@@ -101,36 +103,37 @@ async function search(newSearch){
  updatePager(d.searchInformation?.totalResults || 0);
 }
 
-// render results
+// RENDER RESULTS
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
-  const safeTitle = p.title.replace(/'/g,"");
   const d=document.createElement("div");
   d.className="card";
+
   d.innerHTML=`
    <a href="${p.link}" target="_blank">
      <img src="${p.img}">
    </a>
-
    <h4>${p.title}</h4>
-
-   <button onclick="searchSupplier('${safeTitle}')">
-     🔍 Search Supplier
-   </button>
-
    <input placeholder="Supplier Price" type="number" id="s${i}">
    <input placeholder="TagShop Price" type="number" id="t${i}">
-
-   <button onclick="add(${i})">
-     ➕ Add to Showcase
-   </button>
+   <button id="addBtn${i}">➕ Add to Showcase</button>
   `;
+
   results.appendChild(d);
+
+  // Add supplier button dynamically (safe)
+  const supplierBtn = document.createElement("button");
+  supplierBtn.textContent = "🔍 Search Supplier";
+  supplierBtn.addEventListener("click",()=>searchSupplier(p.title));
+  d.appendChild(supplierBtn);
+
+  // Add to showcase
+  document.getElementById(`addBtn${i}`).addEventListener("click",()=>add(i));
  });
 }
 
-// pager
+// PAGINATION
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
  const maxPage=Math.ceil(total/pageSize) || 1;
@@ -152,7 +155,7 @@ function prevPage(){
  search(false);
 }
 
-// showcase functions
+// SHOWCASE FUNCTIONS
 function add(i){
  const p=last[i];
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
@@ -174,6 +177,7 @@ function renderShowcase(){
    <h4>${p.title}</h4>
    <p>£${p.tagshopPrice}</p>
    <button onclick="remove(${i})">Remove</button>
+   <button onclick="searchSupplier('${p.title.replace(/'/g,"\\'")}')">🔍 Supplier</button>
   `;
   showcaseDiv.appendChild(d);
  });
@@ -191,14 +195,14 @@ function save(){
 
 function goShop(){ location.href="shop.html"; }
 
-const results=document.getElementById("results");
-const showcaseDiv=document.getElementById("showcase");
-const pager=document.getElementById("pager");
-
+// INITIALIZE
 window.onload=function(){
  showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
  renderShowcase();
 };
+
+// SEARCH BUTTON
+document.getElementById("searchBtn").addEventListener("click",()=>search(true));
 </script>
 
 </body>
