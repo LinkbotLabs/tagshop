@@ -52,6 +52,7 @@ let currentQuery="";
 let startIndex=1;
 const pageSize=10;
 
+// scoring function for results
 function score(t){
  t=t.toLowerCase();
  let s=0;
@@ -63,17 +64,18 @@ function score(t){
  return s;
 }
 
-// FIXED: Search Supplier Button
+// --- SEARCH SUPPLIER BUTTON FIX ---
 function searchSupplier(title){
     if(!title) return;
-    // remove unsupported characters for URL
+    // remove special characters
     let clean = title.replace(/[^\w\s]/gi, '');
-    // replace spaces with +
+    // replace spaces with '+'
     let query = clean.trim().replace(/\s+/g, '+');
     const url = "https://www.dhgate.com/wholesale?SearchText=" + query;
-    window.open(url,"_blank");
+    window.open(url, "_blank");
 }
 
+// perform search
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
@@ -99,6 +101,7 @@ async function search(newSearch){
  updatePager(d.searchInformation?.totalResults || 0);
 }
 
+// render results
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
@@ -127,6 +130,7 @@ function renderResults(){
  });
 }
 
+// pager
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
  const maxPage=Math.ceil(total/pageSize) || 1;
@@ -148,6 +152,7 @@ function prevPage(){
  search(false);
 }
 
+// showcase functions
 function add(i){
  const p=last[i];
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
