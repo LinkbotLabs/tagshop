@@ -52,6 +52,7 @@ let currentQuery="";
 let startIndex=1;
 const pageSize=10;
 
+// Scoring function to prioritize search results
 function score(t){
  t=t.toLowerCase();
  let s=0;
@@ -63,12 +64,15 @@ function score(t){
  return s;
 }
 
+// FIXED: Search Supplier button URL
 function searchSupplier(title){
- const q = encodeURIComponent(title.replace(/[^a-zA-Z0-9 ]/g," "));
- const url = "https://www.dhgate.com/wholesale/" + q + ".html";
- window.open(url,"_blank");
+  let cleanTitle = title.replace(/[^\w\s-]/g,"").trim();  // Remove special chars
+  cleanTitle = cleanTitle.replace(/\s+/g, "-");           // Replace spaces with hyphens
+  const url = "https://www.dhgate.com/wholesale/" + cleanTitle + ".html";
+  window.open(url,"_blank");
 }
 
+// Perform search using Google Custom Search API
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
@@ -94,6 +98,7 @@ async function search(newSearch){
  updatePager(d.searchInformation?.totalResults || 0);
 }
 
+// Render dealer search results
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
@@ -122,6 +127,7 @@ function renderResults(){
  });
 }
 
+// Pagination
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
  const maxPage=Math.ceil(total/pageSize) || 1;
@@ -143,6 +149,7 @@ function prevPage(){
  search(false);
 }
 
+// Showcase handling
 function add(i){
  const p=last[i];
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
