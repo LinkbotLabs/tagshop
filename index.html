@@ -8,80 +8,113 @@
 
 <style>
 body {
-    margin:0;
-    background:#050505;
-    color:#f5d77c;
-    font-family:Montserrat;
+  margin:0;
+  background:#050505;
+  color:#f5d77c;
+  font-family:Montserrat;
+  overflow-x:hidden;
 }
 h1 {
-    text-align:center;
-    font-family:Playfair Display;
-    margin:30px 0;
+  text-align:center;
+  font-family:Playfair Display;
+  margin:30px 0;
 }
 .section {
-    padding:20px;
+  padding:20px;
 }
 .tier-title {
-    font-size:1.6em;
-    margin:20px 0 10px;
-    text-align:center;
+  font-size:1.6em;
+  margin:20px 0 10px;
+  text-align:center;
 }
 .tier-info {
-    max-width:900px;
-    margin:0 auto 20px;
-    background:rgba(245,215,124,.08);
-    padding:15px;
-    border-radius:12px;
-    text-align:center;
-    font-size:.95em;
+  max-width:900px;
+  margin:0 auto 20px;
+  background:rgba(245,215,124,.08);
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  font-size:.95em;
 }
 .grid {
-    display:flex;
-    gap:20px;
-    overflow-x:auto;
-    padding:20px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  gap:20px;
+  padding:20px;
 }
 .card {
-    min-width:240px;
-    background:rgba(255,255,255,.06);
-    border-radius:18px;
-    padding:15px;
-    flex-shrink:0;
+  min-width:240px;
+  max-width:280px;
+  background:rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:15px;
+  text-align:center;
 }
 .card img {
-    width:100%;
-    height:220px;
-    object-fit:contain;
-    background:#111;
-    border-radius:12px;
-    padding:10px;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  background:#111;
+  border-radius:12px;
+  padding:10px;
 }
 button {
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:10px;
-    border:none;
-    background:#f5d77c;
-    color:#050505;
-    font-weight:600;
-    cursor:pointer;
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+  background:#f5d77c;
+  color:#050505;
+  font-weight:600;
+  cursor:pointer;
+}
+#reviews {
+  max-width:900px;
+  margin:30px auto;
+  padding:20px;
 }
 .review {
-    background: rgba(245,215,124,0.08);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+  background:rgba(245,215,124,.08);
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+  font-size:.9em;
 }
 .review h4 {
-    margin: 0 0 5px 0;
-    font-size: 1em;
-    color: #fff;
+  margin:0 0 5px;
 }
 .review p {
-    margin: 0;
-    font-size: 0.9em;
-    color: #eee;
+  margin:0;
+}
+form {
+  max-width:500px;
+  margin:20px auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+form input, form textarea, form button {
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+form button {
+  background:#f5d77c;
+  color:#050505;
+  font-weight:600;
+  cursor:pointer;
+}
+@media (max-width:750px) {
+  .grid {
+    flex-direction:column;
+    align-items:center;
+  }
+  .card {
+    max-width:90%;
+  }
 }
 </style>
 </head>
@@ -90,115 +123,60 @@ button {
 
 <h1>TagShop Luxury Watches</h1>
 
-<!-- PRODUCT TIERS -->
+<!-- Product Tiers -->
 <div class="section">
-    <div class="tier-title">Elite Swiss Grade (£600+)</div>
-    <div class="tier-info">
-        Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. 
-        For collectors who want the closest possible match to genuine luxury watches.
-    </div>
-    <div id="tier-elite" class="grid"></div>
+  <div class="tier-title">Elite Swiss Grade (£600+)</div>
+  <div class="tier-info">
+    Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. 
+    For collectors who want the closest possible match to genuine luxury watches.
+  </div>
+  <div id="tier-elite" class="grid">Loading watches...</div>
 </div>
 
 <div class="section">
-    <div class="tier-title">AAA Premium (£350 – £599)</div>
-    <div class="tier-info">
-        Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
-        Exceptional value for serious buyers.
-    </div>
-    <div id="tier-premium" class="grid"></div>
+  <div class="tier-title">AAA Premium (£350 – £599)</div>
+  <div class="tier-info">
+    Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
+    Exceptional value for serious buyers.
+  </div>
+  <div id="tier-premium" class="grid">Loading watches...</div>
 </div>
 
 <div class="section">
-    <div class="tier-title">AAA Value (£180 – £349)</div>
-    <div class="tier-info">
-        Strong quality with great appearance and durability. 
-        Ideal for daily wear and customers who want luxury looks at a sensible price.
-    </div>
-    <div id="tier-value" class="grid"></div>
+  <div class="tier-title">AAA Value (£180 – £349)</div>
+  <div class="tier-info">
+    Strong quality with great appearance and durability. 
+    Ideal for daily wear and customers who want luxury looks at a sensible price.
+  </div>
+  <div id="tier-value" class="grid">Loading watches...</div>
 </div>
 
 <div class="section">
-    <div class="tier-title">Entry Luxury (Under £180)</div>
-    <div class="tier-info">
-        Budget-friendly luxury designs. 
-        Stylish, attractive and perfect for gifts or first-time buyers.
-    </div>
-    <div id="tier-entry" class="grid"></div>
+  <div class="tier-title">Entry Luxury (Under £180)</div>
+  <div class="tier-info">
+    Budget-friendly luxury designs. 
+    Stylish, attractive and perfect for gifts or first-time buyers.
+  </div>
+  <div id="tier-entry" class="grid">Loading watches...</div>
 </div>
 
-<!-- REVIEWS -->
+<!-- Reviews Section -->
+<div class="section" id="reviews">
+  <h2>Customer Reviews</h2>
+</div>
+
+<!-- Contact Form -->
 <div class="section">
-    <div class="tier-title">Customer Reviews</div>
-    <div id="reviews" class="grid"></div>
+  <h2>Contact Us</h2>
+  <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="_replyto" placeholder="Your Email" required>
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
 </div>
 
-<script>
-const WISE="https://wise.com/pay/me/davids14542";
-
-// PRODUCT TIER CONTAINERS
-const elite = document.getElementById("tier-elite");
-const premium = document.getElementById("tier-premium");
-const value = document.getElementById("tier-value");
-const entry = document.getElementById("tier-entry");
-
-// SAMPLE SHOWCASE
-let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
-
-showcase.forEach(p=>{
-    const price = parseFloat(p.tagshopPrice) || 0;
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-        <img src="${p.img}">
-        <h3>${p.title}</h3>
-        <p>£${p.tagshopPrice}</p>
-        <button onclick="window.open('${p.link}')">Shop with Supplier</button>
-        <button onclick="window.open('${WISE}')">Buy via TagShop</button>
-    `;
-    if(price >= 600) elite.appendChild(card);
-    else if(price >= 350) premium.appendChild(card);
-    else if(price >= 180) value.appendChild(card);
-    else entry.appendChild(card);
-});
-
-// CUSTOMER REVIEWS
-const reviewsData = [
-    {
-        name: "stus****son",
-        date: "Nov 23, 2023",
-        text: "Finally got myself the no date Submariner and love its simplicity, for the price there probably isn't any match for this Ul sub. Quality ceramic bezel, lume glows bright, dial is on point, 2813 movement is noisy as expected but reliable. Jason was spot on with comms and delivery to UK was fast and tracking available all the way."
-    },
-    {
-        name: "danny****son88",
-        date: "Mar 03, 2022",
-        text: "Very happy with my sub no date watch. From the bezel to the clasp. Machined well, looks beautiful. Shipping took around 2 weeks, came with a rubber bezel protector. Will use this seller again."
-    },
-    {
-        name: "Jas****all",
-        date: "Mar 07, 2020",
-        text: "Immense quality for the price. Bracelet screws actually have a decent sized slot in the head so it's easy to adjust. Glide lock works. Finishing is excellent and keeping decent time."
-    },
-    {
-        name: "jim****078",
-        date: "Apr 15, 2023",
-        text: "First time using Jason007 but was reassured by the reviews and quick replies. The bezel clicks anti-clockwise in a reassuring way, the colour is spot on, lume is only on the hands. Face hour dashes match bezel exactly. Lovely watch. Will order more."
-    }
-];
-
-const reviewsContainer = document.getElementById("reviews");
-reviewsData.forEach(r=>{
-    const div = document.createElement("div");
-    div.className="review card";
-    div.innerHTML=`
-        <h4>${r.name} - <small>${r.date}</small></h4>
-        <p>${r.text}</p>
-    `;
-    reviewsContainer.appendChild(div);
-});
-</script>
-
-<!-- Tawk.to Chat -->
+<!-- Tawk.to Live Chat -->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -209,6 +187,85 @@ s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
+</script>
+
+<script>
+const WISE="https://wise.com/pay/me/davids14542";
+
+const elite = document.getElementById("tier-elite");
+const premium = document.getElementById("tier-premium");
+const value = document.getElementById("tier-value");
+const entry = document.getElementById("tier-entry");
+const reviewsDiv = document.getElementById("reviews");
+
+// Sample reviews data (replace with your sourced reviews)
+const reviews = [
+  {
+    name:"stus****son",
+    date:"Nov 23, 2023",
+    title:"High Grade Quartz Chronograph Mens",
+    text:"Finally got myself the no date Submariner and love its simplicity. Quality ceramic bezel, lume glows bright, dial is on point. Jason was spot on with his comms and delivery to UK was fast."
+  },
+  {
+    name:"danny****son88",
+    date:"Mar 03, 2022",
+    title:"St9 Steel 41MM Steel Watch Big Automatic",
+    text:"Very happy with my sub no date watch. Shipping took around 2 weeks, packaging was good, will be using this seller again."
+  },
+  {
+    name:"Jas****all",
+    date:"Mar 07, 2020",
+    title:"YZ Men Watch D Blue SEA-DWELLER",
+    text:"Immense quality for the price. Glide lock works well. Finishing is excellent and keeping decent time."
+  },
+  {
+    name:"jim****078",
+    date:"Apr 15, 2023",
+    title:"ST9 Wristwatches Sapphire Black watch Cer",
+    text:"First time using Jason007 but was reassured by the reviews. The watch is very good quality, bezel clicks anti-clockwise, face matches perfectly."
+  },
+  {
+    name:"sha***ez",
+    date:"Jun 25, 2022",
+    title:"ST9 Wristwatches Sapphire Black watch Cer",
+    text:"Woooow!!! Couldn’t be happier with my purchase. Communication amazing, product exceeded expectations."
+  }
+];
+
+reviews.forEach(r=>{
+  const d = document.createElement("div");
+  d.className="review";
+  d.innerHTML=`<h4>${r.name} - ${r.date}</h4>
+               <strong>${r.title}</strong>
+               <p>${r.text}</p>`;
+  reviewsDiv.appendChild(d);
+});
+
+// Load showcase products from localStorage
+let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
+
+if(!showcase.length){
+  document.querySelectorAll('.grid').forEach(el=>{
+    el.innerHTML='<p style="color:#ccc;text-align:center;width:100%;">No products added yet.</p>';
+  });
+} else {
+  showcase.forEach(p=>{
+    const price = parseFloat(p.tagshopPrice)||0;
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${p.img}">
+      <h3>${p.title}</h3>
+      <p>£${p.tagshopPrice}</p>
+      <button onclick="window.open('${p.link}')">Shop with Supplier</button>
+      <button onclick="window.open('${WISE}')">Buy via TagShop</button>
+    `;
+    if(price >= 600) elite.appendChild(card);
+    else if(price >= 350) premium.appendChild(card);
+    else if(price >= 180) value.appendChild(card);
+    else entry.appendChild(card);
+  });
+}
 </script>
 
 </body>
