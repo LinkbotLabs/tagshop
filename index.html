@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>TagShop Luxury Watches</title>
@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;background:#050505;color:#f5d77c;font-family:Montserrat}
-h1{text-align:center;font-family:Playfair Display;margin:30px 0}
-.section{padding:20px}
-.tier-title{font-size:1.6em;margin:20px 0 10px;text-align:center}
+body{margin:0;background:#050505;color:#f5d77c;font-family:Montserrat;}
+h1{text-align:center;font-family:Playfair Display;margin:30px 0;}
+.section{padding:20px;}
+.tier-title{font-size:1.6em;margin:20px 0 10px;text-align:center;}
 .tier-info{
  max-width:900px;margin:0 auto 20px;
  background:rgba(245,215,124,.08);
@@ -19,7 +19,7 @@ h1{text-align:center;font-family:Playfair Display;margin:30px 0}
  text-align:center;
  font-size:.95em;
 }
-.grid{display:flex;gap:20px;overflow-x:auto;padding:20px}
+.grid{display:flex;gap:20px;overflow-x:auto;padding:20px;}
 .card{
  min-width:240px;
  background:rgba(255,255,255,.06);
@@ -45,107 +45,85 @@ button{
  font-weight:600;
  cursor:pointer;
 }
-#chat-btn{
- position:fixed;bottom:25px;right:25px;
- background:#f5d77c;color:#050505;
- padding:15px;border-radius:50%;
- font-size:1.2em;cursor:pointer;z-index:999;
- box-shadow:0 4px 8px rgba(0,0,0,.5);
-}
-#chat-box{
- position:fixed;bottom:80px;right:25px;
- width:300px;background:#111;color:#fff;
- border-radius:12px;padding:15px;
- display:none;flex-direction:column;gap:8px;z-index:999;
-}
-#chat-box input,#chat-box textarea{
- width:100%;padding:8px;border-radius:6px;border:none;background:#222;color:#fff;
-}
-#chat-box button{background:#f5d77c;color:#050505;}
 .review-card{
- background:rgba(245,215,124,.08);
- color:#050505;
- padding:12px;
- border-radius:10px;
- margin-bottom:12px;
+ background:rgba(255,255,255,.08);
+ padding:15px;
+ margin:10px 0;
+ border-radius:12px;
+ max-width:800px;
 }
-.review-card h4{margin:0 0 5px;font-size:1em;font-weight:600;}
-.review-card p{margin:2px 0;font-size:.85em;}
+.review-card p{margin:5px 0;}
+form{
+ max-width:500px;
+ margin:20px auto;
+ background:rgba(245,215,124,.08);
+ padding:20px;
+ border-radius:12px;
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+}
+input,textarea{padding:10px;border-radius:8px;border:none;width:100%;}
+textarea{resize:vertical;}
 </style>
 </head>
-
 <body>
 
 <h1>TagShop Luxury Watches</h1>
 
+<!-- Watch Tiers -->
 <div class="section">
   <div class="tier-title">Elite Swiss Grade (£600+)</div>
-  <div class="tier-info">
-    Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. 
-    For collectors who want the closest possible match to genuine luxury watches.
-  </div>
+  <div class="tier-info">Top-tier 1:1 Swiss-grade replicas. Sapphire crystal, perfect branding and weight.</div>
   <div id="tier-elite" class="grid"></div>
 </div>
 
 <div class="section">
   <div class="tier-title">AAA Premium (£350 – £599)</div>
-  <div class="tier-info">
-    Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
-    Exceptional value for serious buyers.
-  </div>
+  <div class="tier-info">Best-selling range. 904L steel, sapphire glass, automatic movements. Exceptional value.</div>
   <div id="tier-premium" class="grid"></div>
 </div>
 
 <div class="section">
   <div class="tier-title">AAA Value (£180 – £349)</div>
-  <div class="tier-info">
-    Strong quality with great appearance and durability. 
-    Ideal for daily wear and customers who want luxury looks at a sensible price.
-  </div>
+  <div class="tier-info">Strong quality, ideal for daily wear. Luxury looks at sensible price.</div>
   <div id="tier-value" class="grid"></div>
 </div>
 
 <div class="section">
   <div class="tier-title">Entry Luxury (Under £180)</div>
-  <div class="tier-info">
-    Budget-friendly luxury designs. 
-    Stylish, attractive and perfect for gifts or first-time buyers.
-  </div>
+  <div class="tier-info">Budget-friendly luxury designs. Stylish and perfect for gifts or first-time buyers.</div>
   <div id="tier-entry" class="grid"></div>
 </div>
 
+<!-- Reviews -->
 <div class="section">
-  <div class="tier-title">Customer Reviews</div>
+  <h2 style="text-align:center;">Customer Reviews</h2>
   <div id="reviews"></div>
 </div>
 
-<!-- Chat Button -->
-<div id="chat-btn">💬</div>
-
-<!-- Chat Box -->
-<div id="chat-box">
-  <input type="text" id="chat-name" placeholder="Your Name">
-  <input type="email" id="chat-email" placeholder="Your Email">
-  <textarea id="chat-message" placeholder="Your Message"></textarea>
-  <button id="chat-send">Send</button>
-  <p id="chat-status" style="font-size:.85em;margin-top:5px;"></p>
+<!-- Contact Form -->
+<div class="section">
+  <h2 style="text-align:center;">Contact TagShop</h2>
+  <form action="https://formsubmit.co/YOUR_EMAIL_HERE" method="POST">
+    <input type="text" name="name" placeholder="Your name" required>
+    <input type="email" name="email" placeholder="Your email" required>
+    <textarea name="message" rows="5" placeholder="Your message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 <script>
-emailjs.init("uMBWBshmzlvZ8v52yJO_n"); // your public key
+const WISE = "https://wise.com/pay/me/davids14542";
 
-const WISE="https://wise.com/pay/me/davids14542";
-
+// Tiers
 const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
-const reviewsDiv = document.getElementById("reviews");
 
+// Example showcase from localStorage
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
-
-// Display items in tiers
 showcase.forEach(p=>{
  const price = parseFloat(p.tagshopPrice) || 0;
  const card = document.createElement("div");
@@ -163,69 +141,37 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// Example reviews
-const reviews = [
-{
- name:"stus****son",
- date:"Nov 23, 2023",
- rating:5,
- comment:"Finally got myself the no date Submariner and love it's simplicity, for the price there probably isn't any match for this Ul sub. Quality ceramic bezel, lume glows bright, dial is on point and p**I glows same colour as the dial unlike some reviews, the rehaut is also lined up spot on, 2813 movement is noisy as they all are but that's expected in this price point but not a put off for me as they seem reliable. Jason was spot on with his comms and delivery to UK was fast and tracking available all the way."
-},
-{
- name:"danny****son88",
- date:"Mar 03, 2022",
- rating:5,
- comment:"Very happy with my sub no date watch. From the bezel to the clasp. Machined well, looks beautiful and genuine. Shipping took around 2 weeks which is fine, didn't have to contact the seller but he sent me a quality piece so I'm satisfied and recommend this seller."
-},
-{
- name:"Jas****all",
- date:"Mar 07, 2020",
- rating:5,
- comment:"Immense quality for the price. Bracelet screws actually have a decent sized slot in the head so it's easy to adjust. Glide lock works. Finishing is excellent and keeping decent time. Everything well aligned on the dial including rehaut. Very quick delivery."
-},
-{
- name:"jim****078",
- date:"Apr 15, 2023",
- rating:5,
- comment:"First time using Jason007 but was reassured by the reviews and the quick reply of messages when I asked him a couple of questions. The watch is **ly good quality! The bezel clicks anti-clockwise in a reassuring way, the colour is spot on, lume is only on the hands but that's to be expected given the colour on the dots, the face hour dashes match exactly to the bezel when at 12 o clock. A lovely watch. I will 100% be ordering more watches from Jason."
-},
-{
- name:"sha***ez",
- date:"Jun 25, 2022",
- rating:5,
- comment:"Woooow. alhamdulillah!!! I couldn't be more happier with my purchase. the communication with the seller was amazing. the product has exceeded my expectations. I am sooo happy alhamdulillah."
-}
+// Reviews
+const reviewsData = [
+  {
+    name:"stus****son",
+    date:"November 23, 2023",
+    text:"Finally got myself the no date Submariner and love its simplicity. Quality ceramic bezel, lume glows bright, dial is on point. 2813 movement is noisy but reliable. Jason was spot on with comms and fast UK delivery."
+  },
+  {
+    name:"danny****son88",
+    date:"March 03, 2022",
+    text:"Very happy with my sub no date watch. From bezel to clasp, looks beautiful. Shipping ~2 weeks. Packaging was good. Will use this seller again."
+  },
+  {
+    name:"Jas****all",
+    date:"March 07, 2020",
+    text:"Immense quality for the price. Bracelet screws easy to adjust, glide lock works, finishing excellent, keeping decent time."
+  },
+  {
+    name:"jim****078",
+    date:"April 15, 2023",
+    text:"First time using Jason007 but was reassured by reviews and quick replies. The bezel clicks correctly, color is spot on, face hour dashes match bezel perfectly."
+  }
 ];
 
-reviews.forEach(r=>{
- const div = document.createElement("div");
- div.className="review-card";
- div.innerHTML=`
-   <h4>${r.name} - ${r.date}</h4>
-   <p>Rating: ${"★".repeat(r.rating)}</p>
-   <p>${r.comment}</p>
- `;
- reviewsDiv.appendChild(div);
+const reviewsDiv = document.getElementById("reviews");
+reviewsData.forEach(r=>{
+ const d = document.createElement("div");
+ d.className="review-card";
+ d.innerHTML=`<p><strong>${r.name}</strong> — ${r.date}</p><p>${r.text}</p>`;
+ reviewsDiv.appendChild(d);
 });
-
-// Chat functionality
-const chatBtn = document.getElementById("chat-btn");
-const chatBox = document.getElementById("chat-box");
-const chatSend = document.getElementById("chat-send");
-const chatStatus = document.getElementById("chat-status");
-
-chatBtn.onclick = ()=> chatBox.style.display = chatBox.style.display==="flex" ? "none":"flex";
-
-chatSend.onclick = ()=>{
- const name = document.getElementById("chat-name").value;
- const email = document.getElementById("chat-email").value;
- const message = document.getElementById("chat-message").value;
- if(!name||!email||!message){ chatStatus.textContent="Please fill all fields."; return; }
- chatStatus.textContent="Sending...";
- emailjs.send("service_pzzseh7","bceEcXpLIRDpJxOHM",{from_name:name,from_email:email,message:message})
- .then(()=>{ chatStatus.textContent="Message sent! Thank you."; document.getElementById("chat-name").value=""; document.getElementById("chat-email").value=""; document.getElementById("chat-message").value=""; })
- .catch(err=>{ chatStatus.textContent="Failed to send. Try again."; console.error(err); });
-};
 </script>
 
 </body>
