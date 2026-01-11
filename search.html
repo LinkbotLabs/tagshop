@@ -63,10 +63,14 @@ function score(t){
  return s;
 }
 
-// FIXED: Search Supplier button opens DHgate search correctly
+// FIXED: Search Supplier Button
 function searchSupplier(title){
     if(!title) return;
-    const url = "https://www.dhgate.com/wholesale?SearchText=" + encodeURIComponent(title);
+    // remove unsupported characters for URL
+    let clean = title.replace(/[^\w\s]/gi, '');
+    // replace spaces with +
+    let query = clean.trim().replace(/\s+/g, '+');
+    const url = "https://www.dhgate.com/wholesale?SearchText=" + query;
     window.open(url,"_blank");
 }
 
