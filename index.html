@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TagShop • Private Luxury Watch Concierge</title>
+  <title>TagShop • Exclusive Private Watch Concierge</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #050505;
-      --text: #e8d9a6;
-      --gold: #f5d77c;
-      --gold-dark: #d4b45c;
-      --card: rgba(255,255,255,0.06);
-      --card-hover: rgba(255,255,255,0.11);
+      --bg: #000000;
+      --text: #e8d9b0;
+      --gold: #d4af37;
+      --gold-dark: #b8962e;
+      --card-bg: rgba(30,30,30,0.45);
+      --card-hover: rgba(50,50,50,0.65);
+      --accent: #c9a96e;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -24,14 +25,16 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Montserrat', sans-serif;
-      line-height: 1.5;
+      line-height: 1.6;
       overflow-x: hidden;
+      min-height: 100vh;
+      overflow-y: auto;
     }
 
     h1, h2, h3 {
       font-family: 'Playfair Display', serif;
       color: var(--gold);
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
 
     .hero-bg {
@@ -46,8 +49,8 @@
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-      animation: crossfade 60s infinite;
+      transition: opacity 1.8s ease-in-out;
+      animation: cinematicFade 60s infinite;
     }
     .hero-bg img:nth-child(1) { animation-delay: 0s; }
     .hero-bg img:nth-child(2) { animation-delay: 12s; }
@@ -55,7 +58,7 @@
     .hero-bg img:nth-child(4) { animation-delay: 36s; }
     .hero-bg img:nth-child(5) { animation-delay: 48s; }
 
-    @keyframes crossfade {
+    @keyframes cinematicFade {
       0%   { opacity: 0; }
       5%   { opacity: 1; }
       20%  { opacity: 1; }
@@ -66,94 +69,88 @@
     .overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 25%, rgba(245,215,140,0.12), transparent 40%),
-                  linear-gradient(to bottom, rgba(5,5,5,0.45), rgba(5,5,5,0.95) 70%);
+      background: radial-gradient(circle at 50% 20%, rgba(212,175,55,0.12), transparent 60%),
+                  linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.95) 70%);
       z-index: -1;
     }
 
     header {
       text-align: center;
-      padding: 80px 20px 40px;
+      padding: 140px 20px 80px;
+      animation: fadeUp 1.8s ease-out;
     }
     header h1 {
-      font-size: 3.6rem;
-      margin-bottom: 0.2em;
+      font-size: 4.2rem;
+      margin-bottom: 0.25em;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.8);
     }
     header p {
-      font-size: 1.1rem;
-      opacity: 0.8;
-      max-width: 680px;
+      font-size: 1.3rem;
+      opacity: 0.9;
+      max-width: 780px;
       margin: 0 auto;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .container {
-      max-width: 1320px;
+      max-width: 1480px;
       margin: 0 auto;
-      padding: 0 20px 60px;
+      padding: 0 40px 120px;
+      position: relative;
+      z-index: 2;
     }
+
+    .admin-only { display: none; }
 
     .search-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 18px;
       justify-content: center;
-      margin: 40px 0 60px;
+      margin: 60px 0 80px;
+      animation: fadeUp 1.6s ease-out 0.4s both;
     }
     input[type="text"], button {
-      padding: 14px 20px;
-      font-size: 1.05rem;
+      padding: 18px 28px;
+      font-size: 1.15rem;
       border: none;
-      border-radius: 12px;
+      border-radius: 16px;
+      transition: all 0.35s;
     }
     input[type="text"] {
       flex: 1;
-      min-width: 320px;
+      min-width: 380px;
       background: rgba(255,255,255,0.08);
       color: white;
+      backdrop-filter: blur(8px);
     }
     button {
       background: var(--gold);
-      color: black;
+      color: #000;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.25s;
     }
-    button:hover { background: var(--gold-dark); transform: translateY(-1px); }
-
-    .nav {
-      text-align: center;
-      margin: 30px 0;
-      font-weight: 500;
-    }
-    .nav button {
-      width: auto;
-      padding: 10px 24px;
-      margin: 0 8px;
-      background: rgba(245,215,124,0.15);
-      color: var(--gold);
-    }
-
-    .stats {
-      text-align: center;
-      margin: 20px 0 40px;
-      font-size: 0.95rem;
-      opacity: 0.8;
-    }
+    button:hover { background: var(--gold-dark); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,0.25); }
 
     .section-title {
       text-align: center;
-      font-size: 2.4rem;
-      margin: 70px 0 40px;
+      font-size: 2.8rem;
+      margin: 100px 0 60px;
       position: relative;
     }
     .section-title::after {
       content: "";
-      width: 80px;
+      width: 120px;
       height: 2px;
-      background: var(--gold);
-      opacity: 0.4;
+      background: var(--accent);
+      opacity: 0.6;
       display: block;
-      margin: 12px auto 0;
+      margin: 20px auto 0;
     }
 
     .carousel {
@@ -162,282 +159,186 @@
     }
     .carousel-track {
       display: flex;
-      gap: 28px;
-      transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
-      padding: 20px 0;
+      gap: 40px;
+      padding: 30px 0;
+      transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
     }
-
     .card {
-      flex: 0 0 300px;
-      background: var(--card);
-      border-radius: 20px;
-      padding: 18px;
-      backdrop-filter: blur(8px);
-      transition: all 0.35s;
-      border: 1px solid rgba(245,215,124,0.08);
+      flex: 0 0 340px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(212,175,55,0.15);
+      transition: all 0.5s ease;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: cardReveal 1s forwards;
     }
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
     .card:hover {
-      transform: translateY(-10px);
+      transform: translateY(-18px) scale(1.03);
       background: var(--card-hover);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
     }
     .card img {
       width: 100%;
-      height: 240px;
+      height: 280px;
       object-fit: contain;
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 14px;
+      background: #111;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      transition: transform 0.4s;
     }
+    .card:hover img { transform: scale(1.06); }
+
     .card h4 {
-      font-size: 1.15rem;
-      margin-bottom: 8px;
+      font-size: 1.35rem;
+      margin-bottom: 12px;
       line-height: 1.3;
+    }
+    .card .desc {
+      font-size: 0.97rem;
+      opacity: 0.82;
+      margin-bottom: 16px;
+      line-height: 1.55;
     }
     .card .highlight {
       color: #ffeb3b;
       font-weight: 600;
-      font-size: 0.9rem;
-      margin: 6px 0;
+      font-size: 1rem;
+      margin: 10px 0;
     }
     .card .price {
       color: var(--gold);
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.25rem;
     }
+
     .price-input {
       width: 100%;
-      margin: 10px 0 6px;
-      padding: 10px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(245,215,124,0.2);
+      margin: 14px 0 10px;
+      padding: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,175,55,0.3);
       color: white;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
     }
 
     .btn-row {
       display: flex;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 14px;
+      margin-top: 16px;
     }
     .btn-row button {
       flex: 1;
-      font-size: 0.92rem;
-      padding: 10px;
+      padding: 14px;
+      font-size: 0.98rem;
     }
-    .btn-showcase { background: rgba(245,215,124,0.25); color: var(--gold); }
-    .btn-shop     { background: #00ff9c; color: black; }
+    .btn-curate   { background: rgba(212,175,55,0.25); color: var(--gold); }
+    .btn-publish  { background: #00e68a; color: #000; font-weight: 600; }
 
-    @media (max-width: 900px) {
-      .card { flex: 0 0 260px; }
-      header h1 { font-size: 2.8rem; }
+    @keyframes cardReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .card { flex: 0 0 300px; }
+      header h1 { font-size: 3.4rem; }
     }
   </style>
 </head>
 <body>
 
 <div class="hero-bg">
-  <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=2000&q=90" alt="luxury watch dark">
-  <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=2000&q=90" alt="luxury watch macro">
-  <img src="https://images.unsplash.com/photo-1587836374828-4db7f7d6d2c6?auto=format&fit=crop&w=2000&q=90" alt="elegant timepiece">
-  <img src="https://images.unsplash.com/photo-1609587312208-cea54be969e7?auto=format&fit=crop&w=2000&q=90" alt="gold watch detail">
-  <img src="https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=2000&q=90" alt="luxury watch black bg">
+  <img src="https://www.shutterstock.com/image-photo/beautifully-designed-wrist-watch-dark-260nw-1761441800.jpg" alt="Cinematic luxury watch">
+  <img src="https://www.shutterstock.com/image-photo/closeup-luxury-man-wrist-watch-260nw-726157354.jpg" alt="Timeless elegance">
+  <img src="https://www.shutterstock.com/image-photo/nice-luxury-mans-wrist-watch-260nw-2114443649.jpg" alt="Gold accents drama">
+  <img src="https://www.shutterstock.com/image-photo/black-luxury-watch-on-coals-260nw-1914091201.jpg" alt="Dark moody masterpiece">
+  <img src="https://png.pngtree.com/thumb_back/fw800/background/20251117/pngtree-luxury-wristwatch-featuring-gold-accents-and-an-intricate-design-creating-elegant-image_20331816.webp" alt="Sophisticated timepiece">
 </div>
 <div class="overlay"></div>
 
 <header>
   <h1>TagShop</h1>
-  <p>Private Luxury Watch Concierge • Curated Collector-Grade Timepieces</p>
+  <p>Exclusive Private Concierge • Curated Collector Masterpieces • Where Time Becomes Legacy</p>
 </header>
 
 <div class="container">
 
-  <div class="search-bar">
-    <input id="q" placeholder="Rolex Submariner, AP Royal Oak, Patek Nautilus…" autocomplete="off"/>
-    <button onclick="search()">Search Network</button>
+  <!-- Admin Controls -->
+  <div class="search-bar admin-only">
+    <input id="q" placeholder="Search Rolex, Audemars Piguet, Patek Philippe…" autocomplete="off"/>
+    <button onclick="search()">Explore Network</button>
   </div>
 
-  <div class="nav">
-    <button onclick="prevPage()">◀ Previous</button>
-    <span id="pageInfo">Page 1</span>
-    <button onclick="nextPage()">Next ▶</button>
+  <div class="admin-only" style="text-align:center; margin:40px 0;">
+    <button onclick="logoutAdmin()" style="background:#c0392b; color:white; padding:14px 40px;">Exit Admin Mode</button>
   </div>
 
-  <div class="stats" id="stats">Curated: 0 • Published to Shop: 0</div>
+  <!-- Public Showcase -->
+  <h2 class="section-title">Curated Masterpieces</h2>
+  <div class="carousel">
+    <div class="carousel-track" id="shopTrack"></div>
+  </div>
 
-  <div id="results" class="carousel">
+  <!-- Admin Sections -->
+  <h2 class="section-title admin-only">Search Results</h2>
+  <div class="carousel admin-only">
     <div class="carousel-track" id="searchTrack"></div>
   </div>
 
-  <h2 class="section-title">Private Curated Selection</h2>
-  <div id="showcase" class="carousel">
+  <h2 class="section-title admin-only">Private Curation Vault</h2>
+  <div class="carousel admin-only">
     <div class="carousel-track" id="showcaseTrack"></div>
-  </div>
-
-  <h2 class="section-title">Live Shop Collection</h2>
-  <div id="shopView" class="carousel">
-    <div class="carousel-track" id="shopTrack"></div>
   </div>
 
 </div>
 
 <script>
-const API_KEY = "AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CX      = "f7e219616fe1d4629";
-const AFF_TAG = "2545671";
-const WISE    = "https://wise.com/pay/me/davids14542";
+const ADMIN_PASS = "lux2026elite"; // ← CHANGE THIS to your secure password
+const ADMIN_KEY = "tagshop_elite_access";
+const SHOP_KEY = "tagshop_live_collection";
 
-const SHOWCASE_KEY = "tagshopShowcase";
-const SHOP_KEY     = "tagshopShop";
+let shop = JSON.parse(localStorage.getItem(SHOP_KEY) || "[]");
+let showcase = []; // Admin only - reset on logout
 
-let currentQuery = "";
-let startIndex   = 1;
-let searchResults = [];
+function isAdmin() { return localStorage.getItem(ADMIN_KEY) === "true"; }
 
-let showcase = JSON.parse(localStorage.getItem(SHOWCASE_KEY) || "[]");
-let shop     = JSON.parse(localStorage.getItem(SHOP_KEY)     || "[]");
-
-function saveShowcase() { localStorage.setItem(SHOWCASE_KEY, JSON.stringify(showcase)); updateStats(); }
-function saveShop()     { localStorage.setItem(SHOP_KEY,     JSON.stringify(shop));     updateStats(); }
-
-function updateStats() {
-  document.getElementById("stats").textContent =
-    `Curated: ${showcase.length} • Published to Shop: ${shop.length}`;
+function showAdmin() {
+  document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
 }
 
-function score(title) {
-  const t = title.toLowerCase();
-  let s = 0;
-  if (t.includes("aaa"))      s += 4;
-  if (t.includes("box") || t.includes("box & papers")) s += 3;
-  if (t.includes("papers"))   s += 3;
-  if (t.includes("full set")) s += 4;
-  if (t.includes("904l"))     s += 3;
-  if (t.includes("automatic")) s += 2;
-  if (t.includes("sapphire")) s += 2;
-  if (t.includes("unworn"))   s += 4;
-  return s;
+function hideAdmin() {
+  document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
 }
 
-async function search() {
-  currentQuery = document.getElementById("q").value.trim();
-  if (!currentQuery) return alert("Please enter a search term");
-  startIndex = 1;
-  await fetchResults();
-}
-
-async function fetchResults() {
-  try {
-    const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API_KEY}&start=${startIndex}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("API error");
-    const data = await res.json();
-
-    searchResults = (data.items || []).map(item => ({
-      title: item.title || "Untitled Listing",
-      img: item.pagemap?.cse_image?.[0]?.src || "https://via.placeholder.com/300x240/111/eee?text=No+Image",
-      link: item.link.includes("?") ? item.link + "&aff=" + AFF_TAG : item.link + "?aff=" + AFF_TAG,
-      score: score(item.title || "")
-    })).sort((a,b) => b.score - a.score);
-
-    renderSearchResults();
-    document.getElementById("pageInfo").textContent = `Page ${Math.ceil(startIndex / 10)}`;
-  } catch (e) {
-    console.error(e);
-    alert("Sorry, search failed. Check API key or quota.");
+function loginAdmin() {
+  const pass = prompt("Private Concierge Access — Enter credentials:");
+  if (pass === ADMIN_PASS) {
+    localStorage.setItem(ADMIN_KEY, "true");
+    showAdmin();
+    alert("Welcome, Concierge. Access granted.");
+  } else {
+    alert("Access denied.");
   }
 }
 
-function renderSearchResults() {
-  const track = document.getElementById("searchTrack");
-  track.innerHTML = "";
-
-  searchResults.forEach((item, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${item.img}" alt="${item.title}" loading="lazy">
-      <h4>${item.title}</h4>
-      ${item.score >= 8 ? '<div class="highlight">★ Premium Selection</div>' : ''}
-      <input type="number" class="price-input" placeholder="Supplier Price (£)" id="sup-${i}">
-      <input type="number" class="price-input" placeholder="TagShop Price (£)" id="tag-${i}">
-      <div class="btn-row">
-        <button onclick="window.open('${item.link}','_blank')">View Dealer</button>
-        <button class="btn-showcase" onclick="addToShowcase(${i})">Curate</button>
-        <button class="btn-shop" onclick="addToShopFromSearch(${i})">Publish</button>
-      </div>
-    `;
-    track.appendChild(card);
-  });
-}
-
-function buildItemFromSearch(idx) {
-  return {
-    title: searchResults[idx].title,
-    img:   searchResults[idx].img,
-    link:  searchResults[idx].link,
-    score: searchResults[idx].score,
-    supplierPrice: parseFloat(document.getElementById(`sup-${idx}`)?.value) || 0,
-    tagshopPrice:  parseFloat(document.getElementById(`tag-${idx}`)?.value) || 0
-  };
-}
-
-function addToShowcase(idx) {
-  const item = buildItemFromSearch(idx);
-  if (showcase.some(x => x.link === item.link)) return alert("Already in curation");
-  showcase.push(item);
-  saveShowcase();
-  renderShowcase();
-}
-
-function addToShopFromSearch(idx) {
-  const item = buildItemFromSearch(idx);
-  if (shop.some(x => x.link === item.link)) return alert("Already in shop");
-  shop.unshift(item);
-  saveShop();
-  renderShop();
-  alert("Published to Live Shop");
-}
-
-function addCuratedToShop(idx) {
-  const item = showcase[idx];
-  if (shop.some(x => x.link === item.link)) return alert("Already in shop");
-  shop.unshift(item);
-  saveShop();
-  renderShop();
-  alert("Curated piece published to Live Shop");
-}
-
-function removeFromShowcase(idx) {
-  showcase.splice(idx, 1);
-  saveShowcase();
-  renderShowcase();
-}
-
-function renderShowcase() {
-  const track = document.getElementById("showcaseTrack");
-  track.innerHTML = showcase.length === 0 ? "<p style='padding:60px;text-align:center;opacity:0.6'>Your private selection is empty…</p>" : "";
-
-  showcase.forEach((item, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${item.img}" alt="${item.title}" loading="lazy">
-      <h4>${item.title}</h4>
-      ${item.tagshopPrice ? `<p class="price">TagShop: £${item.tagshopPrice.toLocaleString()}</p>` : ''}
-      <div class="btn-row">
-        <button onclick="addCuratedToShop(${i})">Publish to Shop</button>
-        <button style="background:#ff5252;color:white;" onclick="removeFromShowcase(${i})">Remove</button>
-      </div>
-    `;
-    track.appendChild(card);
-  });
+function logoutAdmin() {
+  localStorage.removeItem(ADMIN_KEY);
+  hideAdmin();
+  alert("Concierge session ended.");
 }
 
 function renderShop() {
   const track = document.getElementById("shopTrack");
-  track.innerHTML = shop.length === 0 ? "<p style='padding:60px;text-align:center;opacity:0.6'>No pieces published yet…</p>" : "";
+  track.innerHTML = shop.length === 0 
+    ? '<p style="text-align:center; padding:120px 0; opacity:0.7; font-size:1.3rem;">The collection awaits its first masterpiece…</p>'
+    : '';
 
   shop.forEach(item => {
     const card = document.createElement("div");
@@ -445,27 +346,62 @@ function renderShop() {
     card.innerHTML = `
       <img src="${item.img}" alt="${item.title}" loading="lazy">
       <h4>${item.title}</h4>
-      <p>
-        <b>TagShop Certified</b><br>
-        ${item.supplierPrice ? `Supplier £${item.supplierPrice.toLocaleString()} → ` : ""}
-        <span class="price">£${item.tagshopPrice.toLocaleString()}</span>
-      </p>
+      <p class="desc">${item.desc || "A timeless icon of precision and elegance."}</p>
+      <p class="price">£${(item.tagshopPrice || 0).toLocaleString()}</p>
       <div class="btn-row">
-        <button onclick="window.open('${item.link}','_blank')">Dealer Listing</button>
-        <button onclick="window.open('${WISE}','_blank')">Secure Purchase</button>
+        <button onclick="window.open('${item.link}','_blank')">View Details</button>
+        <button style="background:#00e68a;">Enquire Privately</button>
       </div>
     `;
     track.appendChild(card);
   });
 }
 
-function nextPage() { startIndex += 10; fetchResults(); }
-function prevPage() { if (startIndex > 1) { startIndex -= 10; fetchResults(); } }
+// Simple admin add function (expand later with full search)
+function addToShop(title, img, price, link, desc = "") {
+  shop.unshift({ title, img, tagshopPrice: price, link, desc });
+  localStorage.setItem(SHOP_KEY, JSON.stringify(shop));
+  renderShop();
+}
+
+// Example initial masterpieces (replace with your real data)
+if (shop.length === 0) {
+  addToShop(
+    "Rolex Submariner Date",
+    "https://cdn.shopify.com/s/files/1/0059/5152/0820/files/image21_jpg_600x600.webp?v=1693417439",
+    14500,
+    "https://www.rolex.com",
+    "The definitive dive watch — iconic, robust, eternally desired."
+  );
+  addToShop(
+    "Audemars Piguet Royal Oak",
+    "http://timepiecetradingllc.com/cdn/shop/articles/Limited_Edition_Alert_Audemars_Piguet_Royal_Oak_Sand_Gold.jpg?v=1717021497",
+    52000,
+    "https://www.audemarspiguet.com",
+    "Architectural brilliance meets haute horlogerie."
+  );
+  addToShop(
+    "Patek Philippe Nautilus",
+    "https://swisswatches-magazine.com/uploads/2021/11/Patek-Philippe-PP-Nautilus-5711A-Gerald-Genta-Design-2048x1365.jpg",
+    98000,
+    "https://www.patek.com",
+    "The pinnacle of understated luxury — forever iconic."
+  );
+}
 
 // Init
-updateStats();
-renderShowcase();
 renderShop();
+
+if (!isAdmin()) {
+  hideAdmin();
+  setTimeout(() => {
+    if (confirm("Would you like to enter Private Concierge Mode?")) {
+      loginAdmin();
+    }
+  }, 1800);
+} else {
+  showAdmin();
+}
 </script>
 </body>
 </html>
