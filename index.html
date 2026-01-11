@@ -14,7 +14,7 @@ body {
   color:#f5d77c;
   font-family:Montserrat;
 }
-h1,h2,h3 {
+h1, h2 {
   font-family:Playfair Display;
   color:#f5d77c;
   text-align:center;
@@ -41,9 +41,11 @@ h1,h2,h3 {
 }
 .grid {
   display:flex;
+  flex-direction:column; /* vertical scrolling */
   gap:20px;
-  overflow-x:auto;
-  padding:20px;
+  max-height:500px; /* adjust per tier */
+  overflow-y:auto;
+  padding:10px 0;
 }
 .card {
   min-width:240px;
@@ -70,37 +72,16 @@ button {
   font-weight:600;
   cursor:pointer;
 }
-.notice {
-  background:rgba(245,215,124,.08);
-  padding:10px;
-  margin:10px auto 20px;
-  max-width:900px;
-  text-align:center;
-  border-radius:12px;
-  font-size:1em;
-}
 
-/* HERO CAROUSEL */
+/* HERO */
 .hero-carousel {
   position:relative;
   width:100%;
-  height:300px;
+  height:400px;
   margin-bottom:20px;
-  border-radius:12px;
   overflow:hidden;
-}
-.hero-carousel img {
-  width:100%;
-  height:300px;
-  object-fit:cover;
-  position:absolute;
-  top:0;
-  left:0;
-  opacity:0;
-  transition: opacity 1s ease-in-out;
-}
-.hero-carousel img.active {
-  opacity:1;
+  background: url('https://i.imgur.com/8qK5GqM.jpg') center/cover no-repeat;
+  border-radius:12px;
 }
 .hero-overlay {
   position:absolute;
@@ -121,74 +102,98 @@ button {
   text-align:center;
 }
 
-/* DRAWER BUTTONS */
-#side-buttons {
-  position:fixed;
-  top:100px;
-  right:0;
-  z-index:1001;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-#side-buttons button {
-  width:120px;
+/* NOTICE */
+.notice {
+  background:rgba(245,215,124,.08);
+  padding:10px;
+  margin:10px auto 20px;
+  max-width:900px;
+  text-align:center;
+  border-radius:12px;
+  font-size:1em;
 }
 
-/* DRAWER */
-#drawer {
-  position:fixed;
-  top:0;
-  right:-350px;
-  width:300px;
-  height:100%;
-  background:rgba(0,0,0,0.95);
-  color:#f5d77c;
-  padding:20px;
-  overflow-y:auto;
-  transition:right 0.3s ease;
-  z-index:1000;
-}
-#drawer button {
-  position:absolute;
-  top:10px;
-  right:10px;
-  width:auto;
-  padding:5px 10px;
+/* DRAWER PANELS */
+.drawer-button {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  border:none;
   background:#f5d77c;
   color:#050505;
-  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+  text-align:left;
 }
-
-/* REVIEW BOX */
-.review {
+.drawer-content {
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.3s ease;
   background:rgba(245,215,124,.08);
+  padding:0 15px;
   border-radius:12px;
-  padding:10px;
   margin-bottom:10px;
   font-size:0.9em;
 }
+.drawer-content.open {
+  max-height:500px; /* adjust as needed */
+  padding:15px;
+}
+
+/* LAYOUT */
+.content {
+  margin-right:20px; /* leave space for drawers if needed */
+}
 </style>
 </head>
+
 <body>
 
-<!-- HERO -->
-<div class="hero-carousel" id="hero-carousel">
-  <img src="https://i.imgur.com/8qK5GqM.jpg" class="active">
-  <img src="https://i.imgur.com/wQ1bJkl.jpg">
-  <img src="https://i.imgur.com/LdNJu6F.jpg">
+<div class="hero-carousel">
   <div class="hero-overlay"></div>
   <div class="hero-text">Premium Watches, Curated Just For You</div>
 </div>
 
 <h1>TagShop Luxury Watches</h1>
-<div class="notice">
-All watches have the correct markings and will look exactly as expected when they arrive to you.
+<div class="notice">All watches have the correct markings and will look as expected when they arrive to you.</div>
+
+<!-- DRAWER PANELS -->
+<div class="content" style="max-width:300px; margin:auto;">
+  <button class="drawer-button">About TagShop</button>
+  <div class="drawer-content">
+    <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support for our customers. Each piece is carefully inspected before it reaches you.</p>
+  </div>
+
+  <button class="drawer-button">Supplier Route</button>
+  <div class="drawer-content">
+    <p>Buying directly from suppliers can save money but may involve navigating exchange rates, slower shipping, and varying quality checks. Finding the perfect watch can be time-consuming.</p>
+  </div>
+
+  <button class="drawer-button">Customer Reviews</button>
+  <div class="drawer-content" id="reviews">
+    <div class="review">
+      <strong>jim****078</strong> | April 15, 2023<br>
+      First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
+    </div>
+    <div class="review">
+      <strong>romm****3_59</strong> | June 25, 2024<br>
+      Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
+    </div>
+    <div class="review">
+      <strong>stus****son</strong> | Nov 23, 2023<br>
+      Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
+    </div>
+    <div class="review">
+      <strong>danny****son88</strong> | March 03,2022<br>
+      Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
+    </div>
+  </div>
 </div>
 
+<!-- PRODUCT TIERS -->
 <div class="content">
 
-<!-- PRODUCT TIERS -->
 <div class="section">
   <div class="tier-title">Elite Swiss Grade (£600+)</div>
   <div class="tier-info">
@@ -210,7 +215,8 @@ All watches have the correct markings and will look exactly as expected when the
 <div class="section">
   <div class="tier-title">AAA Value (£180 – £349)</div>
   <div class="tier-info">
-    Strong quality with great appearance and durability. Ideal for daily wear and customers who want luxury looks at a sensible price.
+    Strong quality with great appearance and durability. 
+    Ideal for daily wear and customers who want luxury looks at a sensible price.
   </div>
   <div id="tier-value" class="grid"></div>
 </div>
@@ -225,22 +231,18 @@ All watches have the correct markings and will look exactly as expected when the
 
 </div>
 
-<!-- SIDE BUTTONS -->
-<div id="side-buttons">
-  <button onclick="openDrawer('about')">About Us</button>
-  <button onclick="openDrawer('reviews')">Reviews</button>
-  <button onclick="openDrawer('supplier')">Supplier Info</button>
-</div>
-
-<!-- DRAWER -->
-<div id="drawer">
-  <button onclick="closeDrawer()">Close ✖</button>
-  <div id="drawer-content"></div>
-</div>
-
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
 
+// Drawer toggle
+document.querySelectorAll('.drawer-button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const content = btn.nextElementSibling;
+    content.classList.toggle('open');
+  });
+});
+
+// Populate products
 const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
@@ -264,41 +266,6 @@ showcase.forEach(p=>{
  else if(price >= 180) value.appendChild(card);
  else entry.appendChild(card);
 });
-
-// HERO CAROUSEL
-const heroImages = document.querySelectorAll("#hero-carousel img");
-let current = 0;
-setInterval(()=>{
- heroImages[current].classList.remove("active");
- current = (current+1)%heroImages.length;
- heroImages[current].classList.add("active");
-},5000);
-
-// DRAWER SYSTEM
-const drawer = document.getElementById('drawer');
-const content = document.getElementById('drawer-content');
-const sections = {
-  about: `<h3>About TagShop</h3>
-<p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support. Every watch is inspected and marked correctly so it looks perfect when it arrives.</p>`,
-
-  reviews: `<h3>Customer Reviews</h3>
-<div class="review"><strong>jim****078</strong> | Apr 15, 2023<br>First time using Jason007… Bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match. Lovely watch. Will order more.</div>
-<div class="review"><strong>romm****3_59</strong> | Jun 25, 2024<br>Ul Submariner Miyota… 14 days delivery, weight perfect, bezel and SELs tight, rehaut aligned.</div>
-<div class="review"><strong>stus****son</strong> | Nov 23, 2023<br>No date Submariner… Ceramic bezel, bright lume, 2813 movement noisy but reliable. Fast UK delivery.</div>
-<div class="review"><strong>danny****son88</strong> | Mar 03,2022<br>Very happy with sub no date, packaging good, tracking available, will buy again.</div>`,
-
-  supplier: `<h3>Supplier Route</h3>
-<p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks. Our team simplifies this, ensures quality, and guarantees faster delivery.</p>`
-};
-
-function openDrawer(section) {
-  content.innerHTML = sections[section];
-  drawer.style.right = '0';
-}
-
-function closeDrawer() {
-  drawer.style.right = '-350px';
-}
 </script>
 
 <!-- Tawk.to live chat -->
