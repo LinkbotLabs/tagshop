@@ -43,8 +43,8 @@ h1, h2 {
   display:flex;
   flex-direction:column; /* vertical scrolling */
   gap:20px;
-  max-height:500px;
   overflow-y:auto;
+  max-height:400px; /* adjust height as needed */
   padding:10px;
 }
 .card {
@@ -75,24 +75,25 @@ button {
 
 /* HERO BACKGROUND */
 .hero-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  overflow: hidden;
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
 }
 .hero-bg img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
   animation: fade 30s infinite;
-  opacity: 0;
+  opacity:0;
 }
 .hero-bg img:nth-child(1){animation-delay:0s}
 .hero-bg img:nth-child(2){animation-delay:6s}
 .hero-bg img:nth-child(3){animation-delay:12s}
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
+
 .hero-bg::after {
   content: "";
   position: absolute;
@@ -103,13 +104,13 @@ button {
   0%{opacity:0} 5%{opacity:1} 20%{opacity:1} 25%{opacity:0} 100%{opacity:0}
 }
 .hero-text {
-  position: relative;
-  text-align: center;
-  margin-top:200px;
-  font-family: Playfair Display;
-  color:#f5d77c;
+  position:relative;
+  z-index:1;
+  text-align:center;
+  font-family:Playfair Display;
   font-size:2em;
-  z-index: 1;
+  color:#f5d77c;
+  margin-top:20px;
 }
 
 /* NOTICE */
@@ -123,27 +124,10 @@ button {
   font-size:1em;
 }
 
-/* SIDE BUTTONS & PANEL */
-#side-buttons {
-  position:fixed;
-  right:0;
-  top:150px;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.side-btn {
-  background:#f5d77c;
-  border:none;
-  border-radius:10px 0 0 10px;
-  padding:10px;
-  font-weight:600;
-  cursor:pointer;
-}
+/* SIDE PANEL */
 #side-panel {
   position:fixed;
-  right:-310px; /* hidden by default */
+  right:-310px;
   top:0;
   width:300px;
   height:100%;
@@ -153,9 +137,12 @@ button {
   border-left:2px solid #f5d77c;
   box-shadow: -2px 0 10px rgba(0,0,0,0.5);
   z-index:1000;
-  transition: right 0.3s ease;
+  transition: right 0.3s;
 }
-#side-panel h3 {color:#f5d77c;margin-top:20px;}
+#side-panel h3 {
+  color:#f5d77c;
+  margin-top:20px;
+}
 .review {
   background:rgba(245,215,124,.08);
   border-radius:12px;
@@ -163,17 +150,30 @@ button {
   margin-bottom:10px;
   font-size:0.9em;
 }
-#reviews {max-height:300px; overflow-y:auto;}
 
-/* LAYOUT */
-.content {margin-right:20px;}
+/* BUTTONS TO OPEN PANELS */
+.panel-btn {
+  position:fixed;
+  top:80px;
+  right:20px;
+  z-index:1100;
+  padding:10px;
+  background:#f5d77c;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  color:#050505;
+  margin-bottom:10px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- HERO BACKGROUND -->
 <div class="hero-bg">
-  <img src="https://i.imgur.com/8qK5GqM.jpg" alt="Luxury Watch">
+  <img src="https://i.imgur.com/8qK5GqM.jpg" alt="Luxury Black-Face Watch">
   <img src="https://i.imgur.com/wQ1bJkl.jpg" alt="Luxury Watch">
   <img src="https://i.imgur.com/LdNJu6F.jpg" alt="Luxury Watch">
   <img src="https://i.imgur.com/xYZ1234.jpg" alt="Luxury Watch">
@@ -181,19 +181,17 @@ button {
 </div>
 <div class="hero-text">Premium Watches, Curated Just For You</div>
 
-<h1>TagShop Luxury Watches</h1>
-<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
+<!-- PANEL TOGGLE BUTTONS -->
+<button class="panel-btn" onclick="togglePanel('about')">About / TagShop</button>
+<button class="panel-btn" style="top:140px;" onclick="togglePanel('reviews')">Reviews</button>
 
-<div id="side-buttons">
-  <button class="side-btn" onclick="togglePanel('about')">About TagShop</button>
-  <button class="side-btn" onclick="togglePanel('reviews')">Customer Reviews</button>
-</div>
-
+<!-- SIDE PANEL -->
 <div id="side-panel">
   <div id="panel-content"></div>
 </div>
 
-<div class="content">
+<h1>TagShop Luxury Watches</h1>
+<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
 
 <div class="section">
   <div class="tier-title">Elite Swiss Grade (£600+)</div>
@@ -230,8 +228,6 @@ button {
   <div id="tier-entry" class="grid"></div>
 </div>
 
-</div>
-
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
 
@@ -240,7 +236,6 @@ const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
 
-// Sample showcase data
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
 showcase.forEach(p=>{
@@ -260,11 +255,27 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// Side panel toggle
+// HERO IMAGE ANIMATION
+const heroImages = document.querySelectorAll(".hero-bg img");
+let current = 0;
+setInterval(()=>{
+ heroImages[current].style.opacity=0;
+ current=(current+1)%heroImages.length;
+ heroImages[current].style.opacity=1;
+},6000);
+
+// PANEL TOGGLE
+let currentPanel = null;
 function togglePanel(type){
   const panel = document.getElementById('side-panel');
   const content = document.getElementById('panel-content');
-  panel.style.right = panel.style.right === '0px' ? '-310px' : '0px';
+  if(currentPanel===type){
+    panel.style.right='-310px';
+    currentPanel=null;
+    return;
+  }
+  panel.style.right='0px';
+  currentPanel=type;
   if(type==='about'){
     content.innerHTML = `<h3>Why Buy With TagShop</h3>
       <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
@@ -290,8 +301,6 @@ function togglePanel(type){
       </div>`;
   }
 }
-
-// HERO IMAGE SLIDES (already handled in CSS animation, no JS needed)
 </script>
 
 <!-- Tawk.to live chat -->
