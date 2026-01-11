@@ -41,7 +41,7 @@ h1, h2 {
 }
 .grid {
   display:flex;
-  flex-direction:column; /* vertical scroll */
+  flex-direction:column;
   gap:20px;
   max-height:400px;
   overflow-y:auto;
@@ -84,61 +84,50 @@ button {
   font-size:1em;
 }
 
-/* SIDE BUTTONS LEFT */
-.side-button {
-  position:fixed;
-  left:10px;
-  top:100px;
-  width:200px;
-  background:rgba(245,215,124,.1);
-  color:#f5d77c;
+/* TOP TABS */
+.top-tabs {
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  padding:10px 0;
+  background:rgba(5,5,5,0.7);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.top-tabs .tab {
+  padding:8px 20px;
   border-radius:12px;
-  padding:10px;
-  cursor:pointer;
-  margin-bottom:10px;
+  background:rgba(245,215,124,0.2);
+  color:#f5d77c;
   font-weight:600;
-  z-index:1001;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.top-tabs .tab.active {
+  background:#f5d77c;
+  color:#050505;
 }
 
-/* MODAL DRAWERS */
-.side-panel-content {
+/* TAB CONTENT */
+.tab-content {
   display:none;
-  position:fixed;
-  left:0;
-  top:0;
-  width:300px;
-  height:100%;
-  background:rgba(0,0,0,0.95);
+  max-width:1200px;
+  margin:auto 0 20px;
   padding:20px;
-  overflow-y:auto;
-  border-right:2px solid #f5d77c;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-  z-index:1000;
-}
-.side-panel-content h3 {
+  background:rgba(5,5,5,0.85);
+  border-radius:18px;
   color:#f5d77c;
-  margin-top:0;
+}
+.tab-content p, .tab-content .review {
+  margin-bottom:10px;
+  line-height:1.4;
 }
 .review {
   background:rgba(245,215,124,.08);
   border-radius:12px;
   padding:10px;
-  margin-bottom:10px;
   font-size:0.9em;
-}
-#reviews {
-  max-height:300px;
-  overflow-y:auto;
-}
-.close-btn {
-  background:#f5d77c;
-  color:#050505;
-  padding:8px;
-  margin-bottom:15px;
-  cursor:pointer;
-  border:none;
-  border-radius:8px;
-  font-weight:600;
 }
 </style>
 </head>
@@ -148,27 +137,26 @@ button {
 <h1>TagShop Luxury Watches</h1>
 <div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
 
-<!-- SIDE BUTTONS -->
-<div class="side-button" onclick="openPanel('about')">About Us</div>
-<div class="side-button" onclick="openPanel('supplier')">Supplier Info</div>
-<div class="side-button" onclick="openPanel('reviews')">Reviews</div>
+<!-- TOP TABS -->
+<div class="top-tabs">
+  <div class="tab active" onclick="openTab('about')">About Us</div>
+  <div class="tab" onclick="openTab('supplier')">Supplier Info</div>
+  <div class="tab" onclick="openTab('reviews')">Reviews</div>
+</div>
 
-<!-- MODAL DRAWERS -->
-<div id="about" class="side-panel-content">
-  <button class="close-btn" onclick="closePanel('about')">Close</button>
-  <h3>About TagShop</h3>
+<!-- TAB CONTENT -->
+<div id="about" class="tab-content" style="display:block;">
+  <h2>About TagShop</h2>
   <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
 </div>
 
-<div id="supplier" class="side-panel-content">
-  <button class="close-btn" onclick="closePanel('supplier')">Close</button>
-  <h3>Supplier Route</h3>
+<div id="supplier" class="tab-content">
+  <h2>Supplier Info</h2>
   <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>
 </div>
 
-<div id="reviews" class="side-panel-content">
-  <button class="close-btn" onclick="closePanel('reviews')">Close</button>
-  <h3>Customer Reviews</h3>
+<div id="reviews" class="tab-content">
+  <h2>Customer Reviews</h2>
   <div class="review">
     <strong>jim****078</strong> | April 15, 2023<br>
     First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
@@ -233,6 +221,7 @@ const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
+// Render watches in tiers
 showcase.forEach(p=>{
  const price = parseFloat(p.tagshopPrice) || 0;
  const card = document.createElement("div");
@@ -250,29 +239,16 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// SIDE PANEL TOGGLE
-function openPanel(id){
-  const panels = document.querySelectorAll('.side-panel-content');
-  panels.forEach(p=>p.style.display='none');
-  document.getElementById(id).style.display='block';
+// TAB FUNCTION
+function openTab(tabId){
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(t => t.style.display='none');
+  document.getElementById(tabId).style.display='block';
+  
+  const tabButtons = document.querySelectorAll('.top-tabs .tab');
+  tabButtons.forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
 }
-
-function closePanel(id){
-  document.getElementById(id).style.display='none';
-}
-</script>
-
-<!-- Tawk.to live chat -->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69636637dcdfaf197f805d54/1jem4eis3';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
 </script>
 
 </body>
