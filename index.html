@@ -41,10 +41,10 @@ h1, h2 {
 }
 .grid {
   display:flex;
-  flex-direction:column; /* vertical scrolling */
+  flex-direction:column; /* vertical scroll */
   gap:20px;
+  max-height:400px;
   overflow-y:auto;
-  max-height:400px; /* adjust height as needed */
   padding:10px;
 }
 .card {
@@ -85,7 +85,7 @@ button {
   width:100%;
   height:100%;
   object-fit:cover;
-  animation: fade 30s infinite;
+  animation:fade 30s infinite;
   opacity:0;
 }
 .hero-bg img:nth-child(1){animation-delay:0s}
@@ -93,12 +93,11 @@ button {
 .hero-bg img:nth-child(3){animation-delay:12s}
 .hero-bg img:nth-child(4){animation-delay:18s}
 .hero-bg img:nth-child(5){animation-delay:24s}
-
 .hero-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
 }
 @keyframes fade {
   0%{opacity:0} 5%{opacity:1} 20%{opacity:1} 25%{opacity:0} 100%{opacity:0}
@@ -124,10 +123,24 @@ button {
   font-size:1em;
 }
 
-/* SIDE PANEL */
-#side-panel {
+/* SIDE BUTTONS */
+.side-button {
   position:fixed;
-  right:-310px;
+  right:10px;
+  top:100px;
+  width:200px;
+  background:rgba(245,215,124,.1);
+  color:#f5d77c;
+  border-radius:12px;
+  padding:10px;
+  cursor:pointer;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.side-panel-content {
+  display:none;
+  position:fixed;
+  right:0;
   top:0;
   width:300px;
   height:100%;
@@ -137,9 +150,8 @@ button {
   border-left:2px solid #f5d77c;
   box-shadow: -2px 0 10px rgba(0,0,0,0.5);
   z-index:1000;
-  transition: right 0.3s;
 }
-#side-panel h3 {
+.side-panel-content h3 {
   color:#f5d77c;
   margin-top:20px;
 }
@@ -150,21 +162,9 @@ button {
   margin-bottom:10px;
   font-size:0.9em;
 }
-
-/* BUTTONS TO OPEN PANELS */
-.panel-btn {
-  position:fixed;
-  top:80px;
-  right:20px;
-  z-index:1100;
-  padding:10px;
-  background:#f5d77c;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-  color:#050505;
-  margin-bottom:10px;
+#reviews {
+  max-height:300px;
+  overflow-y:auto;
 }
 </style>
 </head>
@@ -173,7 +173,7 @@ button {
 
 <!-- HERO BACKGROUND -->
 <div class="hero-bg">
-  <img src="https://i.imgur.com/8qK5GqM.jpg" alt="Luxury Black-Face Watch">
+  <img src="https://i.imgur.com/8qK5GqM.jpg" alt="Luxury Black Face Watch">
   <img src="https://i.imgur.com/wQ1bJkl.jpg" alt="Luxury Watch">
   <img src="https://i.imgur.com/LdNJu6F.jpg" alt="Luxury Watch">
   <img src="https://i.imgur.com/xYZ1234.jpg" alt="Luxury Watch">
@@ -181,18 +181,46 @@ button {
 </div>
 <div class="hero-text">Premium Watches, Curated Just For You</div>
 
-<!-- PANEL TOGGLE BUTTONS -->
-<button class="panel-btn" onclick="togglePanel('about')">About / TagShop</button>
-<button class="panel-btn" style="top:140px;" onclick="togglePanel('reviews')">Reviews</button>
-
-<!-- SIDE PANEL -->
-<div id="side-panel">
-  <div id="panel-content"></div>
-</div>
-
 <h1>TagShop Luxury Watches</h1>
 <div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
 
+<!-- SIDE BUTTONS -->
+<div class="side-button" onclick="togglePanel('about')">About Us</div>
+<div class="side-button" onclick="togglePanel('supplier')">Supplier Info</div>
+<div class="side-button" onclick="togglePanel('reviews')">Reviews</div>
+
+<div id="about" class="side-panel-content">
+  <h3>About TagShop</h3>
+  <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
+</div>
+
+<div id="supplier" class="side-panel-content">
+  <h3>Supplier Route</h3>
+  <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>
+</div>
+
+<div id="reviews" class="side-panel-content">
+  <h3>Customer Reviews</h3>
+  <div class="review">
+    <strong>jim****078</strong> | April 15, 2023<br>
+    First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
+  </div>
+  <div class="review">
+    <strong>romm****3_59</strong> | June 25, 2024<br>
+    Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
+  </div>
+  <div class="review">
+    <strong>stus****son</strong> | Nov 23, 2023<br>
+    Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
+  </div>
+  <div class="review">
+    <strong>danny****son88</strong> | March 03,2022<br>
+    Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
 <div class="section">
   <div class="tier-title">Elite Swiss Grade (£600+)</div>
   <div class="tier-info">
@@ -227,15 +255,14 @@ button {
   </div>
   <div id="tier-entry" class="grid"></div>
 </div>
+</div>
 
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
-
 const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
-
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
 showcase.forEach(p=>{
@@ -255,51 +282,21 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// HERO IMAGE ANIMATION
+// HERO BACKGROUND AUTO SLIDE
 const heroImages = document.querySelectorAll(".hero-bg img");
 let current = 0;
 setInterval(()=>{
- heroImages[current].style.opacity=0;
- current=(current+1)%heroImages.length;
- heroImages[current].style.opacity=1;
-},6000);
+ heroImages[current].style.opacity = 0;
+ current = (current+1)%heroImages.length;
+ heroImages[current].style.opacity = 1;
+},5000);
 
-// PANEL TOGGLE
-let currentPanel = null;
-function togglePanel(type){
-  const panel = document.getElementById('side-panel');
-  const content = document.getElementById('panel-content');
-  if(currentPanel===type){
-    panel.style.right='-310px';
-    currentPanel=null;
-    return;
-  }
-  panel.style.right='0px';
-  currentPanel=type;
-  if(type==='about'){
-    content.innerHTML = `<h3>Why Buy With TagShop</h3>
-      <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
-      <h3>Supplier Route</h3>
-      <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>`;
-  } else {
-    content.innerHTML = `<h3>Customer Reviews</h3>
-      <div class="review">
-        <strong>jim****078</strong> | April 15, 2023<br>
-        First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
-      </div>
-      <div class="review">
-        <strong>romm****3_59</strong> | June 25, 2024<br>
-        Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
-      </div>
-      <div class="review">
-        <strong>stus****son</strong> | Nov 23, 2023<br>
-        Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
-      </div>
-      <div class="review">
-        <strong>danny****son88</strong> | March 03,2022<br>
-        Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
-      </div>`;
-  }
+// SIDE PANEL TOGGLE
+function togglePanel(id){
+  const panels = document.querySelectorAll('.side-panel-content');
+  panels.forEach(p=>{p.style.display='none';});
+  const panel = document.getElementById(id);
+  panel.style.display='block';
 }
 </script>
 
