@@ -15,7 +15,7 @@ body {
   font-family:Montserrat;
 }
 h1, h2 {
-  font-family:Playfair Display;
+  font-family:'Playfair Display', serif;
   color:#f5d77c;
   text-align:center;
   margin:20px 0;
@@ -84,6 +84,48 @@ button {
   font-size:1em;
 }
 
+/* HERO CAROUSEL */
+.hero-bg {
+  position:relative;
+  width:100%;
+  height:400px;
+  overflow:hidden;
+}
+.hero-bg img {
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  animation:fade 12s infinite;
+}
+.hero-bg img:nth-child(1) { animation-delay:0s; }
+.hero-bg img:nth-child(2) { animation-delay:6s; }
+/* Add more images if needed with increasing delay */
+@keyframes fade {
+  0% { opacity:0; }
+  5% { opacity:1; }
+  45% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:0; }
+}
+.hero-overlay {
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+}
+.hero-title {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  color:#f5d77c;
+  font-family:'Playfair Display', serif;
+  font-size:2.5em;
+  text-align:center;
+  text-shadow:1px 1px 8px rgba(0,0,0,0.7);
+}
+
 /* TOP TABS */
 .top-tabs {
   display:flex;
@@ -134,14 +176,21 @@ button {
 
 <body>
 
-<h1>TagShop Luxury Watches</h1>
+<!-- HERO CAROUSEL -->
+<div class="hero-bg">
+  <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg" alt="Watch 1">
+  <!-- Add more images here if you want carousel -->
+  <div class="hero-overlay"></div>
+  <h1 class="hero-title">TagShop Luxury Watches</h1>
+</div>
+
 <div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
 
 <!-- TOP TABS -->
 <div class="top-tabs">
-  <div class="tab active" onclick="openTab('about')">About Us</div>
-  <div class="tab" onclick="openTab('supplier')">Supplier Info</div>
-  <div class="tab" onclick="openTab('reviews')">Reviews</div>
+  <div class="tab active" onclick="openTab('about', this)">About Us</div>
+  <div class="tab" onclick="openTab('supplier', this)">Supplier Info</div>
+  <div class="tab" onclick="openTab('reviews', this)">Reviews</div>
 </div>
 
 <!-- TAB CONTENT -->
@@ -157,58 +206,35 @@ button {
 
 <div id="reviews" class="tab-content">
   <h2>Customer Reviews</h2>
-  <div class="review">
-    <strong>jim****078</strong> | April 15, 2023<br>
-    First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
-  </div>
-  <div class="review">
-    <strong>romm****3_59</strong> | June 25, 2024<br>
-    Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
-  </div>
-  <div class="review">
-    <strong>stus****son</strong> | Nov 23, 2023<br>
-    Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
-  </div>
-  <div class="review">
-    <strong>danny****son88</strong> | March 03,2022<br>
-    Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
-  </div>
+  <div class="review"><strong>jim****078</strong> | April 15, 2023<br>First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.</div>
+  <div class="review"><strong>romm****3_59</strong> | June 25, 2024<br>Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.</div>
+  <div class="review"><strong>stus****son</strong> | Nov 23, 2023<br>Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.</div>
+  <div class="review"><strong>danny****son88</strong> | March 03,2022<br>Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.</div>
 </div>
 
 <!-- MAIN CONTENT -->
 <div class="content">
   <div class="section">
     <div class="tier-title">Elite Swiss Grade (£600+)</div>
-    <div class="tier-info">
-      Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. 
-      For collectors who want the closest possible match to genuine luxury watches.
-    </div>
+    <div class="tier-info">Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. For collectors who want the closest possible match to genuine luxury watches.</div>
     <div id="tier-elite" class="grid"></div>
   </div>
 
   <div class="section">
     <div class="tier-title">AAA Premium (£350 – £599)</div>
-    <div class="tier-info">
-      Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
-      Exceptional value for serious buyers.
-    </div>
+    <div class="tier-info">Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing. Exceptional value for serious buyers.</div>
     <div id="tier-premium" class="grid"></div>
   </div>
 
   <div class="section">
     <div class="tier-title">AAA Value (£180 – £349)</div>
-    <div class="tier-info">
-      Strong quality with great appearance and durability. 
-      Ideal for daily wear and customers who want luxury looks at a sensible price.
-    </div>
+    <div class="tier-info">Strong quality with great appearance and durability. Ideal for daily wear and customers who want luxury looks at a sensible price.</div>
     <div id="tier-value" class="grid"></div>
   </div>
 
   <div class="section">
     <div class="tier-title">Entry Luxury (Under £180)</div>
-    <div class="tier-info">
-      Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.
-    </div>
+    <div class="tier-info">Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.</div>
     <div id="tier-entry" class="grid"></div>
   </div>
 </div>
@@ -239,16 +265,28 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// TAB FUNCTION
-function openTab(tabId){
+// Tab function
+function openTab(tabId, btn){
   const tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(t => t.style.display='none');
   document.getElementById(tabId).style.display='block';
-  
   const tabButtons = document.querySelectorAll('.top-tabs .tab');
   tabButtons.forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  btn.classList.add('active');
 }
+</script>
+
+<!-- Tawk.to chat -->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69636637dcdfaf197f805d54/1jem4eis3';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
 </script>
 
 </body>
