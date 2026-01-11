@@ -64,7 +64,7 @@ function score(t){
 
 function searchSupplier(title){
  const q = encodeURIComponent(title.replace(/[^a-zA-Z0-9 ]/g," "));
- const url = "https://www.dhgate.com/wholesale/search.do?searchkey=" + q;
+ const url = "https://www.dhgate.com/wholesale/" + q + ".html";
  window.open(url,"_blank");
 }
 
