@@ -10,37 +10,15 @@
 /* GENERAL STYLES */
 body {
   margin:0;
-  padding:0;
   background:#050505;
   color:#f5d77c;
-  font-family:Montserrat, sans-serif;
-  min-height:100vh;
-  position:relative;
+  font-family:Montserrat;
 }
-
-/* LUXURY WATCH BACKGROUND - TOP OF PAGE */
-.watch-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-image: url('https://www.pngkey.com/png/full/838x955/some-rolex-explorer-ii-216570-black.png');
-  background-size: contain;
-  background-position: center top;
-  background-repeat: no-repeat;
-  opacity: 0.22;              /* Adjust 0.15–0.30 for desired subtlety */
-  z-index: -1;
-  pointer-events: none;       /* Click through to content */
-}
-
-/* Rest of your styles (slightly adjusted for better contrast/layering) */
 h1, h2 {
-  font-family: 'Playfair Display', serif;
+  font-family:Playfair Display;
   color:#f5d77c;
   text-align:center;
   margin:20px 0;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7); /* Slight shadow for readability */
 }
 .section {
   padding:20px;
@@ -106,13 +84,13 @@ button {
   font-size:1em;
 }
 
-/* TOP TABS - increased z-index so they stay above bg */
+/* TOP TABS */
 .top-tabs {
   display:flex;
   justify-content:center;
   gap:15px;
   padding:10px 0;
-  background:rgba(5,5,5,0.85);
+  background:rgba(5,5,5,0.7);
   position:sticky;
   top:0;
   z-index:100;
@@ -151,20 +129,10 @@ button {
   padding:10px;
   font-size:0.9em;
 }
-
-/* MAIN CONTENT - give some top padding so h1 isn't right at edge */
-.content {
-  position: relative;
-  z-index: 2;
-  padding-top: 60px; /* space for the watch bg + header */
-}
 </style>
 </head>
 
 <body>
-
-<!-- WATCH BACKGROUND -->
-<div class="watch-bg"></div>
 
 <h1>TagShop Luxury Watches</h1>
 <div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
@@ -193,7 +161,18 @@ button {
     <strong>jim****078</strong> | April 15, 2023<br>
     First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.
   </div>
-  <!-- ... other reviews ... -->
+  <div class="review">
+    <strong>romm****3_59</strong> | June 25, 2024<br>
+    Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.
+  </div>
+  <div class="review">
+    <strong>stus****son</strong> | Nov 23, 2023<br>
+    Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.
+  </div>
+  <div class="review">
+    <strong>danny****son88</strong> | March 03,2022<br>
+    Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.
+  </div>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -207,11 +186,34 @@ button {
     <div id="tier-elite" class="grid"></div>
   </div>
 
-  <!-- other tiers remain the same -->
+  <div class="section">
+    <div class="tier-title">AAA Premium (£350 – £599)</div>
+    <div class="tier-info">
+      Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing.
+      Exceptional value for serious buyers.
+    </div>
+    <div id="tier-premium" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="tier-title">AAA Value (£180 – £349)</div>
+    <div class="tier-info">
+      Strong quality with great appearance and durability. 
+      Ideal for daily wear and customers who want luxury looks at a sensible price.
+    </div>
+    <div id="tier-value" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="tier-title">Entry Luxury (Under £180)</div>
+    <div class="tier-info">
+      Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.
+    </div>
+    <div id="tier-entry" class="grid"></div>
+  </div>
 </div>
 
 <script>
-// Your existing script remains unchanged
 const WISE="https://wise.com/pay/me/davids14542";
 const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
@@ -219,7 +221,7 @@ const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
-// Render watches...
+// Render watches in tiers
 showcase.forEach(p=>{
  const price = parseFloat(p.tagshopPrice) || 0;
  const card = document.createElement("div");
