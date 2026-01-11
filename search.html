@@ -107,7 +107,7 @@ function renderResults(){
 
    <button onclick="window.open('${p.link}')">Supplier</button>
    <button class="addShowcase" onclick="addToShowcase(${i})">Add to Showcase</button>
-   <button class="addShop" onclick="addToShop(${i})">Add to Shop</button>
+   <button class="addShop" onclick="addToShopFromSearch(${i})">Add to Shop</button>
   `;
   results.appendChild(d);
  });
@@ -116,7 +116,7 @@ function renderResults(){
 function nextPage(){startIndex+=10;fetchResults()}
 function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
 
-// ---------- ADD ----------
+// ---------- BUILD ITEM ----------
 function buildItem(i){
  return {
   title:last[i].title,
@@ -128,6 +128,7 @@ function buildItem(i){
  };
 }
 
+// ---------- ADD ----------
 function addToShowcase(i){
  const item=buildItem(i);
  if(showcase.find(x=>x.link===item.link)) return;
@@ -136,7 +137,7 @@ function addToShowcase(i){
  renderShowcase();
 }
 
-function addToShop(i){
+function addToShopFromSearch(i){
  const item=buildItem(i);
  if(shop.find(x=>x.link===item.link)) {alert("Already in shop"); return;}
  shop.unshift(item);
@@ -155,12 +156,30 @@ function renderShowcase(){
    <img src="${p.img}">
    <h4>${p.title}</h4>
    <p>£${p.tagshopPrice}</p>
+
+   <button class="addShop" onclick="addCuratedToShop(${i})">Add to Shop</button>
    <button onclick="removeItem(${i})">Remove</button>
   `;
   showcaseBox.appendChild(d);
  });
 }
-function removeItem(i){showcase.splice(i,1);saveShowcase();renderShowcase();}
+
+function addCuratedToShop(i){
+ const item=showcase[i];
+ if(shop.find(x=>x.link===item.link)){
+   alert("Already in shop");
+   return;
+ }
+ shop.unshift(item);
+ saveShop();
+ alert("Curated watch added to Live Shop");
+}
+
+function removeItem(i){
+ showcase.splice(i,1);
+ saveShowcase();
+ renderShowcase();
+}
 
 // ---------- LOAD ----------
 window.onload=()=>{
