@@ -52,7 +52,6 @@ h1, h2 {
   background:rgba(255,255,255,.06);
   border-radius:18px;
   padding:15px;
-  perspective:1000px; /* 3D effect */
 }
 .card img {
   width:100%;
@@ -61,8 +60,6 @@ h1, h2 {
   background:#111;
   border-radius:12px;
   padding:10px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  transform-style: preserve-3d;
 }
 button {
   width:100%;
@@ -104,7 +101,6 @@ button {
 }
 .hero-bg img:nth-child(1) { animation-delay:0s; }
 .hero-bg img:nth-child(2) { animation-delay:6s; }
-/* Add more images if needed */
 @keyframes fade {
   0% { opacity:0; }
   5% { opacity:1; }
@@ -175,13 +171,80 @@ button {
   font-size:0.9em;
 }
 
-/* MOBILE IMAGE POP */
-@media (max-width:768px){
-  .card img.pop {
-    transform: rotateY(10deg) rotateX(5deg) scale(1.08);
-    box-shadow: 0 10px 20px rgba(245,215,124,0.5);
-  }
+/* PURCHASE MODAL STYLING */
+.purchase-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
 }
+.purchase-content {
+  background: #111;
+  border: 3px solid #f5d77c;
+  border-radius: 25px;
+  max-width: 400px;
+  width: 90%;
+  padding: 30px;
+  text-align: center;
+  color: #f5d77c;
+  box-shadow: 0 0 20px rgba(245,215,124,0.5);
+  position: relative;
+  transform: translateY(-20px);
+  animation: slideIn 0.4s forwards;
+}
+.purchase-content h2 {
+  margin-top: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8em;
+}
+.modal-price {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+.purchase-content input,
+.purchase-content textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: none;
+  font-size: 1em;
+}
+.confirm-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background: #f5d77c;
+  color: #050505;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.confirm-btn:hover { background: #e6c95c; }
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f5d77c;
+  color: #050505;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.close-btn:hover { background: #e6c95c; }
+.wa-chat a { color: #f5d77c; text-decoration: underline; }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes slideIn { from {transform: translateY(-20px);} to {transform: translateY(0);} }
 </style>
 </head>
 
@@ -190,7 +253,6 @@ button {
 <!-- HERO CAROUSEL -->
 <div class="hero-bg">
   <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg" alt="Watch 1">
-  <!-- Add more images here if you want carousel -->
   <div class="hero-overlay"></div>
   <h1 class="hero-title">TagShop Luxury Watches</h1>
 </div>
@@ -250,6 +312,23 @@ button {
   </div>
 </div>
 
+<!-- PURCHASE MODAL -->
+<div id="purchaseModal" class="purchase-modal">
+  <div class="purchase-content">
+    <h2>Confirm Your Order</h2>
+    <p id="modalProductTitle"></p>
+    <p id="modalProductPrice" class="modal-price"></p>
+    <form id="purchaseForm">
+      <input type="text" name="fullname" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="address" placeholder="Shipping Address" required></textarea>
+      <button type="submit" class="confirm-btn">Confirm & Pay</button>
+    </form>
+    <button onclick="closePurchaseModal()" class="close-btn">X</button>
+    <p class="wa-chat">Need help? <a href="https://wa.me/66654052867" target="_blank">Chat on WhatsApp</a></p>
+  </div>
+</div>
+
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
 const elite = document.getElementById("tier-elite");
@@ -259,7 +338,7 @@ const entry = document.getElementById("tier-entry");
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
 // Render watches in tiers
-showcase.forEach(p=>{
+showcase.forEach((p,i)=>{
  const price = parseFloat(p.tagshopPrice) || 0;
  const card = document.createElement("div");
  card.className="card";
@@ -268,7 +347,7 @@ showcase.forEach(p=>{
    <h3>${p.title}</h3>
    <p>£${p.tagshopPrice}</p>
    <button onclick="window.open('${p.link}')">Shop with Supplier</button>
-   <button onclick="window.open('${WISE}')">Buy via TagShop</button>
+   <button onclick="buyViaTagShop(${i})">Buy via TagShop</button>
  `;
  if(price >= 600) elite.appendChild(card);
  else if(price >= 350) premium.appendChild(card);
@@ -276,23 +355,42 @@ showcase.forEach(p=>{
  else entry.appendChild(card);
 });
 
-// Tab function
+// Tabs
 function openTab(tabId, btn){
-  const tabs = document.querySelectorAll('.tab-content');
-  tabs.forEach(t => t.style.display='none');
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
   document.getElementById(tabId).style.display='block';
-  const tabButtons = document.querySelectorAll('.top-tabs .tab');
-  tabButtons.forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.top-tabs .tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-// MOBILE IMAGE POP
-if(window.innerWidth <= 768){
-  document.querySelectorAll('.card img').forEach(img=>{
-    img.addEventListener('touchstart', ()=> img.classList.add('pop'));
-    img.addEventListener('touchend', ()=> img.classList.remove('pop'));
-  });
+// Purchase Modal
+function buyViaTagShop(index){
+  const product = showcase[index];
+  document.getElementById("modalProductTitle").innerText = product.title;
+  document.getElementById("modalProductPrice").innerText = `Price: £${product.tagshopPrice || 'TBD'}`;
+  document.getElementById("purchaseModal").style.display="flex";
+
+  const form = document.getElementById("purchaseForm");
+  form.onsubmit = function(e){
+    e.preventDefault();
+    const fullname = form.fullname.value.trim();
+    const email = form.email.value.trim();
+    const address = form.address.value.trim();
+    if(!fullname || !email || !address){ alert("Please fill all fields."); return; }
+
+    // WhatsApp message
+    const msg = `New TagShop Order:%0AProduct: ${product.title}%0APrice: £${product.tagshopPrice || 'TBD'}%0AName: ${fullname}%0AEmail: ${email}%0AAddress: ${address}`;
+    window.open(`https://wa.me/66654052867?text=${msg}`,"_blank");
+
+    // Redirect to Wise
+    window.open(WISE,"_blank");
+
+    closePurchaseModal();
+    form.reset();
+  }
 }
+
+function closePurchaseModal(){ document.getElementById("purchaseModal").style.display="none"; }
 </script>
 
 <!-- Tawk.to chat -->
