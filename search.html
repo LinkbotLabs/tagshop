@@ -4,33 +4,36 @@
 <meta charset="UTF-8">
 <title>TagShop Admin / Search</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
 h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
 .section{max-width:1200px;margin:auto;padding:20px;}
 input,button{padding:8px;margin:5px 0;border-radius:6px;border:none;}
-#results{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;}
-#results::-webkit-scrollbar{height:8px}
-#results::-webkit-scrollbar-thumb{background:#f5d77c;}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:250px;}
+#results,#showcase{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;}
+.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:260px;}
 .card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
-button{width:100%;cursor:pointer;margin-top:5px;}
+button{width:100%;cursor:pointer;margin-top:6px;font-weight:600;}
+.addShop{background:#00ff9c;color:#000;}
+.addShowcase{background:#f5d77c;color:#000;}
 .nav{text-align:center;margin:10px 0;}
 .nav button{width:auto;padding:8px 20px;margin:0 5px;}
-input.price-input{width:100%;margin:5px 0;}
+.price-input{width:100%;}
 </style>
 </head>
+
 <body>
 
 <div class="section">
 <h1>TagShop Search & Curate</h1>
-<input id="q" placeholder="Search Rolex, Patek, AP, Omega…">
+<input id="q" placeholder="Search Rolex, AP, Patek, Omega…">
 <button onclick="search()">Search Dealer Network</button>
 </div>
 
 <div class="section nav">
-<button onclick="prevPage()">◀ Previous</button>
+<button onclick="prevPage()">◀ Prev</button>
 <span id="pageInfo">Page 1</span>
 <button onclick="nextPage()">Next ▶</button>
 </div>
@@ -38,44 +41,57 @@ input.price-input{width:100%;margin:5px 0;}
 <div class="section" id="results"></div>
 
 <div class="section">
-<h2>Your Curated Selection (max 25)</h2>
+<h2>Your Curated Selection (Private)</h2>
 <div id="showcase"></div>
-<button onclick="goToShop()">Go to Shop Page</button>
 </div>
 
 <script>
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
-let startIndex=1, last=[], showcase=[], currentQuery="";
 
+const SHOWCASE_KEY="tagshopShowcase";
+const SHOP_KEY="tagshopShop";
+
+let startIndex=1, last=[], showcase=[], shop=[], currentQuery="";
+
+// ---------- STORAGE ----------
+function getShowcase(){return JSON.parse(localStorage.getItem(SHOWCASE_KEY)||"[]")}
+function saveShowcase(){localStorage.setItem(SHOWCASE_KEY,JSON.stringify(showcase))}
+
+function getShop(){return JSON.parse(localStorage.getItem(SHOP_KEY)||"[]")}
+function saveShop(){localStorage.setItem(SHOP_KEY,JSON.stringify(shop))}
+
+// ---------- SCORING ----------
 function score(t){
- let s=0;t=t.toLowerCase();
+ t=t.toLowerCase(); let s=0;
  if(t.includes("aaa"))s+=3;
  if(t.includes("box"))s+=2;
  if(t.includes("papers"))s+=2;
  if(t.includes("sapphire"))s+=2;
- if(t.includes("904l"))s+=3;
  if(t.includes("automatic"))s+=2;
+ if(t.includes("904l"))s+=3;
  return s;
 }
 
+// ---------- SEARCH ----------
 async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
 async function fetchResults(){
  const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
  const d=await r.json();
- last=d.items.filter(i=>i.link.includes("dhgate")).map(i=>({
+ last=d.items.map(i=>({
   title:i.title,
   img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-  link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
+  link:(i.link.includes("?")?i.link+"&":"?")+"aff="+AFF,
   score:score(i.title),
-  supplierPrice: "",
-  tagshopPrice: ""
+  supplierPrice:0,
+  tagshopPrice:0
  })).sort((a,b)=>b.score-a.score);
  renderResults();
  pageInfo.innerText="Page "+Math.ceil(startIndex/10);
 }
 
+// ---------- RENDER SEARCH ----------
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
@@ -84,13 +100,15 @@ function renderResults(){
   d.innerHTML=`
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <div style="color:#f5d77c">${p.score>=7?"⭐ Best Pick":""}</div>
-   <label>Supplier Price:</label>
-   <input type="number" class="price-input" id="supplier-${i}" value="${p.supplierPrice}" placeholder="Supplier Price">
-   <label>TagShop Price:</label>
-   <input type="number" class="price-input" id="tagshop-${i}" value="${p.tagshopPrice}" placeholder="TagShop Price">
-   <button onclick="window.open('${p.link}','_blank')">Shop with Supplier</button>
-   <button onclick="add(${i})">Add to Showcase</button>`;
+   <div>${p.score>=7?"⭐ Best Pick":""}</div>
+
+   <input class="price-input" placeholder="Supplier Price" id="s-${i}">
+   <input class="price-input" placeholder="TagShop Price" id="t-${i}">
+
+   <button onclick="window.open('${p.link}')">Supplier</button>
+   <button class="addShowcase" onclick="addToShowcase(${i})">Add to Showcase</button>
+   <button class="addShop" onclick="addToShop(${i})">Add to Shop</button>
+  `;
   results.appendChild(d);
  });
 }
@@ -98,77 +116,57 @@ function renderResults(){
 function nextPage(){startIndex+=10;fetchResults()}
 function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
 
-// ---------------- Showcase ----------------
-function add(i){
- const p = last[i];
- // read and parse prices
- const supplier = parseFloat(document.getElementById(`supplier-${i}`).value) || 0;
- const tagshop = parseFloat(document.getElementById(`tagshop-${i}`).value) || 0;
-
- // create new object to push into showcase
- const item = {
-   title: p.title,
-   img: p.img,
-   link: p.link,
-   score: p.score,
-   supplierPrice: supplier,
-   tagshopPrice: tagshop
+// ---------- ADD ----------
+function buildItem(i){
+ return {
+  title:last[i].title,
+  img:last[i].img,
+  link:last[i].link,
+  score:last[i].score,
+  supplierPrice:parseFloat(document.getElementById(`s-${i}`).value)||0,
+  tagshopPrice:parseFloat(document.getElementById(`t-${i}`).value)||0
  };
-
- if(showcase.find(x => x.link === item.link)) return;
- if(showcase.length >= 25) { alert("Max 25 items"); return; }
-
- showcase.push(item);
- renderShowcase();
- saveShowcase();
 }
 
-function removeItem(i){showcase.splice(i,1); renderShowcase(); saveShowcase();}
+function addToShowcase(i){
+ const item=buildItem(i);
+ if(showcase.find(x=>x.link===item.link)) return;
+ showcase.push(item);
+ saveShowcase();
+ renderShowcase();
+}
 
+function addToShop(i){
+ const item=buildItem(i);
+ if(shop.find(x=>x.link===item.link)) {alert("Already in shop"); return;}
+ shop.unshift(item);
+ saveShop();
+ alert("Added to Live Shop");
+}
+
+// ---------- SHOWCASE ----------
 function renderShowcase(){
- const sc=document.getElementById("showcase");
- sc.innerHTML="";
+ showcase=getShowcase();
+ showcaseBox.innerHTML="";
  showcase.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
   d.innerHTML=`
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <label>Supplier Price:</label>
-   <input type="number" class="price-input" value="${p.supplierPrice}" onchange="updateShowcasePrice(${i}, 'supplier', this.value)">
-   <label>TagShop Price:</label>
-   <input type="number" class="price-input" value="${p.tagshopPrice}" onchange="updateShowcasePrice(${i}, 'tagshop', this.value)">
-   <button onclick="removeItem(${i})">Remove</button>`;
-  sc.appendChild(d);
+   <p>£${p.tagshopPrice}</p>
+   <button onclick="removeItem(${i})">Remove</button>
+  `;
+  showcaseBox.appendChild(d);
  });
 }
+function removeItem(i){showcase.splice(i,1);saveShowcase();renderShowcase();}
 
-// Update price manually in showcase
-function updateShowcasePrice(i, type, value){
-  value = parseFloat(value) || 0;
-  if(type==='supplier') showcase[i].supplierPrice = value;
-  if(type==='tagshop') showcase[i].tagshopPrice = value;
-  saveShowcase();
-}
-
-function saveShowcase(){
- localStorage.setItem("tagshopShowcase",JSON.stringify(showcase));
-}
-
-function goToShop(){ window.location.href="shop.html"; }
-
-// ---------------- Load existing showcase and ensure prices exist ----------------
-window.onload = function(){
- const saved = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
- // add price fields to old items if missing
- showcase = saved.map(item => ({
-   title: item.title,
-   img: item.img,
-   link: item.link,
-   score: item.score || 0,
-   supplierPrice: item.supplierPrice || 0,
-   tagshopPrice: item.tagshopPrice || 0
- }));
+// ---------- LOAD ----------
+window.onload=()=>{
+ showcase=getShowcase();
+ shop=getShop();
+ window.showcaseBox=document.getElementById("showcase");
  renderShowcase();
 };
 </script>
