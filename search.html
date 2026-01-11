@@ -57,23 +57,20 @@ const results=document.getElementById("results");
 const showcaseDiv=document.getElementById("showcase");
 const pager=document.getElementById("pager");
 
-// Score function (optional)
+// Optional scoring function
 function score(t){
  t=t.toLowerCase();
  let s=0;
- if(t.includes("aaa"))s+=3;
- if(t.includes("box"))s+=2;
- if(t.includes("papers"))s+=2;
- if(t.includes("904l"))s+=3;
- if(t.includes("sapphire"))s+=2;
+ if(t.includes("aaa")) s+=3;
+ if(t.includes("box")) s+=2;
+ if(t.includes("papers")) s+=2;
+ if(t.includes("904l")) s+=3;
+ if(t.includes("sapphire")) s+=2;
  return s;
 }
 
-// OPEN SUPPLIER LINK (same logic as shop page)
-function searchSupplier(title){
- // Use the same URL construction as Shop page
- const safeTitle = encodeURIComponent(title.replace(/[^a-zA-Z0-9 ]/g," "));
- const url = `https://www.dhgate.com/wholesale/${safeTitle}.html`;
+// OPEN SUPPLIER LINK – exact product page
+function searchSupplier(url){
  window.open(url,"_blank");
 }
 
@@ -122,14 +119,14 @@ function renderResults(){
 
   results.appendChild(d);
 
-  // Add supplier button dynamically (safe)
+  // Supplier button – opens exact product link
   const supplierBtn = document.createElement("button");
   supplierBtn.textContent = "🔍 Search Supplier";
-  supplierBtn.addEventListener("click",()=>searchSupplier(p.title));
+  supplierBtn.addEventListener("click",()=> searchSupplier(p.link));
   d.appendChild(supplierBtn);
 
-  // Add to showcase
-  document.getElementById(`addBtn${i}`).addEventListener("click",()=>add(i));
+  // Add to showcase button
+  document.getElementById(`addBtn${i}`).addEventListener("click",()=> add(i));
  });
 }
 
@@ -145,23 +142,16 @@ function updatePager(total){
  `;
 }
 
-function nextPage(){
- startIndex+=pageSize;
- search(false);
-}
-
-function prevPage(){
- startIndex=Math.max(1,startIndex-pageSize);
- search(false);
-}
+function nextPage(){ startIndex+=pageSize; search(false); }
+function prevPage(){ startIndex=Math.max(1,startIndex-pageSize); search(false); }
 
 // SHOWCASE FUNCTIONS
 function add(i){
  const p=last[i];
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
  p.tagshopPrice=parseFloat(document.getElementById("t"+i).value)||0;
- if(showcase.find(x=>x.link===p.link))return;
- if(showcase.length>=25)return alert("Max 25 items");
+ if(showcase.find(x=>x.link===p.link)) return;
+ if(showcase.length>=25) return alert("Max 25 items");
  showcase.push(p);
  save();
  renderShowcase();
@@ -177,22 +167,14 @@ function renderShowcase(){
    <h4>${p.title}</h4>
    <p>£${p.tagshopPrice}</p>
    <button onclick="remove(${i})">Remove</button>
-   <button onclick="searchSupplier('${p.title.replace(/'/g,"\\'")}')">🔍 Supplier</button>
+   <button onclick="searchSupplier('${p.link.replace(/'/g,"\\'")}')">🔍 Supplier</button>
   `;
   showcaseDiv.appendChild(d);
  });
 }
 
-function remove(i){
- showcase.splice(i,1);
- save(); 
- renderShowcase();
-}
-
-function save(){
- localStorage.setItem("tagshopShowcase",JSON.stringify(showcase));
-}
-
+function remove(i){ showcase.splice(i,1); save(); renderShowcase(); }
+function save(){ localStorage.setItem("tagshopShowcase",JSON.stringify(showcase)); }
 function goShop(){ location.href="shop.html"; }
 
 // INITIALIZE
