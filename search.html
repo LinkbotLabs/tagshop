@@ -2,192 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TagShop Admin / Search</title>
+<title>TagShop Search</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
-h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
-.section{max-width:1200px;margin:auto;padding:20px;}
-input,button{padding:8px;margin:5px 0;border-radius:6px;border:none;}
-#results,#showcase{display:flex;gap:20px;overflow-x:auto;padding-bottom:15px;}
-.card{background:rgba(255,255,255,.08);border-radius:18px;padding:15px;min-width:260px;}
-.card img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:10px;}
-button{width:100%;cursor:pointer;margin-top:6px;font-weight:600;}
-.addShop{background:#00ff9c;color:#000;}
-.addShowcase{background:#f5d77c;color:#000;}
-.nav{text-align:center;margin:10px 0;}
-.nav button{width:auto;padding:8px 20px;margin:0 5px;}
-.price-input{width:100%;}
+  body { font-family: 'Montserrat', sans-serif; padding: 20px; background: #f5f5f5; }
+  h1 { text-align: center; }
+  #search-bar { width: 100%; max-width: 400px; padding: 10px; font-size: 1em; margin: 10px auto; display: block; }
+  #results { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+  .result-card {
+    background: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .result-card img { max-width: 100%; border-radius: 4px; }
+  .result-card button {
+    margin-top: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background: #0077ff;
+    color: #fff;
+  }
 </style>
 </head>
-
 <body>
 
-<div class="section">
-<h1>TagShop Search & Curate</h1>
-<input id="q" placeholder="Search Rolex, AP, Patek, Omega…">
-<button onclick="search()">Search Dealer Network</button>
-</div>
+<h1>TagShop Search</h1>
+<input type="text" id="search-bar" placeholder="Search watches…">
 
-<div class="section nav">
-<button onclick="prevPage()">◀ Prev</button>
-<span id="pageInfo">Page 1</span>
-<button onclick="nextPage()">Next ▶</button>
-</div>
-
-<div class="section" id="results"></div>
-
-<div class="section">
-<h2>Your Curated Selection (Private)</h2>
-<div id="showcase"></div>
-</div>
+<div id="results"></div>
 
 <script>
-const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
-const CX="f7e219616fe1d4629";
-const AFF="2545671";
+// Simulated search database
+const watches = [
+  { name: 'Rolex Submariner', img: 'https://via.placeholder.com/150', priceA: '-150', priceAA: '249.99', priceAAA: '499' },
+  { name: 'Omega Seamaster', img: 'https://via.placeholder.com/150', priceA: '-120', priceAA: '220.00', priceAAA: '480' },
+  { name: 'Patek Philippe Nautilus', img: 'https://via.placeholder.com/150', priceA: '-200', priceAA: '260.00', priceAAA: '499' },
+];
 
-const SHOWCASE_KEY="tagshopShowcase";
-const SHOP_KEY="tagshopShop";
+// Function to display search results
+function displayResults(query) {
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
 
-let startIndex=1, last=[], showcase=[], shop=[], currentQuery="";
+  const filtered = watches.filter(w => w.name.toLowerCase().includes(query.toLowerCase()));
+  
+  filtered.forEach(watch => {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <img src="${watch.img}" alt="${watch.name}">
+      <p>${watch.name}</p>
+      <button onclick="addToShowcase('A', '${watch.name}', '${watch.img}', '${watch.priceA}')">Add to A</button>
+      <button onclick="addToShowcase('AA', '${watch.name}', '${watch.img}', '${watch.priceAA}')">Add to AA</button>
+      <button onclick="addToShowcase('AAA', '${watch.name}', '${watch.img}', '${watch.priceAAA}')">Add to AAA</button>
+    `;
+    resultsContainer.appendChild(card);
+  });
 
-// ---------- STORAGE ----------
-function getShowcase(){return JSON.parse(localStorage.getItem(SHOWCASE_KEY)||"[]")}
-function saveShowcase(){localStorage.setItem(SHOWCASE_KEY,JSON.stringify(showcase))}
-
-function getShop(){return JSON.parse(localStorage.getItem(SHOP_KEY)||"[]")}
-function saveShop(){localStorage.setItem(SHOP_KEY,JSON.stringify(shop))}
-
-// ---------- SCORING ----------
-function score(t){
- t=t.toLowerCase(); let s=0;
- if(t.includes("aaa"))s+=3;
- if(t.includes("box"))s+=2;
- if(t.includes("papers"))s+=2;
- if(t.includes("sapphire"))s+=2;
- if(t.includes("automatic"))s+=2;
- if(t.includes("904l"))s+=3;
- return s;
+  if (filtered.length === 0 && query.length > 0) {
+    resultsContainer.innerHTML = '<p>No watches found.</p>';
+  }
 }
 
-// ---------- SEARCH ----------
-async function search(){currentQuery=q.value;startIndex=1;fetchResults()}
-async function fetchResults(){
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
- const d=await r.json();
- last=d.items.map(i=>({
-  title:i.title,
-  img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
-  link:(i.link.includes("?")?i.link+"&":"?")+"aff="+AFF,
-  score:score(i.title),
-  supplierPrice:0,
-  tagshopPrice:0
- })).sort((a,b)=>b.score-a.score);
- renderResults();
- pageInfo.innerText="Page "+Math.ceil(startIndex/10);
+// Listen to input
+document.getElementById('search-bar').addEventListener('input', e => {
+  displayResults(e.target.value);
+});
+
+// Function to add items to index.html showcase
+function addToShowcase(section, name, img, price) {
+  // Check if parent window has the showcase
+  if (window.opener && !window.opener.closed) {
+    window.opener.addItemToShowcase(section, name, img, price);
+    alert(`${name} added to section ${section} on Showcase page.`);
+  } else {
+    alert('Showcase page not open. Please open index.html first.');
+  }
 }
-
-// ---------- RENDER SEARCH ----------
-function renderResults(){
- results.innerHTML="";
- last.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <div>${p.score>=7?"⭐ Best Pick":""}</div>
-
-   <input class="price-input" placeholder="Supplier Price" id="s-${i}">
-   <input class="price-input" placeholder="TagShop Price" id="t-${i}">
-
-   <button onclick="window.open('${p.link}')">Supplier</button>
-   <button class="addShowcase" onclick="addToShowcase(${i})">Add to Showcase</button>
-   <button class="addShop" onclick="addToShopFromSearch(${i})">Add to Shop</button>
-  `;
-  results.appendChild(d);
- });
-}
-
-function nextPage(){startIndex+=10;fetchResults()}
-function prevPage(){if(startIndex>1){startIndex-=10;fetchResults()}}
-
-// ---------- BUILD ITEM ----------
-function buildItem(i){
- return {
-  title:last[i].title,
-  img:last[i].img,
-  link:last[i].link,
-  score:last[i].score,
-  supplierPrice:parseFloat(document.getElementById(`s-${i}`).value)||0,
-  tagshopPrice:parseFloat(document.getElementById(`t-${i}`).value)||0
- };
-}
-
-// ---------- ADD ----------
-function addToShowcase(i){
- const item=buildItem(i);
- if(showcase.find(x=>x.link===item.link)) return;
- showcase.push(item);
- saveShowcase();
- renderShowcase();
-}
-
-function addToShopFromSearch(i){
- const item=buildItem(i);
- if(shop.find(x=>x.link===item.link)) {alert("Already in shop"); return;}
- shop.unshift(item);
- saveShop();
- alert("Added to Live Shop");
-}
-
-// ---------- SHOWCASE ----------
-function renderShowcase(){
- showcase=getShowcase();
- showcaseBox.innerHTML="";
- showcase.forEach((p,i)=>{
-  const d=document.createElement("div");
-  d.className="card";
-  d.innerHTML=`
-   <img src="${p.img}">
-   <h4>${p.title}</h4>
-   <p>£${p.tagshopPrice}</p>
-
-   <button class="addShop" onclick="addCuratedToShop(${i})">Add to Shop</button>
-   <button onclick="removeItem(${i})">Remove</button>
-  `;
-  showcaseBox.appendChild(d);
- });
-}
-
-function addCuratedToShop(i){
- const item=showcase[i];
- if(shop.find(x=>x.link===item.link)){
-   alert("Already in shop");
-   return;
- }
- shop.unshift(item);
- saveShop();
- alert("Curated watch added to Live Shop");
-}
-
-function removeItem(i){
- showcase.splice(i,1);
- saveShowcase();
- renderShowcase();
-}
-
-// ---------- LOAD ----------
-window.onload=()=>{
- showcase=getShowcase();
- shop=getShop();
- window.showcaseBox=document.getElementById("showcase");
- renderShowcase();
-};
 </script>
 
 </body>
