@@ -6,6 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
+<!-- FACEBOOK & INSTAGRAM FIX: force real browser -->
+<script>
+(function () {
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
+  if (ua.indexOf("FBAN") > -1 || 
+      ua.indexOf("FBAV") > -1 || 
+      ua.indexOf("Instagram") > -1) {
+
+    var url = window.location.href;
+
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+      window.location.href = "x-safari-" + url;
+    } else {
+      window.location.href =
+        "intent://" + url.replace(/^https?:\/\//, "") +
+        "#Intent;scheme=https;package=com.android.chrome;end";
+    }
+  }
+})();
+</script>
+
 <style>
 /* GENERAL STYLES */
 body {
@@ -257,7 +278,7 @@ button {
   <h1 class="hero-title">TagShop Luxury Watches</h1>
 </div>
 
-<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you all our watches are high quality and arrive with presentation boxes and certificates  certified serial number authenticity shipping guaranteed fast and discreet</div>
+<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you all our watches are high quality and arrive with presentation boxes and certificates certified serial number authenticity shipping guaranteed fast and discreet</div>
 
 <!-- TOP TABS -->
 <div class="top-tabs">
@@ -337,7 +358,6 @@ const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
 let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
-// Render watches in tiers
 showcase.forEach((p,i)=>{
  const price = parseFloat(p.tagshopPrice) || 0;
  const card = document.createElement("div");
@@ -355,7 +375,6 @@ showcase.forEach((p,i)=>{
  else entry.appendChild(card);
 });
 
-// Tabs
 function openTab(tabId, btn){
   document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
   document.getElementById(tabId).style.display='block';
@@ -363,7 +382,6 @@ function openTab(tabId, btn){
   btn.classList.add('active');
 }
 
-// Purchase Modal
 function buyViaTagShop(index){
   const product = showcase[index];
   document.getElementById("modalProductTitle").innerText = product.title;
@@ -378,11 +396,8 @@ function buyViaTagShop(index){
     const address = form.address.value.trim();
     if(!fullname || !email || !address){ alert("Please fill all fields."); return; }
 
-    // WhatsApp message
     const msg = `New TagShop Order:%0AProduct: ${product.title}%0APrice: £${product.tagshopPrice || 'TBD'}%0AName: ${fullname}%0AEmail: ${email}%0AAddress: ${address}`;
     window.open(`https://wa.me/66654052867?text=${msg}`,"_blank");
-
-    // Redirect to Wise
     window.open(WISE,"_blank");
 
     closePurchaseModal();
