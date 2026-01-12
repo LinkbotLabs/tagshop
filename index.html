@@ -363,7 +363,7 @@ showcase.forEach((p,i)=>{
  const card = document.createElement("div");
  card.className="card";
  card.innerHTML=`
-   <img src="https://linkbotlabs.github.io/tagshop/img.html?u=${encodeURIComponent(p.img)}">
+   <img src="${p.img}">
    <h3>${p.title}</h3>
    <p>£${p.tagshopPrice}</p>
    <button onclick="window.open('${p.link}')">Shop with Supplier</button>
