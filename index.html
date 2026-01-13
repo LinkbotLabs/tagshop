@@ -6,121 +6,137 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- FACEBOOK & INSTAGRAM FIX: force real browser -->
+<!-- FACEBOOK & INSTAGRAM FIX -->
 <script>
 (function () {
   var ua = navigator.userAgent || navigator.vendor || window.opera;
-  if (ua.indexOf("FBAN") > -1 || 
-      ua.indexOf("FBAV") > -1 || 
-      ua.indexOf("Instagram") > -1) {
-
+  if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1) {
     var url = window.location.href;
-
     if (/iPhone|iPad|iPod/i.test(ua)) {
       window.location.href = "x-safari-" + url;
     } else {
-      window.location.href =
-        "intent://" + url.replace(/^https?:\/\//, "") +
-        "#Intent;scheme=https;package=com.android.chrome;end";
+      window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
     }
   }
 })();
 </script>
 
 <style>
-/* ────────────────────────────── GENERAL ────────────────────────────── */
+/* GENERAL */
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
   background: #050505;
   color: #f5d77c;
   font-family: Montserrat, sans-serif;
-  line-height: 1.5;
+  line-height: 1.62;
+  font-size: 1.02rem;
 }
 
 h1, h2, h3 {
   font-family: 'Playfair Display', serif;
   color: #f5d77c;
   text-align: center;
-  margin: 20px 0;
+  margin: 0.8em 0 0.5em;
+  letter-spacing: 0.8px;
 }
 
 .section {
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
+  padding: 2rem 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .notice {
-  background: rgba(245,215,124,.08);
-  padding: 14px;
-  margin: 12px auto 24px;
-  max-width: 900px;
+  background: rgba(245,215,124,0.06);
+  border: 1px solid rgba(245,215,124,0.18);
+  padding: 1.1rem 1.4rem;
+  margin: 1.2rem auto 2.2rem;
+  max-width: 960px;
   text-align: center;
-  border-radius: 12px;
-  font-size: 1.02em;
+  border-radius: 14px;
+  font-size: 1.06rem;
 }
 
-/* ────────────────────────────── CARDS & TIERS ────────────────────────────── */
+/* CARDS & TIERS */
 .tier-title {
-  font-size: 1.7em;
-  margin: 28px 0 12px;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  margin: 2.5rem 0 1rem;
+  letter-spacing: 1.2px;
 }
 
 .tier-info {
   max-width: 900px;
-  margin: 0 auto 24px;
-  background: rgba(245,215,124,.07);
-  padding: 16px;
-  border-radius: 12px;
+  margin: 0 auto 2rem;
+  background: rgba(245,215,124,0.065);
+  padding: 1.2rem 1.6rem;
+  border-radius: 14px;
   text-align: center;
-  font-size: 0.96em;
+  font-size: 0.98rem;
+  border: 1px solid rgba(245,215,124,0.12);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-  padding: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+  padding: 1rem;
 }
 
 .card {
-  min-width: 240px;
-  background: rgba(255,255,255,.065);
-  border-radius: 18px;
-  padding: 16px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(245,215,124,0.03));
+  border: 1px solid rgba(245,215,124,0.14);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  padding: 1.3rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 40px rgba(245,215,124,0.16);
+  border-color: rgba(245,215,124,0.4);
 }
 
 .card img {
   width: 100%;
-  height: 220px;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  max-height: 280px;
   object-fit: contain;
-  background: #111;
-  border-radius: 12px;
-  padding: 10px;
+  background: #0a0a0a;
+  border-radius: 14px;
+  padding: 1.2rem;
+  margin-bottom: 0.9rem;
 }
 
 button {
   width: 100%;
-  padding: 11px;
-  margin-top: 10px;
-  border-radius: 10px;
+  padding: 0.9rem;
+  margin-top: 0.8rem;
+  border-radius: 12px;
   border: none;
-  background: #f5d77c;
+  background: linear-gradient(90deg, #f5d77c 0%, #e8c760 100%);
   color: #050505;
   font-weight: 700;
+  font-size: 1.02rem;
   cursor: pointer;
-  transition: background .2s;
+  transition: all 0.28s ease;
+  box-shadow: 0 4px 14px rgba(245,215,124,0.28);
 }
 
 button:hover {
-  background: #e6c95c;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(245,215,124,0.5);
+  background: linear-gradient(90deg, #ffeb99 0%, #f5d77c 100%);
 }
 
-/* ────────────────────────────── HERO ────────────────────────────── */
+/* HERO */
 .hero-bg {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: clamp(420px, 65vh, 720px);
   overflow: hidden;
 }
 
@@ -130,24 +146,21 @@ button:hover {
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  animation: fade 12s infinite;
+  animation: fade 14s infinite;
 }
-
-.hero-bg img:nth-child(1) { animation-delay: 0s; }
-.hero-bg img:nth-child(2) { animation-delay: 6s; }
 
 @keyframes fade {
   0%   { opacity: 0; }
-  5%   { opacity: 1; }
-  45%  { opacity: 1; }
-  50%  { opacity: 0; }
+  6%   { opacity: 1; }
+  46%  { opacity: 1; }
+  52%  { opacity: 0; }
   100% { opacity: 0; }
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.82));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.95) 100%);
 }
 
 .hero-title {
@@ -156,63 +169,68 @@ button:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #f5d77c;
-  font-size: 2.6em;
+  font-size: clamp(3rem, 9vw, 7rem);
   text-align: center;
-  text-shadow: 1px 1px 10px rgba(0,0,0,0.75);
+  text-shadow: 0 6px 24px rgba(0,0,0,0.85);
+  letter-spacing: 3px;
+  padding: 0 1rem;
 }
 
-/* ────────────────────────────── TABS ────────────────────────────── */
+/* TABS */
 .top-tabs {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 14px;
-  padding: 12px 0;
-  background: rgba(5,5,5,0.75);
+  gap: 1rem;
+  padding: 1rem 0.8rem;
+  background: rgba(5,5,5,0.82);
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
 .top-tabs .tab {
-  padding: 9px 22px;
+  padding: 0.7rem 1.8rem;
   border-radius: 12px;
-  background: rgba(245,215,124,0.18);
+  background: rgba(245,215,124,0.16);
   color: #f5d77c;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.22s;
+  transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .top-tabs .tab.active {
   background: #f5d77c;
   color: #050505;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(245,215,124,0.35);
 }
 
-/* ────────────────────────────── TAB CONTENT & MODELS ────────────────────────────── */
+/* TAB CONTENT & MODELS */
 .tab-content {
   display: none;
   max-width: 1200px;
-  margin: 0 auto 28px;
-  padding: 24px;
-  background: rgba(5,5,5,0.88);
-  border-radius: 18px;
-  color: #f5d77c;
+  margin: 0 auto 3rem;
+  padding: 2rem 1.2rem;
+  background: rgba(5,5,5,0.9);
+  border-radius: 20px;
 }
 
 .models-container {
-  background: rgba(245,215,124,0.05);
-  padding: 28px;
+  background: rgba(245,215,124,0.04);
+  padding: 2rem 1.4rem;
   border-radius: 16px;
-  line-height: 1.55;
+  line-height: 1.7;
 }
 
 .models-container h3 {
-  margin: 1.8em 0 0.9em;
-  font-size: 1.55em;
-  border-bottom: 1px solid rgba(245,215,124,0.28);
-  padding-bottom: 10px;
+  margin: 2.2em 0 1.1em;
+  font-size: 1.9rem;
+  border-bottom: 1px solid rgba(245,215,124,0.25);
+  padding-bottom: 0.6em;
+  letter-spacing: 0.8px;
 }
 
 .models-container ul {
@@ -221,134 +239,108 @@ button:hover {
 }
 
 .models-container li {
-  margin: 15px 0;
-  padding-left: 28px;
+  margin: 3.5em 0;
+  padding-left: 2.4em;
   position: relative;
 }
 
 .models-container li:before {
   content: "•";
   position: absolute;
-  left: 6px;
+  left: 0.5em;
   color: #f5d77c;
-  font-size: 1.7em;
+  font-size: 2.2em;
+  line-height: 1;
 }
 
-.description-gallery img {
+.models-container img {
+  display: block;
   width: 100%;
-  max-width: 300px;
-  margin: 10px 5px 10px 0;
-  border-radius: 10px;
-  display: inline-block;
+  max-width: 460px;
+  height: auto;
+  margin: 2em auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(245,215,124,0.12);
 }
 
-/* ────────────────────────────── FLOATING WHATSAPP ────────────────────────────── */
+/* FLOATING WHATSAPP */
 .whatsapp-float {
   position: fixed;
-  width: 64px;
-  height: 64px;
+  width: 70px;
+  height: 70px;
   bottom: 30px;
   right: 30px;
-  background: #25D366;
+  background: linear-gradient(135deg, #25D366, #128C7E);
   color: white;
   border-radius: 50%;
-  text-align: center;
-  font-size: 40px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 6px 22px rgba(37,211,102,0.45);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.32s ease;
 }
 
 .whatsapp-float:hover {
-  transform: scale(1.12);
-  background: #20b858;
+  transform: scale(1.16) translateY(-5px);
+  box-shadow: 0 14px 40px rgba(37,211,102,0.6);
 }
 
-/* ────────────────────────────── MODAL ────────────────────────────── */
+/* PURCHASE MODAL */
 .purchase-modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(8px);
   z-index: 2000;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.3s ease;
 }
 
 .purchase-content {
-  background: #111;
-  border: 3px solid #f5d77c;
-  border-radius: 25px;
-  max-width: 400px;
-  width: 90%;
-  padding: 30px;
+  background: #0d0d0d;
+  border: 2px solid #f5d77c;
+  border-radius: 24px;
+  max-width: 440px;
+  width: 92%;
+  padding: 2.2rem 1.8rem;
   text-align: center;
   color: #f5d77c;
-  box-shadow: 0 0 20px rgba(245,215,124,0.5);
-  position: relative;
-  animation: slideIn 0.4s forwards;
-}
-
-.purchase-content h2 {
-  margin-top: 0;
-  font-size: 1.8em;
-}
-
-.modal-price {
-  font-weight: bold;
-  font-size: 1.3em;
-  margin-bottom: 15px;
+  box-shadow: 0 0 40px rgba(245,215,124,0.35);
 }
 
 .purchase-content input,
 .purchase-content textarea {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
+  padding: 0.9rem 1.1rem;
+  margin: 0.8rem 0;
   border-radius: 12px;
   border: none;
-  font-size: 1em;
+  background: rgba(255,255,255,0.07);
+  color: #f5d77c;
+  font-size: 1rem;
 }
 
-.confirm-btn {
-  width: 100%;
-  padding: 12px 0;
-  border: none;
-  border-radius: 12px;
-  background: #f5d77c;
-  color: #050505;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
+.purchase-content input::placeholder,
+.purchase-content textarea::placeholder {
+  color: rgba(245,215,124,0.55);
 }
 
-.confirm-btn:hover { background: #e6c95c; }
-
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #f5d77c;
-  color: #050505;
-  border: none;
-  border-radius: 8px;
-  padding: 5px 12px;
-  font-weight: 600;
-  cursor: pointer;
+.modal-price {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 1rem 0;
 }
 
-.close-btn:hover { background: #e6c95c; }
-
-.wa-chat a { color: #f5d77c; text-decoration: underline; }
-
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes slideIn { from {transform: translateY(-20px);} to {transform: translateY(0);} }
+/* Mobile adjustments */
+@media (max-width: 680px) {
+  .grid { gap: 1.4rem; padding: 0.8rem; }
+  .card { padding: 1rem; }
+  .models-container img { max-width: 100%; }
+  .whatsapp-float { width: 60px; height: 60px; bottom: 20px; right: 20px; }
+}
 </style>
 </head>
 
@@ -398,6 +390,7 @@ button:hover {
   <div class="review"><strong>stus****son</strong> | Dec 12, 2025<br>Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement perfect time reliable. Fast delivery to UK.</div>
   <div class="review"><strong>danny****son88</strong> | Jan 05,2026<br>Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.</div>
 </div>
+
 <div id="models" class="tab-content">
   <h2>Professional & Classic Rolex Models Guide</h2>
   
@@ -411,8 +404,7 @@ button:hover {
         • Recognizable by its three sub-dial layout and engraved tachymeter bezel.<br>
         • Famous through Paul Newman, whose own Daytona set a world auction record.<br>
         • Modern versions continue to be highly sought after.
-      </li>
-      
+      </li>     
       <li>
         <strong>Submariner</strong><br>
         <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0841.png" alt="Rolex Submariner">
@@ -638,4 +630,3 @@ function closePurchaseModal() {
 
 </body>
 </html>
-<!-- ─────────────── WATCH MODELS TAB (FULLY POPULATED) ─────────────── -->
