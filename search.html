@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <title>TagShop Admin – Search & Curate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
 h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
@@ -19,6 +21,7 @@ button{cursor:pointer;background:#f5d77c;color:#050505;font-weight:600;}
 a{display:block;}
 </style>
 </head>
+
 <body>
 
 <div class="section">
@@ -43,6 +46,7 @@ a{display:block;}
 const API="AIzaSyB9YwW8EVXQJsVwSMbJrk-NU9B9ZrzzkGs";
 const CX="f7e219616fe1d4629";
 const AFF="2545671";
+const WISE="https://wise.com/pay/me/davids14542";
 
 let last=[], showcase=[];
 let currentQuery="";
@@ -53,6 +57,7 @@ const results=document.getElementById("results");
 const showcaseDiv=document.getElementById("showcase");
 const pager=document.getElementById("pager");
 
+// Optional scoring function
 function score(t){
  t=t.toLowerCase();
  let s=0;
@@ -64,10 +69,12 @@ function score(t){
  return s;
 }
 
+// OPEN SUPPLIER LINK – exact product page
 function searchSupplier(url){
  window.open(url,"_blank");
 }
 
+// SEARCH FUNCTION
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
@@ -75,7 +82,9 @@ async function search(newSearch){
  }
  if(!currentQuery) return;
 
- const r=await fetch(`https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`);
+ const r=await fetch(
+  `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(currentQuery)}&cx=${CX}&key=${API}&start=${startIndex}`
+ );
  const d=await r.json();
 
  last=(d.items||[]).map(i=>({
@@ -91,42 +100,52 @@ async function search(newSearch){
  updatePager(d.searchInformation?.totalResults || 0);
 }
 
+// RENDER RESULTS
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
+
   d.innerHTML=`
-   <a href="${p.link}" target="_blank"><img src="${p.img}"></a>
+   <a href="${p.link}" target="_blank">
+     <img src="${p.img}">
+   </a>
    <h4>${p.title}</h4>
    <input placeholder="Supplier Price" type="number" id="s${i}">
    <input placeholder="TagShop Price" type="number" id="t${i}">
    <button id="addBtn${i}">➕ Add to Showcase</button>
   `;
+
   results.appendChild(d);
 
-  const supplierBtn=document.createElement("button");
-  supplierBtn.textContent="🔍 Search Supplier";
-  supplierBtn.onclick=()=>searchSupplier(p.link);
+  // Supplier button – opens exact product link
+  const supplierBtn = document.createElement("button");
+  supplierBtn.textContent = "🔍 Search Supplier";
+  supplierBtn.addEventListener("click",()=> searchSupplier(p.link));
   d.appendChild(supplierBtn);
 
-  document.getElementById(`addBtn${i}`).onclick=()=>add(i);
+  // Add to showcase button
+  document.getElementById(`addBtn${i}`).addEventListener("click",()=> add(i));
  });
 }
 
+// PAGINATION
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
- const maxPage=Math.ceil(total/pageSize)||1;
+ const maxPage=Math.ceil(total/pageSize) || 1;
+
  pager.innerHTML=`
-   <button onclick="prevPage()" ${page<=1?"disabled":""}>◀</button>
+   <button onclick="prevPage()" ${page<=1?"disabled":""}>◀ Previous</button>
    <span>Page ${page} of ${maxPage}</span>
-   <button onclick="nextPage()" ${page>=maxPage?"disabled":""}>▶</button>
+   <button onclick="nextPage()" ${page>=maxPage?"disabled":""}>Next ▶</button>
  `;
 }
 
 function nextPage(){ startIndex+=pageSize; search(false); }
 function prevPage(){ startIndex=Math.max(1,startIndex-pageSize); search(false); }
 
+// SHOWCASE FUNCTIONS
 function add(i){
  const p=last[i];
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
@@ -134,6 +153,7 @@ function add(i){
  if(showcase.find(x=>x.link===p.link)) return;
  if(showcase.length>=50) return alert("Max 50 items");
  showcase.push(p);
+ save();
  renderShowcase();
 }
 
@@ -153,15 +173,18 @@ function renderShowcase(){
  });
 }
 
-function remove(i){ showcase.splice(i,1); renderShowcase(); }
+function remove(i){ showcase.splice(i,1); save(); renderShowcase(); }
+function save(){ localStorage.setItem("tagshopShowcase",JSON.stringify(showcase)); }
+function goShop(){ location.href="shop.html"; }
 
-// THE FIX — pass showcase through URL
-function goShop(){
- const payload=btoa(encodeURIComponent(JSON.stringify(showcase)));
- location.href="index.html?showcase="+payload;
-}
+// INITIALIZE
+window.onload=function(){
+ showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+ renderShowcase();
+};
 
-document.getElementById("searchBtn").onclick=()=>search(true);
+// SEARCH BUTTON
+document.getElementById("searchBtn").addEventListener("click",()=>search(true));
 </script>
 
 </body>
