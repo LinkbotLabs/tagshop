@@ -569,22 +569,7 @@ const elite = document.getElementById("tier-elite");
 const premium = document.getElementById("tier-premium");
 const value = document.getElementById("tier-value");
 const entry = document.getElementById("tier-entry");
-efunction getShowcase() {
-  const params = new URLSearchParams(window.location.search);
-  const data = params.get("showcase");
-
-  if (data) {
-    try {
-      return JSON.parse(decodeURIComponent(atob(data)));
-    } catch (e) {
-      console.warn("Showcase decode failed");
-    }
-  }
-
-  return JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
-}
-
-let showcase = getShowcase();
+let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
 showcase.forEach((p, i) => {
   const price = parseFloat(p.tagshopPrice) || 0;
