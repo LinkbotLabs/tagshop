@@ -151,7 +151,7 @@ function add(i){
  p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
  p.tagshopPrice=parseFloat(document.getElementById("t"+i).value)||0;
  if(showcase.find(x=>x.link===p.link)) return;
- if(showcase.length>=50) return alert("Max 50 items");
+ if(showcase.length>=60) return alert("Max 60 items");
  showcase.push(p);
  save();
  renderShowcase();
