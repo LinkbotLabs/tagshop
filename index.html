@@ -6,405 +6,163 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
+<!-- FACEBOOK & INSTAGRAM FIX -->
+<script>
+(function () {
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
+  if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1) {
+    var url = window.location.href;
+    if (/iPhone|iPad|iPod/i.test(ua)) window.location.href = "x-safari-" + url;
+    else window.location.href = "intent://" + url.replace(/^https?:\/\//,"") + "#Intent;scheme=https;package=com.android.chrome;end";
+  }
+})();
+</script>
+
 <style>
-/* GENERAL STYLES */
-body {
-  margin:0;
-  background:#050505;
-  color:#f5d77c;
-  font-family:Montserrat;
-}
-h1, h2 {
-  font-family:'Playfair Display', serif;
-  color:#f5d77c;
-  text-align:center;
-  margin:20px 0;
-}
-.section {
-  padding:20px;
-  max-width:1200px;
-  margin:auto;
-}
-.tier-title {
-  font-size:1.6em;
-  margin:20px 0 10px;
-  text-align:center;
-}
-.tier-info {
-  max-width:900px;
-  margin:0 auto 20px;
-  background:rgba(245,215,124,.08);
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
-  font-size:.95em;
-}
-.grid {
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-  max-height:400px;
-  overflow-y:auto;
-  padding:10px;
-}
-.card {
-  min-width:240px;
-  background:rgba(255,255,255,.06);
-  border-radius:18px;
-  padding:15px;
-}
-.card img {
-  width:100%;
-  height:220px;
-  object-fit:contain;
-  background:#111;
-  border-radius:12px;
-  padding:10px;
-}
-button {
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:10px;
-  border:none;
-  background:#f5d77c;
-  color:#050505;
-  font-weight:600;
-  cursor:pointer;
-}
+body{margin:0;background:#050505;color:#f5d77c;font-family:Montserrat}
+h1,h2{font-family:'Playfair Display',serif;text-align:center}
+.section{padding:20px;max-width:1200px;margin:auto}
+.grid{display:flex;flex-direction:column;gap:20px;max-height:400px;overflow-y:auto;padding:10px}
+.card{background:rgba(255,255,255,.06);border-radius:18px;padding:15px}
+.card img{width:100%;height:220px;object-fit:contain;background:#111;border-radius:12px;padding:10px;cursor:pointer}
+button{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:none;background:#f5d77c;color:#050505;font-weight:700;cursor:pointer}
+.notice{background:rgba(245,215,124,.08);padding:10px;margin:10px auto 20px;max-width:900px;text-align:center;border-radius:12px}
 
-/* NOTICE */
-.notice {
-  background:rgba(245,215,124,.08);
-  padding:10px;
-  margin:10px auto 20px;
-  max-width:900px;
-  text-align:center;
-  border-radius:12px;
-  font-size:1em;
-}
+.hero-bg{position:relative;height:400px;overflow:hidden}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
+.hero-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5em}
 
-/* HERO CAROUSEL */
-.hero-bg {
-  position:relative;
-  width:100%;
-  height:400px;
-  overflow:hidden;
-}
-.hero-bg img {
-  position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  animation:fade 12s infinite;
-}
-.hero-bg img:nth-child(1) { animation-delay:0s; }
-.hero-bg img:nth-child(2) { animation-delay:6s; }
-@keyframes fade {
-  0% { opacity:0; }
-  5% { opacity:1; }
-  45% { opacity:1; }
-  50% { opacity:0; }
-  100% { opacity:0; }
-}
-.hero-overlay {
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
-}
-.hero-title {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  color:#f5d77c;
-  font-family:'Playfair Display', serif;
-  font-size:2.5em;
-  text-align:center;
-  text-shadow:1px 1px 8px rgba(0,0,0,0.7);
-}
+.top-tabs{display:flex;justify-content:center;gap:15px;padding:10px;background:#050505;position:sticky;top:0;z-index:100}
+.tab{padding:8px 18px;border-radius:12px;background:rgba(245,215,124,.2);cursor:pointer}
+.tab.active{background:#f5d77c;color:#000}
+.tab-content{display:none;max-width:1200px;margin:auto;padding:20px;background:rgba(0,0,0,.7);border-radius:18px}
 
-/* TOP TABS */
-.top-tabs {
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  padding:10px 0;
-  background:rgba(5,5,5,0.7);
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-.top-tabs .tab {
-  padding:8px 20px;
-  border-radius:12px;
-  background:rgba(245,215,124,0.2);
-  color:#f5d77c;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.top-tabs .tab.active {
-  background:#f5d77c;
-  color:#050505;
-}
-
-/* TAB CONTENT */
-.tab-content {
-  display:none;
-  max-width:1200px;
-  margin:auto 0 20px;
-  padding:20px;
-  background:rgba(5,5,5,0.85);
-  border-radius:18px;
-  color:#f5d77c;
-}
-.tab-content p, .tab-content .review {
-  margin-bottom:10px;
-  line-height:1.4;
-}
-.review {
-  background:rgba(245,215,124,.08);
-  border-radius:12px;
-  padding:10px;
-  font-size:0.9em;
-}
-
-/* PURCHASE MODAL STYLING */
-.purchase-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 0.3s ease;
-}
-.purchase-content {
-  background: #111;
-  border: 3px solid #f5d77c;
-  border-radius: 25px;
-  max-width: 400px;
-  width: 90%;
-  padding: 30px;
-  text-align: center;
-  color: #f5d77c;
-  box-shadow: 0 0 20px rgba(245,215,124,0.5);
-  position: relative;
-  transform: translateY(-20px);
-  animation: slideIn 0.4s forwards;
-}
-.purchase-content h2 {
-  margin-top: 0;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8em;
-}
-.modal-price {
-  font-weight: bold;
-  font-size: 1.3em;
-  margin-bottom: 15px;
-}
-.purchase-content input,
-.purchase-content textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 12px;
-  border: none;
-  font-size: 1em;
-}
-.confirm-btn {
-  width: 100%;
-  padding: 12px 0;
-  border: none;
-  border-radius: 12px;
-  background: #f5d77c;
-  color: #050505;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.confirm-btn:hover { background: #e6c95c; }
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #f5d77c;
-  color: #050505;
-  border: none;
-  border-radius: 8px;
-  padding: 5px 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.close-btn:hover { background: #e6c95c; }
-.wa-chat a { color: #f5d77c; text-decoration: underline; }
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes slideIn { from {transform: translateY(-20px);} to {transform: translateY(0);} }
+.modal,.purchase-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000;justify-content:center;align-items:center}
+.modal-box,.purchase-content{background:#111;border:2px solid #f5d77c;border-radius:20px;padding:25px;max-width:400px;width:90%;text-align:center}
+.close-btn{margin-top:15px;background:#f5d77c;border:none;padding:8px 14px;border-radius:10px;font-weight:700}
+input,textarea{width:100%;padding:10px;border-radius:10px;margin:8px 0;border:none}
 </style>
 </head>
 
 <body>
 
-<!-- HERO CAROUSEL -->
 <div class="hero-bg">
-  <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg" alt="Watch 1">
+  <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg">
   <div class="hero-overlay"></div>
   <h1 class="hero-title">TagShop Luxury Watches</h1>
 </div>
 
-<div class="notice">All watches have the correct markings and will look exactly as expected when they arrive to you.</div>
+<div class="notice">Certified serials • Presentation boxes • Discreet fast shipping • Guaranteed quality</div>
 
-<!-- TOP TABS -->
 <div class="top-tabs">
-  <div class="tab active" onclick="openTab('about', this)">About Us</div>
-  <div class="tab" onclick="openTab('supplier', this)">Supplier Info</div>
-  <div class="tab" onclick="openTab('reviews', this)">Reviews</div>
+  <div class="tab active" onclick="openTab('about',this)">About Us</div>
+  <div class="tab" onclick="openTab('supplier',this)">Supplier Info</div>
+  <div class="tab" onclick="openTab('reviews',this)">Reviews</div>
 </div>
 
-<!-- TAB CONTENT -->
-<div id="about" class="tab-content" style="display:block;">
-  <h2>About TagShop</h2>
-  <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
-</div>
+<div id="about" class="tab-content" style="display:block"><h2>About TagShop</h2><p>We source and verify premium watches with full support.</p></div>
+<div id="supplier" class="tab-content"><h2>Supplier Info</h2><p>All watches are QC checked before shipping.</p></div>
+<div id="reviews" class="tab-content"><h2>Reviews</h2><p>★★★★★ Submariner perfect • ★★★★★ Daytona flawless</p></div>
 
-<div id="supplier" class="tab-content">
-  <h2>Supplier Info</h2>
-  <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>
-</div>
+<div class="section"><div class="grid" id="tier-elite"></div></div>
+<div class="section"><div class="grid" id="tier-premium"></div></div>
+<div class="section"><div class="grid" id="tier-value"></div></div>
+<div class="section"><div class="grid" id="tier-entry"></div></div>
 
-<div id="reviews" class="tab-content">
-  <h2>Customer Reviews</h2>
-  <div class="review"><strong>jim****078</strong> | April 15, 2023<br>First time using Jason007… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.</div>
-  <div class="review"><strong>romm****3_59</strong> | June 25, 2024<br>Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.</div>
-  <div class="review"><strong>stus****son</strong> | Nov 23, 2023<br>Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement noisy but reliable. Fast delivery to UK.</div>
-  <div class="review"><strong>danny****son88</strong> | March 03,2022<br>Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.</div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="content">
-  <div class="section">
-    <div class="tier-title">Elite Swiss Grade (£600+)</div>
-    <div class="tier-info">Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. For collectors who want the closest possible match to genuine luxury watches.</div>
-    <div id="tier-elite" class="grid"></div>
-  </div>
-
-  <div class="section">
-    <div class="tier-title">AAA Premium (£350 – £599)</div>
-    <div class="tier-info">Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing. Exceptional value for serious buyers.</div>
-    <div id="tier-premium" class="grid"></div>
-  </div>
-
-  <div class="section">
-    <div class="tier-title">AAA Value (£180 – £349)</div>
-    <div class="tier-info">Strong quality with great appearance and durability. Ideal for daily wear and customers who want luxury looks at a sensible price.</div>
-    <div id="tier-value" class="grid"></div>
-  </div>
-
-  <div class="section">
-    <div class="tier-title">Entry Luxury (Under £180)</div>
-    <div class="tier-info">Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.</div>
-    <div id="tier-entry" class="grid"></div>
+<div class="modal" id="eduModal">
+  <div class="modal-box">
+    <h2 id="eduTitle"></h2>
+    <p id="eduText"></p>
+    <button class="close-btn" onclick="closeEdu()">Close</button>
   </div>
 </div>
 
-<!-- PURCHASE MODAL -->
-<div id="purchaseModal" class="purchase-modal">
+<div class="purchase-modal" id="purchaseModal">
   <div class="purchase-content">
-    <h2>Confirm Your Order</h2>
-    <p id="modalProductTitle"></p>
-    <p id="modalProductPrice" class="modal-price"></p>
-    <form id="purchaseForm">
-      <input type="text" name="fullname" placeholder="Full Name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <textarea name="address" placeholder="Shipping Address" required></textarea>
-      <button type="submit" class="confirm-btn">Confirm & Pay</button>
-    </form>
-    <button onclick="closePurchaseModal()" class="close-btn">X</button>
-    <p class="wa-chat">Need help? <a href="https://wa.me/66654052867" target="_blank">Chat on WhatsApp</a></p>
+    <h2 id="modalProductTitle"></h2>
+    <p id="modalProductPrice"></p>
+    <input id="custName" placeholder="Full Name">
+    <input id="custEmail" placeholder="Email">
+    <textarea id="custAddr" placeholder="Shipping Address"></textarea>
+    <button onclick="confirmOrder()">Confirm & Pay</button>
+    <button class="close-btn" onclick="closePurchase()">Cancel</button>
   </div>
 </div>
 
 <script>
 const WISE="https://wise.com/pay/me/davids14542";
-const elite = document.getElementById("tier-elite");
-const premium = document.getElementById("tier-premium");
-const value = document.getElementById("tier-value");
-const entry = document.getElementById("tier-entry");
-let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
+const WA="https://wa.me/66654052867";
 
-// Render watches in tiers
-showcase.forEach((p,i)=>{
- const price = parseFloat(p.tagshopPrice) || 0;
- const card = document.createElement("div");
+const rolexInfo={
+submariner:"The Rolex Submariner is the world’s most famous dive watch.",
+daytona:"The Daytona is Rolex’s motorsport chronograph.",
+gmt:"The GMT-Master II tracks two time zones.",
+datejust:"The Datejust is Rolex’s everyday luxury icon.",
+daydate:"The Day-Date shows the full day of the week.",
+yacht:"The Yacht-Master is Rolex’s nautical sports model.",
+explorer:"The Explorer was built for mountaineers."
+};
+
+function getInfo(title){
+ title=title.toLowerCase();
+ for(let k in rolexInfo){if(title.includes(k))return rolexInfo[k];}
+ return "Rolex is the world’s most respected luxury watch manufacturer.";
+}
+
+function showEdu(title){
+ document.getElementById("eduTitle").innerText=title;
+ document.getElementById("eduText").innerText=getInfo(title);
+ document.getElementById("eduModal").style.display="flex";
+}
+function closeEdu(){eduModal.style.display="none";}
+
+function openTab(id,btn){
+ document.querySelectorAll(".tab-content").forEach(t=>t.style.display="none");
+ document.getElementById(id).style.display="block";
+ document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+}
+
+let currentProduct=null;
+function buyViaTagShop(p){
+ currentProduct=p;
+ modalProductTitle.innerText=p.title;
+ modalProductPrice.innerText="£"+p.tagshopPrice;
+ purchaseModal.style.display="flex";
+}
+function closePurchase(){purchaseModal.style.display="none";}
+
+function confirmOrder(){
+ const msg=`New TagShop Order:%0A${currentProduct.title}%0A£${currentProduct.tagshopPrice}%0A${custName.value}%0A${custEmail.value}%0A${custAddr.value}`;
+ window.open(WA+"?text="+msg,"_blank");
+ window.open(WISE,"_blank");
+ closePurchase();
+}
+
+const showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
+const tiers={elite:tier-elite,premium:tier-premium,value:tier-value,entry:tier-entry};
+
+showcase.forEach(p=>{
+ const price=parseFloat(p.tagshopPrice)||0;
+ const card=document.createElement("div");
  card.className="card";
  card.innerHTML=`
-   <img src="${p.img}">
-   <h3>${p.title}</h3>
-   <p>£${p.tagshopPrice}</p>
-   <button onclick="window.open('${p.link}')">Shop with Supplier</button>
-   <button onclick="buyViaTagShop(${i})">Buy via TagShop</button>
- `;
- if(price >= 600) elite.appendChild(card);
- else if(price >= 350) premium.appendChild(card);
- else if(price >= 180) value.appendChild(card);
- else entry.appendChild(card);
+ <img src="${p.img}" onclick="showEdu('${p.title}')">
+ <h3>${p.title}</h3>
+ <p>£${p.tagshopPrice}</p>
+ <button onclick="showEdu('${p.title}')">Learn About This Watch</button>
+ <button onclick="window.open('${p.link}')">Supplier</button>
+ <button onclick='buyViaTagShop(${JSON.stringify(p)})'>Buy via TagShop</button>`;
+ if(price>=600)tiers.elite.appendChild(card);
+ else if(price>=350)tiers.premium.appendChild(card);
+ else if(price>=180)tiers.value.appendChild(card);
+ else tiers.entry.appendChild(card);
 });
-
-// Tabs
-function openTab(tabId, btn){
-  document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
-  document.getElementById(tabId).style.display='block';
-  document.querySelectorAll('.top-tabs .tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// Purchase Modal
-function buyViaTagShop(index){
-  const product = showcase[index];
-  document.getElementById("modalProductTitle").innerText = product.title;
-  document.getElementById("modalProductPrice").innerText = `Price: £${product.tagshopPrice || 'TBD'}`;
-  document.getElementById("purchaseModal").style.display="flex";
-
-  const form = document.getElementById("purchaseForm");
-  form.onsubmit = function(e){
-    e.preventDefault();
-    const fullname = form.fullname.value.trim();
-    const email = form.email.value.trim();
-    const address = form.address.value.trim();
-    if(!fullname || !email || !address){ alert("Please fill all fields."); return; }
-
-    // WhatsApp message
-    const msg = `New TagShop Order:%0AProduct: ${product.title}%0APrice: £${product.tagshopPrice || 'TBD'}%0AName: ${fullname}%0AEmail: ${email}%0AAddress: ${address}`;
-    window.open(`https://wa.me/66654052867?text=${msg}`,"_blank");
-
-    // Redirect to Wise
-    window.open(WISE,"_blank");
-
-    closePurchaseModal();
-    form.reset();
-  }
-}
-
-function closePurchaseModal(){ document.getElementById("purchaseModal").style.display="none"; }
 </script>
 
-<!-- Tawk.to chat -->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69636637dcdfaf197f805d54/1jem4eis3';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
+<!-- Tawk -->
+<script src="https://embed.tawk.to/69636637dcdfaf197f805d54/1jem4eis3" async></script>
 
 </body>
 </html>
