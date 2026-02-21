@@ -12,157 +12,621 @@
   var ua = navigator.userAgent || navigator.vendor || window.opera;
   if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1) {
     var url = window.location.href;
-    if (/iPhone|iPad|iPod/i.test(ua)) window.location.href = "x-safari-" + url;
-    else window.location.href = "intent://" + url.replace(/^https?:\/\//,"") + "#Intent;scheme=https;package=com.android.chrome;end";
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+      window.location.href = "x-safari-" + url;
+    } else {
+      window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+    }
   }
 })();
 </script>
 
 <style>
-body{margin:0;background:#050505;color:#f5d77c;font-family:Montserrat}
-h1,h2{font-family:'Playfair Display',serif;text-align:center}
-.section{padding:20px;max-width:1200px;margin:auto}
-.grid{display:flex;flex-direction:column;gap:20px;max-height:400px;overflow-y:auto;padding:10px}
-.card{background:rgba(255,255,255,.06);border-radius:18px;padding:15px}
-.card img{width:100%;height:220px;object-fit:contain;background:#111;border-radius:12px;padding:10px;cursor:pointer}
-button{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:none;background:#f5d77c;color:#050505;font-weight:700;cursor:pointer}
-.notice{background:rgba(245,215,124,.08);padding:10px;margin:10px auto 20px;max-width:900px;text-align:center;border-radius:12px}
+/* GENERAL */
+* { box-sizing: border-box; }
 
-.hero-bg{position:relative;height:400px;overflow:hidden}
-.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.8))}
-.hero-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5em}
+body {
+  margin: 0;
+  background: #050505;
+  color: #f5d77c;
+  font-family: Montserrat, sans-serif;
+  line-height: 1.62;
+  font-size: 1.02rem;
+}
 
-.top-tabs{display:flex;justify-content:center;gap:15px;padding:10px;background:#050505;position:sticky;top:0;z-index:100}
-.tab{padding:8px 18px;border-radius:12px;background:rgba(245,215,124,.2);cursor:pointer}
-.tab.active{background:#f5d77c;color:#000}
-.tab-content{display:none;max-width:1200px;margin:auto;padding:20px;background:rgba(0,0,0,.7);border-radius:18px}
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  color: #f5d77c;
+  text-align: center;
+  margin: 0.8em 0 0.5em;
+  letter-spacing: 0.8px;
+}
 
-.modal,.purchase-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000;justify-content:center;align-items:center}
-.modal-box,.purchase-content{background:#111;border:2px solid #f5d77c;border-radius:20px;padding:25px;max-width:400px;width:90%;text-align:center}
-.close-btn{margin-top:15px;background:#f5d77c;border:none;padding:8px 14px;border-radius:10px;font-weight:700}
-input,textarea{width:100%;padding:10px;border-radius:10px;margin:8px 0;border:none}
+.section {
+  padding: 2rem 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.notice {
+  background: rgba(245,215,124,0.06);
+  border: 1px solid rgba(245,215,124,0.18);
+  padding: 1.1rem 1.4rem;
+  margin: 1.2rem auto 2.2rem;
+  max-width: 960px;
+  text-align: center;
+  border-radius: 14px;
+  font-size: 1.06rem;
+}
+
+/* CARDS & TIERS */
+.tier-title {
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  margin: 2.5rem 0 1rem;
+  letter-spacing: 1.2px;
+}
+
+.tier-info {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  background: rgba(245,215,124,0.065);
+  padding: 1.2rem 1.6rem;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 0.98rem;
+  border: 1px solid rgba(245,215,124,0.12);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+  padding: 1rem;
+}
+
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(245,215,124,0.03));
+  border: 1px solid rgba(245,215,124,0.14);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  padding: 1.3rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 40px rgba(245,215,124,0.16);
+  border-color: rgba(245,215,124,0.4);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  max-height: 280px;
+  object-fit: contain;
+  background: #0a0a0a;
+  border-radius: 14px;
+  padding: 1.2rem;
+  margin-bottom: 0.9rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.9rem;
+  margin-top: 0.8rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, #f5d77c 0%, #e8c760 100%);
+  color: #050505;
+  font-weight: 700;
+  font-size: 1.02rem;
+  cursor: pointer;
+  transition: all 0.28s ease;
+  box-shadow: 0 4px 14px rgba(245,215,124,0.28);
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(245,215,124,0.5);
+  background: linear-gradient(90deg, #ffeb99 0%, #f5d77c 100%);
+}
+
+/* HERO */
+.hero-bg {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 65vh, 720px);
+  overflow: hidden;
+}
+
+.hero-bg img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation: fade 14s infinite;
+}
+
+@keyframes fade {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  46%  { opacity: 1; }
+  52%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.95) 100%);
+}
+
+.hero-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #f5d77c;
+  font-size: clamp(3rem, 9vw, 7rem);
+  text-align: center;
+  text-shadow: 0 6px 24px rgba(0,0,0,0.85);
+  letter-spacing: 3px;
+  padding: 0 1rem;
+}
+
+/* TABS */
+.top-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0.8rem;
+  background: rgba(5,5,5,0.82);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.top-tabs .tab {
+  padding: 0.7rem 1.8rem;
+  border-radius: 12px;
+  background: rgba(245,215,124,0.16);
+  color: #f5d77c;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.top-tabs .tab.active {
+  background: #f5d77c;
+  color: #050505;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(245,215,124,0.35);
+}
+
+/* TAB CONTENT & MODELS */
+.tab-content {
+  display: none;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 2rem 1.2rem;
+  background: rgba(5,5,5,0.9);
+  border-radius: 20px;
+}
+
+.models-container {
+  background: rgba(245,215,124,0.04);
+  padding: 2rem 1.4rem;
+  border-radius: 16px;
+  line-height: 1.7;
+}
+
+.models-container h3 {
+  margin: 2.2em 0 1.1em;
+  font-size: 1.9rem;
+  border-bottom: 1px solid rgba(245,215,124,0.25);
+  padding-bottom: 0.6em;
+  letter-spacing: 0.8px;
+}
+
+.models-container ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.models-container li {
+  margin: 3.5em 0;
+  padding-left: 2.4em;
+  position: relative;
+}
+
+.models-container li:before {
+  content: "•";
+  position: absolute;
+  left: 0.5em;
+  color: #f5d77c;
+  font-size: 2.2em;
+  line-height: 1;
+}
+
+.models-container img {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 2em auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(245,215,124,0.12);
+}
+
+/* FLOATING WHATSAPP */
+.whatsapp-float {
+  position: fixed;
+  width: 70px;
+  height: 70px;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  border-radius: 50%;
+  box-shadow: 0 6px 22px rgba(37,211,102,0.45);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.32s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.16) translateY(-5px);
+  box-shadow: 0 14px 40px rgba(37,211,102,0.6);
+}
+
+/* PURCHASE MODAL */
+.purchase-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.purchase-content {
+  background: #0d0d0d;
+  border: 2px solid #f5d77c;
+  border-radius: 24px;
+  max-width: 440px;
+  width: 92%;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  color: #f5d77c;
+  box-shadow: 0 0 40px rgba(245,215,124,0.35);
+}
+
+.purchase-content input,
+.purchase-content textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  margin: 0.8rem 0;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.07);
+  color: #f5d77c;
+  font-size: 1rem;
+}
+
+.purchase-content input::placeholder,
+.purchase-content textarea::placeholder {
+  color: rgba(245,215,124,0.55);
+}
+
+.modal-price {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 1rem 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 680px) {
+  .grid { gap: 1.4rem; padding: 0.8rem; }
+  .card { padding: 1rem; }
+  .models-container img { max-width: 100%; }
+  .whatsapp-float { width: 60px; height: 60px; bottom: 20px; right: 20px; }
+}
 </style>
 </head>
 
 <body>
 
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/66654052867" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" width="44" height="44" fill="white">
+    <path d="M12 2C6.48 2 2 6.48 2 12c0 2.14.7 4.11 1.88 5.71L2 22l4.29-1.88C7.89 21.3 9.86 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm3.59 14.18c-.35.98-1.03 1.76-1.98 1.98-.95.22-2.03.1-3.45-.78-1.42-.88-2.33-2.64-2.4-2.76-.07-.12-.6-.8-.6-.8s-.24-.3-.5-.8c-.26-.5-.5-1.07-.5-1.62 0-.55.17-1.1.5-1.58.33-.48.98-1.13 1.33-1.52.35-.4.7-.6 1.05-.6.35 0 .7.1 1.05.3.35.2.7.6 1.05 1.1.35.5.7 1.1.95 1.7.25.6.25 1.1 0 1.6-.25.5-.7 1.1-1.05 1.5z"/>
+  </svg>
+</a>
+
+<!-- HERO -->
 <div class="hero-bg">
-  <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg">
+  <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0815.jpeg" alt="Luxury Watch">
   <div class="hero-overlay"></div>
   <h1 class="hero-title">TagShop Luxury Watches</h1>
 </div>
 
-<div class="notice">Certified serials • Presentation boxes • Discreet fast shipping • Guaranteed quality</div>
-
-<div class="top-tabs">
-  <div class="tab active" onclick="openTab('about',this)">About Us</div>
-  <div class="tab" onclick="openTab('supplier',this)">Supplier Info</div>
-  <div class="tab" onclick="openTab('reviews',this)">Reviews</div>
+<div class="notice">
+  All watches have the correct markings and will look exactly as expected when they arrive to you. All our watches are high quality and arrive with presentation boxes and certificates + certified serial number authenticity. Shipping guaranteed – fast and discreet.
 </div>
 
-<div id="about" class="tab-content" style="display:block"><h2>About TagShop</h2><p>We source and verify premium watches with full support.</p></div>
-<div id="supplier" class="tab-content"><h2>Supplier Info</h2><p>All watches are QC checked before shipping.</p></div>
-<div id="reviews" class="tab-content"><h2>Reviews</h2><p>★★★★★ Submariner perfect • ★★★★★ Daytona flawless</p></div>
+<!-- TABS -->
+<div class="top-tabs">
+  <div class="tab active" onclick="openTab('about', this)">About Us</div>
+  <div class="tab" onclick="openTab('supplier', this)">Supplier Info</div>
+  <div class="tab" onclick="openTab('reviews', this)">Reviews</div>
+  <div class="tab" onclick="openTab('models', this)">Watch Models</div>
+</div>
 
-<div class="section"><div class="grid" id="tier-elite"></div></div>
-<div class="section"><div class="grid" id="tier-premium"></div></div>
-<div class="section"><div class="grid" id="tier-value"></div></div>
-<div class="section"><div class="grid" id="tier-entry"></div></div>
+<!-- TAB CONTENTS -->
+<div id="about" class="tab-content" style="display:block;">
+  <h2>About TagShop</h2>
+  <p>Our concierge team searches, verifies, and supplies watches with guaranteed quality. We charge a little more to ensure authenticity, fast shipping, and full support.</p>
+</div>
 
-<div class="modal" id="eduModal">
-  <div class="modal-box">
-    <h2 id="eduTitle"></h2>
-    <p id="eduText"></p>
-    <button class="close-btn" onclick="closeEdu()">Close</button>
+<div id="supplier" class="tab-content">
+  <h2>Supplier Info</h2>
+  <p>Buying directly from suppliers may save money but can involve navigating exchange rates, slower shipping, and varying quality checks.</p>
+</div>
+
+<div id="reviews" class="tab-content">
+  <h2>Customer Reviews</h2>
+  <div class="review"><strong>jim****078</strong> | Nov 2025<br>Rolex Explorer First time using Tagshop… The bezel clicks anti-clockwise, color spot on, lume on hands, face hour dashes match exactly. Lovely watch. Will order more.</div>
+  <div class="review"><strong>romm****3_59</strong> | Jan 8, 2026<br>Ul Submariner (No date) Miyota… Came in 14 days, weight great, bezel and SELs tight, rehaut aligned perfectly.</div>
+  <div class="review"><strong>stus****son</strong> | Dec 12, 2025<br>Finally got the no date Submariner… Quality ceramic bezel, lume glows bright, 2813 movement perfect time reliable. Fast delivery to UK.</div>
+  <div class="review"><strong>danny****son88</strong> | Jan 05,2026<br>Very happy with my sub no date watch… Packaging good, tracking available. Will use seller again.</div>
+</div>
+
+<div id="models" class="tab-content">
+  <h2>Professional & Classic Rolex Models Guide</h2>
+  
+  <div class="models-container">
+    <h3>🕰️ Professional Rolex Models</h3>
+    <ul>
+      <li>
+        <strong>Cosmograph Daytona</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0843.png" alt="Rolex Daytona">
+        <br>• The most iconic Rolex, built for racing and timing speed.<br>
+        • Recognizable by its three sub-dial layout and engraved tachymeter bezel.<br>
+        • Famous through Paul Newman, whose own Daytona set a world auction record.<br>
+        • Modern versions continue to be highly sought after.
+      </li>     
+      <li>
+        <strong>Submariner</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0841.png" alt="Rolex Submariner">
+        <br>• Archetypal dive watch, originally released in 1953.<br>
+        • Features a unidirectional bezel, rugged case, and 300 m water resistance.<br>
+        • Highly versatile — looks good with both casual and dressier outfits.<br>
+        • Comes in both date and no-date versions with robust Rolex automatic movements.
+      </li>
+      
+      <li>
+        <strong>Sea-Dweller</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0845.png" alt="Rolex Sea-Dweller">
+        <br>• A beefier professional diver than the Submariner, with greater depth rating (1,220 m).<br>
+        • Slightly larger, rugged case and often simpler dial focused on tool-watch performance.
+      </li>
+      
+      <li>
+        <strong>Deepsea</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0844.png" alt="Rolex Deepsea">
+        <br>• Now its own collection, originally part of the Sea-Dweller line.<br>
+        • Built for extreme diving — standard versions rated to 3,900 m and the Deepsea Challenge to 11,000 m.<br>
+        • Includes a titanium version for strength and corrosion resistance.
+      </li>
+      
+      <li>
+        <strong>Yacht-Master</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0846.png" alt="Rolex Yacht-Master">
+        <br>• Designed for life at sea but not for deep diving; more of a sailor’s lifestyle watch.<br>
+        • Features a precious-metal rotating bezel and refined nautical styling.
+      </li>
+      
+      <li>
+        <strong>Explorer & Explorer II</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0848.png" alt="Rolex Explorer & Explorer II">
+        <br>• Built for adventure and rugged conditions.<br>
+        • Explorer is simpler and smaller; Explorer II adds a 24-hour hand and fixed bezel to help distinguish day/night in extreme environments like caves.
+      </li>
+      
+      <li>
+        <strong>GMT-Master II</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0851.png" alt="Rolex GMT-Master II">
+        <br>• Created for pilots and frequent travelers to display multiple time zones via a 24-hour hand and rotating bezel.<br>
+        • Famous bezel colorways include Pepsi (blue/red), Coke (black/red), Batman (blue/black), and others.
+      </li>
+      
+      <li>
+        <strong>Air-King</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0853.png" alt="Rolex Air-King">
+        <br>• Pilot’s watch emphasizing legibility, with large numerals and a bold dial.<br>
+        • Modernized with crown guards and updated design in recent years.
+      </li>
+    </ul>
+        <h3>⌚ Classic Rolex Models</h3>
+    <ul>
+      <li>
+        <strong>Datejust</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0861.png" alt="Rolex Datejust">
+        <br>• The epitome of Rolex elegance; first automatic watch with a date window (1945).<br>
+        • Available in many sizes (31 mm–41 mm), dial colors, and metals.<br>
+        • Classic dress-sport look.
+      </li>
+      
+      <li>
+        <strong>Day-Date</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0857.png" alt="Rolex Day-Date">
+        <br>• First watch to display both the day and date (1956).<br>
+        • Rolex flagship; only offered in precious metals.<br>
+        • Often associated with leaders and icons.
+      </li>
+      
+      <li>
+        <strong>Lady-Datejust</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0858.png" alt="Rolex Lady-Datejust">
+        <br>• A smaller, more feminine version of the classic Datejust.<br>
+        • Includes jewelry touches like diamonds and mother-of-pearl dials.
+      </li>
+      
+      <li>
+        <strong>Oyster Perpetual</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0861.png" alt="Rolex Oyster Perpetual">
+        <br>• Closest modern Rolex to the very first waterproof Rolex (1926).<br>
+        • Simple, pure design with a range of sizes and fun dial colors.
+      </li>
+      
+      <li>
+        <strong>Sky-Dweller</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0864.png" alt="Rolex Sky-Dweller">
+        <br>• Sophisticated travel watch: shows dual time zones and has an annual calendar.<br>
+        • Uses an off-center disc for the second time zone and a unique rotating “command” bezel to set functions.
+      </li>
+      
+      <li>
+        <strong>Land-Dweller</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0865.jpeg" alt="Rolex Land-Dweller">
+        <br>• Inspired by Rolex’s Oysterquartz style, now mechanical.<br>
+        • Integrated bracelet, distinctive honeycomb motif dial, and hi-beat movement.
+      </li>
+      
+      <li>
+        <strong>Perpetual 1908</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0866.jpeg" alt="Rolex Perpetual 1908">
+        <br>• New classical dress collection celebrating Rolex’s history.<br>
+        • Features refined case proportions, a two-tiered bezel, and sapphire caseback.
+      </li>
+      
+      <li>
+        <strong>Extra Classic / Miscellaneous Models</strong><br>
+        <img src="https://raw.githubusercontent.com/linkbotlabs/tagshop/main/IMG_0855.png" alt="Rolex Misc Classic">
+        <br>• Various other vintage and modern classics.<br>
+        • Covers niche designs and special editions for collectors.
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- PRODUCT TIERS -->
+<div class="content">
+  <div class="section">
+    <div class="tier-title">Elite Swiss Grade (£600+)</div>
+    <div class="tier-info">Top-tier 1:1 Swiss-grade replicas. Best movements, sapphire crystal, perfect branding and weight. For collectors who want the closest possible match to genuine luxury watches.</div>
+    <div id="tier-elite" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="tier-title">AAA Premium (£350 – £599)</div>
+    <div class="tier-info">Our best-selling range. 904L steel, sapphire glass, automatic movements and excellent finishing. Exceptional value for serious buyers.</div>
+    <div id="tier-premium" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="tier-title">AAA Value (£180 – £349)</div>
+    <div class="tier-info">Strong quality with great appearance and durability. Ideal for daily wear and customers who want luxury looks at a sensible price.</div>
+    <div id="tier-value" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="tier-title">Entry Luxury (Under £180)</div>
+    <div class="tier-info">Budget-friendly luxury designs. Stylish, attractive and perfect for gifts or first-time buyers.</div>
+    <div id="tier-entry" class="grid"></div>
   </div>
 </div>
 
-<div class="purchase-modal" id="purchaseModal">
+<!-- PURCHASE MODAL -->
+<div id="purchaseModal" class="purchase-modal">
   <div class="purchase-content">
-    <h2 id="modalProductTitle"></h2>
-    <p id="modalProductPrice"></p>
-    <input id="custName" placeholder="Full Name">
-    <input id="custEmail" placeholder="Email">
-    <textarea id="custAddr" placeholder="Shipping Address"></textarea>
-    <button onclick="confirmOrder()">Confirm & Pay</button>
-    <button class="close-btn" onclick="closePurchase()">Cancel</button>
+    <h2>Confirm Your Order</h2>
+    <p id="modalProductTitle"></p>
+    <p id="modalProductPrice" class="modal-price"></p>
+    <form id="purchaseForm">
+      <input type="text" name="fullname" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="address" placeholder="Shipping Address" required></textarea>
+      <button type="submit" class="confirm-btn">Confirm & Pay</button>
+    </form>
+    <button onclick="closePurchaseModal()" class="close-btn">X</button>
+    <p class="wa-chat">Need help? <a href="https://wa.me/66654052867" target="_blank">Chat on WhatsApp</a></p>
   </div>
 </div>
 
 <script>
-const WISE="https://wise.com/pay/me/davids14542";
-const WA="https://wa.me/66654052867";
+const WISE = "https://wise.com/pay/me/davids14542";
+const elite = document.getElementById("tier-elite");
+const premium = document.getElementById("tier-premium");
+const value = document.getElementById("tier-value");
+const entry = document.getElementById("tier-entry");
+let showcase = JSON.parse(localStorage.getItem("tagshopShowcase") || "[]");
 
-const rolexInfo={
-submariner:"The Rolex Submariner is the world’s most famous dive watch.",
-daytona:"The Daytona is Rolex’s motorsport chronograph.",
-gmt:"The GMT-Master II tracks two time zones.",
-datejust:"The Datejust is Rolex’s everyday luxury icon.",
-daydate:"The Day-Date shows the full day of the week.",
-yacht:"The Yacht-Master is Rolex’s nautical sports model.",
-explorer:"The Explorer was built for mountaineers."
-};
-
-function getInfo(title){
- title=title.toLowerCase();
- for(let k in rolexInfo){if(title.includes(k))return rolexInfo[k];}
- return "Rolex is the world’s most respected luxury watch manufacturer.";
-}
-
-function showEdu(title){
- document.getElementById("eduTitle").innerText=title;
- document.getElementById("eduText").innerText=getInfo(title);
- document.getElementById("eduModal").style.display="flex";
-}
-function closeEdu(){eduModal.style.display="none";}
-
-function openTab(id,btn){
- document.querySelectorAll(".tab-content").forEach(t=>t.style.display="none");
- document.getElementById(id).style.display="block";
- document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
- btn.classList.add("active");
-}
-
-let currentProduct=null;
-function buyViaTagShop(p){
- currentProduct=p;
- modalProductTitle.innerText=p.title;
- modalProductPrice.innerText="£"+p.tagshopPrice;
- purchaseModal.style.display="flex";
-}
-function closePurchase(){purchaseModal.style.display="none";}
-
-function confirmOrder(){
- const msg=`New TagShop Order:%0A${currentProduct.title}%0A£${currentProduct.tagshopPrice}%0A${custName.value}%0A${custEmail.value}%0A${custAddr.value}`;
- window.open(WA+"?text="+msg,"_blank");
- window.open(WISE,"_blank");
- closePurchase();
-}
-
-const showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
-const tiers={elite:tier-elite,premium:tier-premium,value:tier-value,entry:tier-entry};
-
-showcase.forEach(p=>{
- const price=parseFloat(p.tagshopPrice)||0;
- const card=document.createElement("div");
- card.className="card";
- card.innerHTML=`
- <img src="${p.img}" onclick="showEdu('${p.title}')">
- <h3>${p.title}</h3>
- <p>£${p.tagshopPrice}</p>
- <button onclick="showEdu('${p.title}')">Learn About This Watch</button>
- <button onclick="window.open('${p.link}')">Supplier</button>
- <button onclick='buyViaTagShop(${JSON.stringify(p)})'>Buy via TagShop</button>`;
- if(price>=600)tiers.elite.appendChild(card);
- else if(price>=350)tiers.premium.appendChild(card);
- else if(price>=180)tiers.value.appendChild(card);
- else tiers.entry.appendChild(card);
+showcase.forEach((p, i) => {
+  const price = parseFloat(p.tagshopPrice) || 0;
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <img src="${p.img}">
+    <h3>${p.title}</h3>
+    <p>£${p.tagshopPrice}</p>
+    <button onclick="window.open('${p.link}', '_blank')">Shop with Supplier</button>
+    <button onclick="buyViaTagShop(${i})">Buy via TagShop</button>
+  `;
+  
+  if (price >= 600) elite.appendChild(card);
+  else if (price >= 350) premium.appendChild(card);
+  else if (price >= 180) value.appendChild(card);
+  else entry.appendChild(card);
 });
-</script>
 
-<!-- Tawk -->
-<script src="https://embed.tawk.to/69636637dcdfaf197f805d54/1jem4eis3" async></script>
+function openTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById(tabId).style.display = 'block';
+  document.querySelectorAll('.top-tabs .tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function buyViaTagShop(index) {
+  const product = showcase[index];
+  document.getElementById("modalProductTitle").innerText = product.title;
+  document.getElementById("modalProductPrice").innerText = `Price: £${product.tagshopPrice || 'TBD'}`;
+  document.getElementById("purchaseModal").style.display = "flex";
+
+  const form = document.getElementById("purchaseForm");
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    const fullname = form.fullname.value.trim();
+    const email = form.email.value.trim();
+    const address = form.address.value.trim();
+    
+    if (!fullname || !email || !address) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    const msg = `New TagShop Order:%0AProduct: ${product.title}%0APrice: £${product.tagshopPrice || 'TBD'}%0AName: ${fullname}%0AEmail: ${email}%0AAddress: ${address}`;
+    window.open(`https://wa.me/66654052867?text=${msg}`,"_blank");
+    window.open(WISE,"_blank");
+
+    closePurchaseModal();
+    form.reset();
+  }
+}
+
+function closePurchaseModal() {
+  document.getElementById("purchaseModal").style.display = "none";
+}
+</script>
 
 </body>
 </html>
