@@ -9,7 +9,7 @@
 
 <style>
 body{margin:0;font-family:Montserrat;background:#050505;color:#fff;}
-h1,h2{font-family:Playfair Display;color:#f5d77c;text-align:center;}
+h1,h2{font-family:'Playfair Display';color:#f5d77c;text-align:center;}
 .section{max-width:1200px;margin:auto;padding:20px;}
 #results,#showcase{display:flex;gap:20px;overflow-x:auto;}
 .card{background:rgba(255,255,255,.08);border-radius:16px;padding:15px;min-width:240px;}
@@ -19,6 +19,7 @@ button{cursor:pointer;background:#f5d77c;color:#050505;font-weight:600;}
 #pager{display:flex;justify-content:center;align-items:center;gap:15px;margin-top:15px;}
 #pager span{font-weight:600;}
 a{display:block;}
+.price-label{font-size:14px;margin-top:4px;color:#f5d77c;}
 </style>
 </head>
 
@@ -37,7 +38,7 @@ a{display:block;}
 </div>
 
 <div class="section">
-<h2>Your Showcase (max 50)</h2>
+<h2>Your Showcase (max 60)</h2>
 <div id="showcase"></div>
 <button onclick="goShop()">Go To Shop</button>
 </div>
@@ -57,7 +58,6 @@ const results=document.getElementById("results");
 const showcaseDiv=document.getElementById("showcase");
 const pager=document.getElementById("pager");
 
-// Optional scoring function
 function score(t){
  t=t.toLowerCase();
  let s=0;
@@ -69,12 +69,10 @@ function score(t){
  return s;
 }
 
-// OPEN SUPPLIER LINK – exact product page
 function searchSupplier(url){
  window.open(url,"_blank");
 }
 
-// SEARCH FUNCTION
 async function search(newSearch){
  if(newSearch){
    startIndex=1;
@@ -92,15 +90,14 @@ async function search(newSearch){
    img:i.pagemap?.cse_image?.[0]?.src || "https://i.imgur.com/JbGQH6g.png",
    link:i.link.includes("?")?i.link+"&aff="+AFF:i.link+"?aff="+AFF,
    score:score(i.title),
-   supplierPrice:0,
-   tagshopPrice:0
+   supplierPrice:"",
+   tagshopPrice:""
  })).sort((a,b)=>b.score-a.score);
 
  renderResults();
  updatePager(d.searchInformation?.totalResults || 0);
 }
 
-// RENDER RESULTS
 function renderResults(){
  results.innerHTML="";
  last.forEach((p,i)=>{
@@ -112,28 +109,30 @@ function renderResults(){
      <img src="${p.img}">
    </a>
    <h4>${p.title}</h4>
-   <input placeholder="Supplier Price" type="number" id="s${i}">
-   <input placeholder="TagShop Price" type="number" id="t${i}">
+
+   <div class="price-label">Supplier Price</div>
+   <input placeholder="e.g. 1200, 1200A, POA, £1500" type="text" id="s${i}">
+
+   <div class="price-label">TagShop Price</div>
+   <input placeholder="e.g. 1500, VIP1500, £1999" type="text" id="t${i}">
+
    <button id="addBtn${i}">➕ Add to Showcase</button>
   `;
 
   results.appendChild(d);
 
-  // Supplier button – opens exact product link
-  const supplierBtn = document.createElement("button");
-  supplierBtn.textContent = "🔍 Search Supplier";
-  supplierBtn.addEventListener("click",()=> searchSupplier(p.link));
+  const supplierBtn=document.createElement("button");
+  supplierBtn.textContent="🔍 Search Supplier";
+  supplierBtn.addEventListener("click",()=>searchSupplier(p.link));
   d.appendChild(supplierBtn);
 
-  // Add to showcase button
-  document.getElementById(`addBtn${i}`).addEventListener("click",()=> add(i));
+  document.getElementById(`addBtn${i}`).addEventListener("click",()=>add(i));
  });
 }
 
-// PAGINATION
 function updatePager(total){
  const page=Math.ceil(startIndex/pageSize);
- const maxPage=Math.ceil(total/pageSize) || 1;
+ const maxPage=Math.ceil(total/pageSize)||1;
 
  pager.innerHTML=`
    <button onclick="prevPage()" ${page<=1?"disabled":""}>◀ Previous</button>
@@ -145,13 +144,15 @@ function updatePager(total){
 function nextPage(){ startIndex+=pageSize; search(false); }
 function prevPage(){ startIndex=Math.max(1,startIndex-pageSize); search(false); }
 
-// SHOWCASE FUNCTIONS
 function add(i){
- const p=last[i];
- p.supplierPrice=parseFloat(document.getElementById("s"+i).value)||0;
- p.tagshopPrice=parseFloat(document.getElementById("t"+i).value)||0;
+ const p={...last[i]};
+
+ p.supplierPrice=document.getElementById("s"+i).value.trim();
+ p.tagshopPrice=document.getElementById("t"+i).value.trim();
+
  if(showcase.find(x=>x.link===p.link)) return;
  if(showcase.length>=60) return alert("Max 60 items");
+
  showcase.push(p);
  save();
  renderShowcase();
@@ -162,28 +163,39 @@ function renderShowcase(){
  showcase.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="card";
+
   d.innerHTML=`
    <img src="${p.img}">
    <h4>${p.title}</h4>
-   <p>£${p.tagshopPrice}</p>
+   <p><strong>Supplier:</strong> ${p.supplierPrice||"—"}</p>
+   <p><strong>TagShop:</strong> ${p.tagshopPrice||"—"}</p>
    <button onclick="remove(${i})">Remove</button>
    <button onclick="searchSupplier('${p.link.replace(/'/g,"\\'")}')">🔍 Supplier</button>
   `;
+
   showcaseDiv.appendChild(d);
  });
 }
 
-function remove(i){ showcase.splice(i,1); save(); renderShowcase(); }
-function save(){ localStorage.setItem("tagshopShowcase",JSON.stringify(showcase)); }
-function goShop(){ location.href="index.html"; }
+function remove(i){
+ showcase.splice(i,1);
+ save();
+ renderShowcase();
+}
 
-// INITIALIZE
+function save(){
+ localStorage.setItem("tagshopShowcase",JSON.stringify(showcase));
+}
+
+function goShop(){
+ location.href="index.html";
+}
+
 window.onload=function(){
  showcase=JSON.parse(localStorage.getItem("tagshopShowcase")||"[]");
  renderShowcase();
 };
 
-// SEARCH BUTTON
 document.getElementById("searchBtn").addEventListener("click",()=>search(true));
 </script>
 
